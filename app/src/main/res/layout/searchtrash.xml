@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:visibility="invisible">
+
+    <!--화면 전체 검색뷰 위에 표시되는 반투명 레이어, 뷰가 열렸을 때 다른 부분을 흐리게 만들기 위해 설정-->
+    <View
+        android:id="@+id/transparent_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/search_layover_view"
+        android:visibility="gone"/>
+
+    <!--검색뷰-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--검색어 상단 바 정의 = 검색어 입력란, 검색 관련 버튼(뒤로가기, 입력 취소)-->
+        <RelativeLayout
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/white">
+
+            <!--입력창-->
+            <EditText
+                android:id="@+id/searchTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="검색어를 입력하세요"
+                android:imeOptions="actionSearch"
+                android:inputType="textNoSuggestions|textAutoComplete"
+                android:paddingLeft="65dp"
+                android:paddingRight="65dp"
+                android:singleLine="true"
+                android:textColor="#212121"
+                android:textColorHint="#727272"
+                android:textSize="16sp"/>
+
+            <!--뒤로 가기 버튼-->
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10sp"
+                android:src="@drawable/left_button"/>
+
+            <!--입력 취소 버튼-->
+            <ImageButton
+                android:id="@+id/btn_edit_close"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10sp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/close"
+                android:visibility="gone"/>
+
+            <!--검색창 아래 개얇은 회색 선-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_alignParentBottom="true"
+                android:background="#fff"
+                android:backgroundTint="#10000000"/>
+        </RelativeLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:divider="@android:color/transparent"/>
+    </LinearLayout>
+</LinearLayout>

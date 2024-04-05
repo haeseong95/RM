@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <!--RM 마크, 환경설정 아이콘-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
         app:contentInsetStart="0sp"
@@ -14,113 +15,454 @@
         android:layout_height="wrap_content"
         android:background="#5DB075">
 
+        <!--RM 로고-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="RM"
-            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:textSize="25sp"
             android:textStyle="bold"
-            android:layout_gravity="center"
-            />
+            android:layout_marginLeft="15sp"
+            android:paddingLeft="10sp"/>
+
+        <!--관리자, 공지사항 버튼-->
+        <ImageView
+            android:id="@+id/btn_setting"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_gravity="right"
+            android:layout_marginRight="20sp"
+            android:src="@drawable/setting"/>
 
     </androidx.appcompat.widget.Toolbar>
 
-
-
-
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:backgroundTint="#5DB075"
-        android:onClick="mOnClick"
-        android:text="로그인"
-        android:textColor="@color/white"
-        android:textStyle="bold" />
-
+    <!--검색창, 카메라 레이아웃-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="108dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginBottom="20sp">
 
-        >
-
+        <!--검색창-->
         <LinearLayout
+            android:id="@+id/li_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5sp"
-            android:layout_weight="1"
-            android:background="@drawable/text_border"
-            android:orientation="vertical"
-            android:padding="15sp">
-
-            <ImageView
-                android:layout_width="40sp"
-                android:layout_height="40sp"
-                android:layout_gravity="center"
-                android:src="@drawable/plastic" />
+            android:orientation="horizontal"
+            android:layout_marginTop="3sp"
+            android:background="@drawable/camera_border">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="플라스틱류"
-                android:textSize="10sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:layout_weight="1"
-            android:background="@drawable/text_border"
-            android:orientation="vertical"
-            android:padding="5sp">
+                android:text="검색어를 입력하세요"
+                android:textSize="10sp"
+                android:textColor="#A0A0A0"
+                android:paddingTop="10sp"
+                android:paddingLeft="10sp"
+                android:paddingBottom="10sp"
+                android:paddingRight="160sp"/>
 
             <ImageView
-                android:layout_width="50sp"
-                android:layout_height="50sp"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
                 android:layout_gravity="center"
-                android:src="@drawable/broken_glass" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="유리병류"
-                android:textSize="10sp" />
-
+                android:layout_marginRight="5sp"
+                android:src="@drawable/search_icon"/>
         </LinearLayout>
 
+        <!--카메라-->
         <LinearLayout
+            android:id="@+id/li_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/text_border"
-            android:orientation="vertical"
-            android:padding="5sp">
+            android:layout_gravity="center"
+            android:background="@drawable/camera_border"
+            android:layout_marginLeft="15sp">
 
             <ImageView
-                android:layout_width="50sp"
-                android:layout_height="50sp"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
                 android:layout_gravity="center"
-                android:src="@drawable/paper" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="종이류"
-                android:textSize="10sp" />
-
+                android:src="@drawable/camera"
+                android:layout_marginLeft="7sp"
+                android:layout_marginRight="7sp"
+                android:layout_marginBottom="5sp"
+                android:layout_marginTop="5sp" />
         </LinearLayout>
-
     </LinearLayout>
 
+    <!--카테고리 텍스트-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="카테고리"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="30sp"/>
 
 
+    <!--전체 페이지-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <!--1열-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20sp"
+            android:layout_marginRight="20sp">
+
+            <!--고철류-->
+            <LinearLayout
+                android:id="@+id/li_can"
+                android:layout_width="110sp"
+                android:layout_height="100sp"
+                android:layout_margin="5sp"
+                android:padding="15sp"
+                android:background="@drawable/text_border"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/cans"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="고철류"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!--대형폐기물-->
+            <LinearLayout
+                android:id="@+id/li_couch"
+                android:layout_width="110sp"
+                android:layout_height="100sp"
+                android:layout_margin="5sp"
+                android:padding="15sp"
+                android:background="@drawable/text_border"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"
+                    android:src="@drawable/couch" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="대형폐기물"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!--비닐류-->
+            <LinearLayout
+                android:id="@+id/li_plastic_bag"
+                android:layout_width="110sp"
+                android:layout_height="100sp"
+                android:layout_margin="5sp"
+                android:padding="15sp"
+                android:background="@drawable/text_border"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/plastic_bag"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="비닐류"
+                    android:textSize="10sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--2열-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20sp"
+            android:layout_marginRight="20sp">
+
+            <!--생활유혜폐기물-->
+            <LinearLayout
+                android:id="@+id/li_battery"
+                android:layout_width="110sp"
+                android:layout_height="100sp"
+                android:layout_margin="5sp"
+                android:padding="15sp"
+                android:background="@drawable/text_border"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/battery"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="생활계유혜폐기물"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!--음식물쓰레기-->
+            <LinearLayout
+                android:id="@+id/li_stink"
+                android:layout_width="110sp"
+                android:layout_height="100sp"
+                android:layout_margin="5sp"
+                android:padding="15sp"
+                android:background="@drawable/text_border"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5sp"
+                    android:layout_marginTop="5sp"
+                    android:src="@drawable/stink" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="음식물쓰레기"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!--유리병-->
+            <LinearLayout
+                android:id="@+id/li_glass"
+                android:layout_width="110sp"
+                android:layout_height="100sp"
+                android:layout_margin="5sp"
+                android:padding="15sp"
+                android:background="@drawable/text_border"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/broken_glass"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="유리병류"
+                    android:textSize="10sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--3열-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20sp"
+            android:layout_marginRight="20sp">
+
+            <!--의류-->
+            <LinearLayout
+                android:id="@+id/li_clothes"
+                android:layout_width="110sp"
+                android:layout_height="100sp"
+                android:layout_margin="5sp"
+                android:padding="15sp"
+                android:background="@drawable/text_border"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/clothes"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="의류"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!--종이류-->
+            <LinearLayout
+                android:id="@+id/li_paper"
+                android:layout_width="110sp"
+                android:layout_height="100sp"
+                android:layout_margin="5sp"
+                android:padding="15sp"
+                android:background="@drawable/text_border"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"
+                    android:src="@drawable/paper" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="종이류"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!--플라스틱류-->
+            <LinearLayout
+                android:id="@+id/li_plastic"
+                android:layout_width="110sp"
+                android:layout_height="100sp"
+                android:layout_margin="5sp"
+                android:padding="15sp"
+                android:background="@drawable/text_border"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5sp"
+                    android:src="@drawable/plastic"
+                    android:layout_marginBottom="5sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="플라스틱류"
+                    android:textSize="10sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--4열-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20sp"
+            android:layout_marginRight="20sp">
+
+            <!--폐가전제품-->
+            <LinearLayout
+                android:id="@+id/li_res"
+                android:layout_width="110sp"
+                android:layout_height="100sp"
+                android:layout_margin="5sp"
+                android:padding="15sp"
+                android:background="@drawable/text_border"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5sp"
+                    android:src="@drawable/responsive_design"
+                    android:layout_marginBottom="5sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="폐가전제품"
+                    android:textSize="10sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 하단 네이게이션바 고정-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingLeft="20sp"
+        android:paddingRight="20sp"
+        android:gravity="bottom">
+
+        <!--홈-->
+        <Button
+            android:id="@+id/main_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/home"
+            android:layout_weight="1"
+            android:text="홈"
+            android:textSize="10sp"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/transparent"/>
+
+        <!--지도-->
+        <Button
+            android:id="@+id/main_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/map"
+            android:text="분리수거장"
+            android:layout_weight="1"
+            android:textSize="10sp"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/transparent"/>
+
+        <!--커뮤니티-->
+        <Button
+            android:id="@+id/main_community"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/community"
+            android:text="커뮤니티"
+            android:layout_weight="1"
+            android:textSize="10sp"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/transparent"/>
+
+        <!--마이페이지-->
+        <Button
+            android:id="@+id/main_userinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/profile"
+            android:text="마이페이지"
+            android:textSize="10sp"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/transparent"/>
+    </LinearLayout>
 
 </LinearLayout>
