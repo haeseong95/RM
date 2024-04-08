@@ -61,8 +61,8 @@
                 android:textSize="10sp"
                 android:hint="아이디"
                 android:layout_marginTop="5dp"
+                android:inputType="text"
                 android:imeOptions="actionSearch"
-                android:inputType="textNoSuggestions|textAutoComplete"
                 android:background="@drawable/text_border"/>
         </LinearLayout>
 
@@ -87,7 +87,7 @@
                 android:hint="비밀번호"
                 android:layout_marginTop="5dp"
                 android:imeOptions="actionSearch"
-                android:inputType="textNoSuggestions|textAutoComplete"
+                android:inputType="textPassword"
                 android:background="@drawable/text_border"/>
         </LinearLayout>
     </LinearLayout>

@@ -23,8 +23,7 @@
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:layout_marginLeft="15sp"
-            android:paddingLeft="10sp"/>
+            android:layout_marginLeft="25sp"/>
 
         <!--관리자, 공지사항 버튼-->
         <ImageView
@@ -98,7 +97,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="카테고리"
+        android:text="@string/예시"
         android:textSize="15sp"
         android:textStyle="bold"
         android:layout_marginLeft="30sp"/>
@@ -411,58 +410,58 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="bottom"
         android:orientation="horizontal"
-        android:paddingLeft="20sp"
-        android:paddingRight="20sp"
-        android:gravity="bottom">
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp">
 
         <!--홈-->
         <Button
             android:id="@+id/main_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/home"
             android:layout_weight="1"
+            android:backgroundTint="@android:color/transparent"
+            android:drawableTop="@drawable/home"
             android:text="홈"
-            android:textSize="10sp"
             android:textColor="@color/black"
-            android:backgroundTint="@android:color/transparent"/>
+            android:textSize="10sp" />
 
         <!--지도-->
         <Button
             android:id="@+id/main_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@android:color/transparent"
             android:drawableTop="@drawable/map"
             android:text="분리수거장"
-            android:layout_weight="1"
-            android:textSize="10sp"
             android:textColor="@color/black"
-            android:backgroundTint="@android:color/transparent"/>
+            android:textSize="10sp" />
 
         <!--커뮤니티-->
         <Button
             android:id="@+id/main_community"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@android:color/transparent"
             android:drawableTop="@drawable/community"
             android:text="커뮤니티"
-            android:layout_weight="1"
-            android:textSize="10sp"
             android:textColor="@color/black"
-            android:backgroundTint="@android:color/transparent"/>
+            android:textSize="10sp" />
 
         <!--마이페이지-->
         <Button
             android:id="@+id/main_userinfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@android:color/transparent"
             android:drawableTop="@drawable/profile"
             android:text="마이페이지"
-            android:textSize="10sp"
-            android:layout_weight="1"
             android:textColor="@color/black"
-            android:backgroundTint="@android:color/transparent"/>
+            android:textSize="10sp" />
     </LinearLayout>
 
 </LinearLayout>
