@@ -61,7 +61,7 @@
                 android:textSize="10sp"
                 android:hint="아이디"
                 android:layout_marginTop="5dp"
-                android:inputType="text"
+                android:inputType="textNoSuggestions|textAutoComplete"
                 android:imeOptions="actionSearch"
                 android:background="@drawable/text_border"/>
         </LinearLayout>
