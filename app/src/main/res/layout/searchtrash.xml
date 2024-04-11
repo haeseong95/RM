@@ -62,7 +62,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10sp"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/close"
+                android:src="@drawable/search_close"
                 android:visibility="gone"/>
 
             <!--검색창 아래 개얇은 회색 선-->

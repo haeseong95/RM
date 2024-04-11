@@ -9,50 +9,25 @@
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar"
         app:contentInsetStart="0sp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:layout_marginBottom="30dp">
+        android:layout_height="80sp"
+        android:background="@android:color/transparent">
 
         <ImageView
             android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10sp"
-            android:src="@drawable/left_button"/>
+            android:src="@drawable/left_button" style="@style/back_icon"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="비밀번호 찾기"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"/>
+        <TextView android:text="비밀번호 찾기" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
-    <!--아이디 입력하기-->
     <EditText
         android:id="@+id/edit_id"
-        android:layout_width="350sp"
-        android:layout_height="40dp"
-        android:textSize="10sp"
         android:layout_gravity="center"
-        android:hint="아이디 입력하기"
-        android:layout_marginTop="5dp"
-        android:inputType="textPersonName"
-        android:background="@drawable/text_border"/>
+        android:layout_marginTop="30sp"
+        android:hint="아이디 입력하기" style="@style/editText_style"/>
 
-    <!--비밀번호 찾기 버튼-->
     <Button
         android:id="@+id/btn_search_pwd"
-        android:layout_width="200dp"
-        android:layout_marginTop="30dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="비밀번호 찾기"
-        android:textColor="@color/white"
-        android:backgroundTint="#5DB075"
-        android:textStyle="bold" />
+        android:text="비밀번호 찾기" style="@style/button_style"/>
 </LinearLayout>

@@ -9,124 +9,73 @@
 
     <!-- 툴바 : 백스페이스_toolBar, 페이지 타이틀-->
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar"
         app:contentInsetStart="0sp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80sp"
         android:background="@android:color/transparent">
 
         <ImageView
             android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10sp"
-            android:src="@drawable/left_button"/>
+            android:src="@drawable/left_button" style="@style/back_icon"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="로그인"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            />
-
+        <TextView android:text="로그인" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
-    <!--아이디, 비밀번호-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:layout_marginTop="150sp">
+        android:layout_marginTop="200sp">
 
         <!--아이디-->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="20sp">
+        <TextView android:text="아이디" style="@style/textView_title_style"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="아이디"
-                android:textSize="13sp"/>
-
-            <EditText
-                android:id="@+id/login_id"
-                android:layout_width="250dp"
-                android:layout_height="40dp"
-                android:textSize="10sp"
-                android:hint="아이디"
-                android:layout_marginTop="5dp"
-                android:inputType="textNoSuggestions|textAutoComplete"
-                android:imeOptions="actionSearch"
-                android:background="@drawable/text_border"/>
-        </LinearLayout>
+        <EditText
+            android:id="@+id/login_id"
+            android:hint="아이디" style="@style/editText_style"
+            android:inputType="text"/>
 
         <!--비밀번호-->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="30sp">
+        <TextView android:text="비밀번호" style="@style/textView_title_style"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="비밀번호"
-                android:textSize="13sp"/>
-
-            <EditText
-                android:id="@+id/login_pwd"
-                android:layout_width="250dp"
-                android:layout_height="40dp"
-                android:textSize="10sp"
-                android:hint="비밀번호"
-                android:layout_marginTop="5dp"
-                android:imeOptions="actionSearch"
-                android:inputType="textPassword"
-                android:background="@drawable/text_border"/>
-        </LinearLayout>
+        <EditText
+            android:id="@+id/login_pwd"
+            android:hint="비밀번호" style="@style/editText_style"
+            android:inputType="textPassword"/>
     </LinearLayout>
 
-    <!--로그인-->
+    <!--로그인 버튼-->
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="로그인"
-        android:textColor="@color/white"
-        android:backgroundTint="#5DB075"
-        android:textStyle="bold" />
+        android:text="로그인" style="@style/button_style" />
 
     <!--아이디/비번 찾기-->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="350sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center">
 
         <Button
             android:id="@+id/search_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:backgroundTint="@android:color/transparent"
             android:text="아이디 찾기"
             android:textColor="#4C4C4C"
-            android:textSize="13sp" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/search_pwd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:backgroundTint="@android:color/transparent"
             android:text="비밀번호 찾기"
             android:textColor="#4C4C4C"
-            android:textSize="13sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
     <!--회원가입-->
@@ -134,12 +83,12 @@
         android:id="@+id/sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30sp"
+        android:layout_marginTop="180sp"
         android:backgroundTint="@android:color/transparent"
         android:gravity="center"
         android:text="회원가입"
-        android:textColor="#5DB075"
-        android:textSize="15sp"
+        android:textColor="@color/main_color_green"
+        android:textSize="20sp"
         android:textAlignment="center"
         android:layout_gravity="center"/>
 </LinearLayout>

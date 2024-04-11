@@ -27,6 +27,9 @@
 
         <activity android:name="com.example.rm.LoginUser"/>
         <activity android:name="com.example.rm.SignUp"/>
+        <activity android:name="com.example.rm.SearchId"/>
+        <activity android:name="com.example.rm.SearchPwd"/>
+        <activity android:name="com.example.rm.SearchTrash"/>
     </application>
 
 </manifest>

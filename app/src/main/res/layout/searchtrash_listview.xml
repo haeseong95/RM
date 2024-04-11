@@ -24,6 +24,6 @@
         android:paddingLeft="65sp"
         android:paddingRight="65sp"
         android:focusable="false"
-        android:src="@drawable/stink" />
+        android:src="@drawable/ci_stink" />
 
 </RelativeLayout>
