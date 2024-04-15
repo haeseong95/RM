@@ -22,7 +22,7 @@ public class CategoryInfo extends AppCompatActivity {
 
         btnBack = (ImageView) findViewById(R.id.btn_back);
         viewPager = (ViewPager2) findViewById(R.id.view_pager);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout = (TabLayout) findViewById(R.id.tab_l);
 
     }
 }
