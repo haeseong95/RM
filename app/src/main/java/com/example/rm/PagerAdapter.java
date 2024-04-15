@@ -6,18 +6,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.List;
 
-public class PagerAdapter extends FragmentPagerAdapter {
+public class PagerAdapter  {
 
-    private List<Fragment> fragmentList;
-
-    public PagerAdapter(List<Fragment> fragmentList, FragmentManager fm) {
-        super(fm);
-        this.fragmentList = fragmentList;
-    }
-
-    @Override
-    public int getCount(){
-
-    }
 
 }
