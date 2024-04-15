@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_paper:
             case R.id.btn_plastic:
             case R.id.btn_res:
-                startActivity(new Intent(MainActivity.this, LoginUser.class));
+                startActivity(new Intent(MainActivity.this, CategoryInfo.class));
                 break;
             case R.id.main_map:
                 startActivity(new Intent(MainActivity.this, LoginUser.class));
