@@ -41,7 +41,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="17sp"
+        android:layout_marginLeft="20sp"
         android:layout_marginTop="30sp"
         android:layout_marginBottom="50sp">
 
@@ -60,8 +60,8 @@
                 android:textSize="15sp"
                 android:textColor="#A0A0A0"
                 android:paddingTop="13sp"
-                android:paddingLeft="10sp"
-                android:paddingRight="190sp"/>
+                android:paddingLeft="15sp"
+                android:paddingRight="180sp"/>
 
             <ImageView
                 android:layout_width="35sp"
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/border_camera"
-            android:layout_marginLeft="15sp">
+            android:layout_marginLeft="10sp">
 
             <ImageView
                 android:layout_width="35sp"
@@ -225,7 +225,7 @@
             <Button
                 android:id="@+id/main_userinfo"
                 android:drawableTop="@drawable/main_profile"
-                android:text="마이페이지" style="@style/toolbar_icon"/>
+                android:text="로그인" style="@style/toolbar_icon"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

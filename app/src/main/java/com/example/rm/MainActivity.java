@@ -9,11 +9,11 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     ImageView btnSetting;      // 관리자, 공지사항
     LinearLayout btnSearch, btnCamera;      // 검색창, 카메라
-    LinearLayout btnCan, btnCouch, btnPlastic_bag, btnBattery, btnStink, btnGlass, btnClothes, btnPaper, btnPlastic, btnRes;      // 카테고리 버튼
+    LinearLayout btnCan, btnCouch, btnPlasticBag, btnBattery, btnStink, btnGlass, btnClothes, btnPaper, btnPlastic, btnRes;      // 카테고리 버튼
     Button mainMap, mainCommunity, mainUserinfo;        // 툴바 아이콘
 
     @Override
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnCamera = (LinearLayout)findViewById(R.id.li_camera);
         btnCan = (LinearLayout) findViewById(R.id.btn_can);
         btnCouch = (LinearLayout) findViewById(R.id.btn_couch);
-        btnPlastic_bag = (LinearLayout) findViewById(R.id.btn_plastic_bag);
+        btnPlasticBag = (LinearLayout) findViewById(R.id.btn_plastic_bag);
         btnBattery = (LinearLayout) findViewById(R.id.btn_battery);
         btnStink = (LinearLayout) findViewById(R.id.btn_stink);
         btnGlass = (LinearLayout) findViewById(R.id.btn_glass);
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnCamera.setOnClickListener(this);
         btnCan.setOnClickListener(this);
         btnCouch.setOnClickListener(this);
-        btnPlastic_bag.setOnClickListener(this);
+        btnPlasticBag.setOnClickListener(this);
         btnBattery.setOnClickListener(this);
         btnStink.setOnClickListener(this);
         btnGlass.setOnClickListener(this);
@@ -58,19 +58,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
+    // 각 버튼의 쓰레기 종류명을 CategoryInfo의 툴바에 출력하기 위해 데이터 전달
+    private String categoryText(int id){
+        switch (id){
+            case R.id.btn_can: return "고철류";
+            case R.id.btn_couch: return "대형폐기물";
+            case R.id.btn_plastic_bag: return "비닐류";
+            case R.id.btn_battery: return "생활유혜폐기물";
+            case R.id.btn_stink: return "음식물쓰레기";
+            case R.id.btn_glass: return "유리병";
+            case R.id.btn_clothes: return "의류";
+            case R.id.btn_paper: return "종이류";
+            case R.id.btn_plastic: return "플라스틱류";
+            case R.id.btn_res: return "폐가전제품";
+            default: return " ";
+        }
+    }
+
+
+    // 버튼 클릭 시 액티비티 이동
     @Override
-    public void onClick(final View v) {
+    public void onClick(View v) {
+        Intent intent;
 
         switch (v.getId()){
-            case R.id.btn_setting:
-                startActivity(new Intent(MainActivity.this, LoginUser.class));
-                break;
-            case R.id.li_search:
-                startActivity(new Intent(MainActivity.this, LoginUser.class));
-                break;
-            case R.id.li_camera:
-                startActivity(new Intent(MainActivity.this, LoginUser.class));
-                break;
+            case R.id.btn_setting: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
+            case R.id.li_search: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
+            case R.id.li_camera: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
             case R.id.btn_can:
             case R.id.btn_couch:
             case R.id.btn_plastic_bag:
@@ -81,22 +96,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_paper:
             case R.id.btn_plastic:
             case R.id.btn_res:
-                startActivity(new Intent(MainActivity.this, CategoryInfo.class));
+                intent = new Intent(MainActivity.this, CategoryInfo.class);
+                intent.putExtra("category", categoryText(v.getId()));
+                startActivity(intent);
                 break;
-            case R.id.main_map:
-                startActivity(new Intent(MainActivity.this, LoginUser.class));
-                break;
-            case R.id.main_community:
-                startActivity(new Intent(MainActivity.this, LoginUser.class));
-                break;
-            case R.id.main_userinfo:
-                startActivity(new Intent(MainActivity.this, LoginUser.class));
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + v.getId());
+            case R.id.main_map: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
+            case R.id.main_community: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
+            case R.id.main_userinfo: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
+            default: throw new IllegalStateException("Unexpected value: " + v.getId());
         }
     }
-
 
 
 }

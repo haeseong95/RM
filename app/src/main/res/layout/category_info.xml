@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SearchId">
+    tools:context=".CategoryInfo">
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
@@ -18,44 +18,12 @@
             android:id="@+id/btn_back"
             android:src="@drawable/left_button" style="@style/back_icon"/>
 
-        <TextView android:text="종이류" style="@style/toolbar_text" />
+        <TextView android:id="@+id/category_title" android:text="종류" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/category_gray" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabIndicatorColor="@color/main_color_green"
-        app:tabGravity="fill"
-        app:tabIndicatorFullWidth="true"
-        app:tabIndicatorHeight="3sp"
-        app:tabTextColor="@color/category_tab_text_gray"
-        app:tabSelectedTextColor="@color/main_color_green"
-        app:tabRippleColor="@color/category_gray">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="분리수거 안내"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="대상 품목" />
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-
-
 
 </LinearLayout>

@@ -31,8 +31,6 @@
         <activity android:name="com.example.rm.SearchPwd"/>
         <activity android:name="com.example.rm.SearchTrash"/>
         <activity android:name="com.example.rm.CategoryInfo"/>
-        <activity android:name="com.example.rm.FragTrashInfo"/>
-        <activity android:name="com.example.rm.FragTrashList"/>
     </application>
 
 </manifest>

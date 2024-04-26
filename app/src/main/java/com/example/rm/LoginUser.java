@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 // 사용자 로그인 화면
 public class LoginUser extends AppCompatActivity {
@@ -34,35 +35,26 @@ public class LoginUser extends AppCompatActivity {
 
         btnBack.setOnClickListener(btnClick);
         btnLogin.setOnClickListener(btnClick);
+        btnLogin.setOnClickListener(btnClick);
         searchId.setOnClickListener(btnClick);
         searchPwd.setOnClickListener(btnClick);
         signUp.setOnClickListener(btnClick);
 
-        userId = loginId.getText().toString();        // 아이디, 비번 텍스트값 반환
-        userPwd = loginPwd.getText().toString();
-
     }
 
     class BtnClick implements View.OnClickListener{
+        Intent intent;
+
         @Override
         public void onClick(View v) {
-            if (v.getId() == R.id.btn_back){
-                startActivity(new Intent(LoginUser.this, MainActivity.class));
-            }
+            if (v.getId() == R.id.btn_back){finish();}
             else if (v.getId() == R.id.btn_login) {
-
-
+                userId = loginId.getText().toString();        // 아이디, 비번 텍스트값 반환
+                userPwd = loginPwd.getText().toString();
             }
-            else if (v.getId() == R.id.search_id) {
-                startActivity(new Intent(LoginUser.this, SearchId.class));
-            }
-            else if (v.getId() == R.id.search_pwd) {
-                startActivity(new Intent(LoginUser.this, SearchPwd.class));
-            }
-            else if (v.getId() == R.id.sign_up) {
-                startActivity(new Intent(LoginUser.this, SignUp.class));
-            }
-
+            else if (v.getId() == R.id.search_id) {intent = new Intent(LoginUser.this, SearchId.class); startActivity(intent);}
+            else if (v.getId() == R.id.search_pwd) {intent = new Intent(LoginUser.this, SearchPwd.class); startActivity(intent);}
+            else if (v.getId() == R.id.sign_up) {intent = new Intent(LoginUser.this, SignUp.class); startActivity(intent);}
         }
     }
 

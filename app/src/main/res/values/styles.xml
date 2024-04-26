@@ -3,9 +3,9 @@
     <!--카테고리 버튼 레이아웃-->
     <style name="category_layout">
         <item name="android:layout_width">210sp</item>
-        <item name="android:layout_height">110sp</item>
+        <item name="android:layout_height">120sp</item>
         <item name="android:layout_margin">5sp</item>
-        <item name="android:paddingTop">15sp</item>
+        <item name="android:paddingTop">20sp</item>
         <item name="android:orientation">vertical</item>
     </style>
 
