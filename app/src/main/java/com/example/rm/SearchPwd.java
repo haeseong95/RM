@@ -34,7 +34,6 @@ public class SearchPwd extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SearchPwd.this, LoginUser.class));
                 finish();
             }
         });

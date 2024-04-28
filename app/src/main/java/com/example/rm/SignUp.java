@@ -6,14 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class SignUp extends AppCompatActivity {
 
+    SqliteHelper sqliteHelper;
     String userName, userId, userPwd, userEmail;        // 회원 정보 저장
 
     ImageView btnBack;
@@ -25,61 +27,77 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up);
 
-        btnBack = (ImageView)findViewById(R.id.btn_back);
-        btnCheck = (Button)findViewById(R.id.btn_check);
-        btnCheck2 = (Button)findViewById(R.id.btn_check2);
-        btnSignUp = (Button)findViewById(R.id.btn_sign_up);
-        signName = (EditText)findViewById(R.id.sign_name);
-        signId = (EditText)findViewById(R.id.sign_id);
-        signPwd = (EditText)findViewById(R.id.sign_pwd);
-        signEmail = (EditText)findViewById(R.id.sign_email);
+        btnBack = findViewById(R.id.btn_back);
+        btnCheck = findViewById(R.id.btn_check);
+        btnCheck2 = findViewById(R.id.btn_check2);
+        btnSignUp = findViewById(R.id.btn_sign_up);
+        signName = findViewById(R.id.sign_name);
+        signId = findViewById(R.id.sign_id);
+        signPwd = findViewById(R.id.sign_pwd);
+        signEmail = findViewById(R.id.sign_email);
 
-        userName = signName.getText().toString();      // 사용자 정보 텍스트값 저장
-        userId = signId.getText().toString();
-        userPwd = signPwd.getText().toString();
-        userEmail = signEmail.getText().toString();
-
+        sqliteHelper = new SqliteHelper(this);
 
         // 뒤로 가기 버튼
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SignUp.this, LoginUser.class));
-                finish();
+        btnBack.setOnClickListener(v -> finish());
+
+        // 닉네임 중복 검사
+        btnCheck.setOnClickListener(v -> {
+            userName = signName.getText().toString().trim();
+
+            if (!sqliteHelper.checkNickname(userName)) {
+                showDialog("닉네임", false);
+            } else {
+                showDialog("닉네임", true);
             }
         });
 
-        // 중복 확인 버튼
-        btnCheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog("닉네임");
+        // 아이디 중복 검사
+        btnCheck2.setOnClickListener(v -> {
+            userId = signId.getText().toString().trim();
+
+            if (!sqliteHelper.checkId(userId)) {
+                showDialog("아이디", false);
+            }
+            else {
+                showDialog("아이디", true);
             }
         });
 
-        btnCheck2.setOnClickListener(new View.OnClickListener() {
+        btnSignUp.setOnClickListener(new View.OnClickListener() {       // 회원가입 버튼
             @Override
             public void onClick(View v) {
-                showDialog("아이디");
+
+                userPwd = signPwd.getText().toString().trim();
+                userEmail = signEmail.getText().toString().trim();
+                Boolean insert = sqliteHelper.insertData(userId, userPwd, userEmail, userName);
+
+                if (userId.isEmpty() || userPwd.isEmpty() || userName.isEmpty() || userEmail.isEmpty()){
+                    Toast.makeText(SignUp.this, "모든 정보를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    Log.d("SignUp", "userId: " + userId + ", userPwd: " + userPwd + ", userName: " + userName + ", userEmail: " + userEmail);
+                }
+                else {
+                    if (insert){
+                        Toast.makeText(SignUp.this, "회원가입에 성공하였습니다.", Toast.LENGTH_SHORT).show();       // 화면이 바로 넘어감
+                        Log.d("SignUp", "userId: " + userId + ", userPwd: " + userPwd + ", userName: " + userName + ", userEmail: " + userEmail);
+                        finish();
+                    } else {
+                        Toast.makeText(SignUp.this, "회원가입 실패", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
-
-
-
-
     }
 
     // 중복 확인 버튼 알림
-    void showDialog(String message){
+    void showDialog(String message, boolean b){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("사용 가능한 " + message + "입니다");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
 
-            }
-        });
+        if (b){
+            builder.setMessage("중복된 " + message + "입니다.");
+        } else builder.setMessage("사용 가능한 " + message + "입니다.");
 
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }

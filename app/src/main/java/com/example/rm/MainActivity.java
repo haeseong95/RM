@@ -1,5 +1,7 @@
 package com.example.rm;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayout btnSearch, btnCamera;      // 검색창, 카메라
     LinearLayout btnCan, btnCouch, btnPlasticBag, btnBattery, btnStink, btnGlass, btnClothes, btnPaper, btnPlastic, btnRes;      // 카테고리 버튼
     Button mainMap, mainCommunity, mainUserinfo;        // 툴바 아이콘
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,16 +79,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     // 버튼 클릭 시 액티비티 이동
     @Override
     public void onClick(View v) {
         Intent intent;
 
         switch (v.getId()){
-            case R.id.btn_setting: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
-            case R.id.li_search: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
-            case R.id.li_camera: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
+            case R.id.btn_setting: intent = new Intent(MainActivity.this, LoginUser.class); break;
+            case R.id.li_search: intent = new Intent(MainActivity.this, LoginUser.class); break;
+            case R.id.li_camera: intent = new Intent(MainActivity.this, LoginUser.class); break;
             case R.id.btn_can:
             case R.id.btn_couch:
             case R.id.btn_plastic_bag:
@@ -98,13 +100,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_res:
                 intent = new Intent(MainActivity.this, CategoryInfo.class);
                 intent.putExtra("category", categoryText(v.getId()));
-                startActivity(intent);
                 break;
-            case R.id.main_map: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
-            case R.id.main_community: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
-            case R.id.main_userinfo: intent = new Intent(MainActivity.this, LoginUser.class); startActivity(intent); break;
+            case R.id.main_map: intent = new Intent(MainActivity.this, LoginUser.class); break;
+            case R.id.main_community: intent = new Intent(MainActivity.this, LoginUser.class); break;
+            case R.id.main_userinfo: intent = new Intent(MainActivity.this, LoginUser.class); break;
             default: throw new IllegalStateException("Unexpected value: " + v.getId());
         }
+        startActivity(intent);
     }
 
 
