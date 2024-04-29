@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Mypage">
+
+    <!--툴바-->
+    <androidx.appcompat.widget.Toolbar
+        app:contentInsetStart="0sp"
+        android:layout_width="match_parent"
+        android:layout_height="80sp"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:src="@drawable/left_button" style="@style/back_icon"/>
+
+        <TextView android:id="@+id/category_title" android:text="마이페이지" style="@style/toolbar_text" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="50sp">
+
+        <!--프로필 이미지-->
+        <ImageView
+            android:id="@+id/user_image"
+            android:layout_width="180sp"
+            android:layout_height="180sp"
+            android:src="@drawable/mypage_user"/>
+
+        <!--닉네임-->
+        <TextView
+            android:id="@+id/user_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="닉네임"
+            android:textSize="30sp"/>
+
+        <!--등급-->
+        <TextView
+            android:id="@+id/user_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="등급"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+
+
+
+
+    <!--로그아웃-->
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="180sp"
+        android:backgroundTint="@android:color/transparent"
+        android:gravity="center"
+        android:text="로그아웃"
+        android:textAlignment="center"
+        android:textColor="#858585"
+        android:textSize="20sp" />
+
+
+
+
+</LinearLayout>

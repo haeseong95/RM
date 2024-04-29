@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".RecycleLocation">
+
+    <!--툴바-->
+    <androidx.appcompat.widget.Toolbar
+        app:contentInsetStart="0sp"
+        android:layout_width="match_parent"
+        android:layout_height="80sp"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:src="@drawable/left_button" style="@style/back_icon"/>
+
+        <TextView android:id="@+id/category_title" android:text="분리수거장 안내" style="@style/toolbar_text" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/category_gray" />
+
+</LinearLayout>

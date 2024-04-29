@@ -2,11 +2,12 @@ package com.example.rm;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,6 +48,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
+
         Intent intent;
 
         if (v.getId() == R.id.btn_back){finish();}
@@ -64,6 +66,10 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             else {
                 if (sqliteHelper.checkId(userId)){
                     if (sqliteHelper.checkIdPassword(userId, userPw)){
+
+                        PreferenceHelper.setLoginInfo(this, userId, userPw);    // 로그인 시 입력한 아이디, 비번 저장
+                        PreferenceHelper.setLoginState(this, true);        // 로그인 성공 시 true 값 저장
+
                         Toast.makeText(this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(this, MainActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

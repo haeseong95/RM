@@ -6,14 +6,6 @@
     android:orientation="vertical"
     android:visibility="invisible">
 
-    <!--화면 전체 검색뷰 위에 표시되는 반투명 레이어, 뷰가 열렸을 때 다른 부분을 흐리게 만들기 위해 설정-->
-    <View
-        android:id="@+id/transparent_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/search_layover_view"
-        android:visibility="gone"/>
-
     <!--검색뷰-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,10 +66,5 @@
                 android:backgroundTint="#10000000"/>
         </RelativeLayout>
 
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:divider="@android:color/transparent"/>
     </LinearLayout>
 </LinearLayout>

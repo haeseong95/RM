@@ -1,8 +1,8 @@
 package com.example.rm;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    ImageView btnSetting;      // 관리자, 공지사항
+
     LinearLayout btnSearch, btnCamera;      // 검색창, 카메라
     LinearLayout btnCan, btnCouch, btnPlasticBag, btnBattery, btnStink, btnGlass, btnClothes, btnPaper, btnPlastic, btnRes;      // 카테고리 버튼
     Button mainMap, mainCommunity, mainUserinfo;        // 툴바 아이콘
@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnSetting = (ImageView)findViewById(R.id.btn_setting);
         btnSearch = (LinearLayout)findViewById(R.id.li_search);
         btnCamera = (LinearLayout)findViewById(R.id.li_camera);
         btnCan = (LinearLayout) findViewById(R.id.btn_can);
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainCommunity = (Button)findViewById(R.id.main_community);
         mainUserinfo = (Button)findViewById(R.id.main_userinfo);
 
-        btnSetting.setOnClickListener(this);
         btnSearch.setOnClickListener(this);
         btnCamera.setOnClickListener(this);
         btnCan.setOnClickListener(this);
@@ -57,10 +55,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMap.setOnClickListener(this);
         mainCommunity.setOnClickListener(this);
         mainUserinfo.setOnClickListener(this);
-
+        PreferenceHelper.init(this);
 
     }
 
+    // 앱이 다시 활성화 될 때 로그인 상태에세 따라 로그인/메인페이지 텍스트 갱신
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(PreferenceHelper.getLoginState()){   // true(마이페이지), false(로그인)
+            mainUserinfo.setText("마이페이지");
+        }
+        else {
+            mainUserinfo.setText("로그인");
+        }
+
+    }
 
     // 각 버튼의 쓰레기 종류명을 CategoryInfo의 툴바에 출력하기 위해 데이터 전달
     private String categoryText(int id){
@@ -85,9 +96,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent;
 
         switch (v.getId()){
-            case R.id.btn_setting: intent = new Intent(MainActivity.this, LoginUser.class); break;
-            case R.id.li_search: intent = new Intent(MainActivity.this, LoginUser.class); break;
-            case R.id.li_camera: intent = new Intent(MainActivity.this, LoginUser.class); break;
+            case R.id.li_search: intent = new Intent(MainActivity.this, SearchTrash.class); break;
+            case R.id.li_camera: intent = new Intent(MainActivity.this, Camera.class); break;
             case R.id.btn_can:
             case R.id.btn_couch:
             case R.id.btn_plastic_bag:
@@ -101,13 +111,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(MainActivity.this, CategoryInfo.class);
                 intent.putExtra("category", categoryText(v.getId()));
                 break;
-            case R.id.main_map: intent = new Intent(MainActivity.this, LoginUser.class); break;
-            case R.id.main_community: intent = new Intent(MainActivity.this, LoginUser.class); break;
-            case R.id.main_userinfo: intent = new Intent(MainActivity.this, LoginUser.class); break;
+            case R.id.main_map: intent = new Intent(MainActivity.this, RecycleLocation.class); break;
+            case R.id.main_community: intent = new Intent(MainActivity.this, Community.class); break;
+            case R.id.main_userinfo:
+
+                boolean login = PreferenceHelper.getLoginState();
+                Log.d("로그인/마이페이지 버튼 클릭 시", "마이페이지(true) / 로그인(false) : " + login);
+
+                if(login) {intent = new Intent(MainActivity.this, Mypage.class);}
+                else {intent = new Intent(MainActivity.this, LoginUser.class);}
+                break;
             default: throw new IllegalStateException("Unexpected value: " + v.getId());
         }
+
         startActivity(intent);
     }
+
 
 
 }

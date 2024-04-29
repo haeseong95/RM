@@ -72,6 +72,7 @@ public class SignUp extends AppCompatActivity {
                 userEmail = signEmail.getText().toString().trim();
                 Boolean insert = sqliteHelper.insertData(userId, userPwd, userEmail, userName);
 
+                // 빈칸이 생기면
                 if (userId.isEmpty() || userPwd.isEmpty() || userName.isEmpty() || userEmail.isEmpty()){
                     Toast.makeText(SignUp.this, "모든 정보를 입력해주세요", Toast.LENGTH_SHORT).show();
                     Log.d("SignUp", "userId: " + userId + ", userPwd: " + userPwd + ", userName: " + userName + ", userEmail: " + userEmail);
@@ -82,7 +83,7 @@ public class SignUp extends AppCompatActivity {
                         Log.d("SignUp", "userId: " + userId + ", userPwd: " + userPwd + ", userName: " + userName + ", userEmail: " + userEmail);
                         finish();
                     } else {
-                        Toast.makeText(SignUp.this, "회원가입 실패", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUp.this, "회원가입 실패하였습니다.", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
