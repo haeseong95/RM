@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".CategoryInfo">
+    tools:context=".TrashDetail">
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
@@ -18,26 +18,20 @@
             android:id="@+id/btn_back"
             android:src="@drawable/left_button" style="@style/back_icon"/>
 
-        <TextView android:id="@+id/category_title" android:text="종류" style="@style/toolbar_text" />
+        <TextView android:id="@+id/title_trashName" android:text="쓰레기 이름" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
-    <View
+    <ImageView
+        android:id="@+id/trash_image"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/category_gray" />
+        android:layout_height="300sp"
+        android:background="@color/category_gray"/>
 
     <TextView
         android:id="@+id/trash_info"
         android:layout_width="match_parent"
-        android:layout_height="700sp"
+        android:layout_height="wrap_content"
         android:text="분리수거 방법 안내"
         android:layout_margin="30sp"
         android:paddingBottom="30sp"/>
-
-    <ListView
-        android:id="@+id/category_listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:headerDividersEnabled="false"/>
-
 </LinearLayout>

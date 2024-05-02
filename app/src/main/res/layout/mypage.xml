@@ -28,14 +28,12 @@
         android:gravity="center_horizontal"
         android:layout_marginTop="50sp">
 
-        <!--프로필 이미지-->
         <ImageView
             android:id="@+id/user_image"
             android:layout_width="180sp"
             android:layout_height="180sp"
             android:src="@drawable/mypage_user"/>
 
-        <!--닉네임-->
         <TextView
             android:id="@+id/user_nickname"
             android:layout_width="wrap_content"
@@ -43,7 +41,6 @@
             android:text="닉네임"
             android:textSize="30sp"/>
 
-        <!--등급-->
         <TextView
             android:id="@+id/user_level"
             android:layout_width="wrap_content"
@@ -53,7 +50,83 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="430sp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="@color/category_gray"
+        android:layout_marginTop="50sp"
+        android:layout_marginBottom="20sp"/>
 
+
+    <LinearLayout
+        android:id="@+id/li_user"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_marginBottom="30sp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="내 정보 설정"
+            android:paddingLeft="40sp"
+            android:layout_gravity="center"
+            android:layout_weight="4"
+            android:textSize="20sp"/>
+
+        <ImageView
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_weight="1"
+            android:layout_marginRight="30sp"
+            android:layout_gravity="center"
+            android:src="@drawable/mypage_button"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/li_community"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_marginBottom="30sp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="커뮤니티 관리하기"
+            android:paddingLeft="40sp"
+            android:layout_gravity="center"
+            android:layout_weight="4"
+            android:textSize="20sp"/>
+
+        <ImageView
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_weight="1"
+            android:layout_marginRight="30sp"
+            android:layout_gravity="center"
+            android:src="@drawable/mypage_button"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/li_delete"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_marginBottom="30sp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="탈퇴하기"
+            android:paddingLeft="40sp"
+            android:layout_gravity="center"
+            android:layout_weight="4"
+            android:textSize="20sp"/>
+
+        <ImageView
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_weight="1"
+            android:layout_marginRight="30sp"
+            android:layout_gravity="center"
+            android:src="@drawable/mypage_button"/>
+    </LinearLayout>
 
 
 
@@ -63,7 +136,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="180sp"
+        android:layout_marginTop="200sp"
         android:backgroundTint="@android:color/transparent"
         android:gravity="center"
         android:text="로그아웃"

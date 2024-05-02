@@ -60,12 +60,11 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
                 break;
-
             default: throw new IllegalStateException("Unexpected value: " + v.getId());
         }
-
-
     }
+
+
+
 }

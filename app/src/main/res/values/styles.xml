@@ -37,8 +37,8 @@
 
     <!--뒤로 가기 버튼-->
     <style name="back_icon">
-        <item name="android:layout_width">60sp</item>
-        <item name="android:layout_height">60sp</item>
+        <item name="android:layout_width">50sp</item>
+        <item name="android:layout_height">50sp</item>
         <item name="android:layout_marginLeft">10sp</item>
     </style>
 

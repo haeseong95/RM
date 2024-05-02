@@ -25,6 +25,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -34,7 +35,7 @@ android {
 dependencies {
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    // Gson 컨버터, JSON 파싱을 위한 라이브러리
+    // Gson, JSON 파싱을 위한 라이브러리
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     implementation(libs.appcompat)

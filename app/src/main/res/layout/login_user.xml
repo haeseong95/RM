@@ -37,7 +37,9 @@
             android:inputType="text"/>
 
         <!--비밀번호-->
-        <TextView android:text="비밀번호" style="@style/textView_title_style"/>
+        <TextView
+            style="@style/textView_title_style"
+            android:text="비밀번호" />
 
         <EditText
             android:id="@+id/login_pwd"
