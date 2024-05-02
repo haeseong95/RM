@@ -22,12 +22,67 @@
     </androidx.appcompat.widget.Toolbar>
 
     <EditText
-        android:id="@+id/edit_id"
+        android:id="@+id/se_id"
         android:layout_gravity="center"
         android:layout_marginTop="30sp"
-        android:hint="아이디 입력하기" style="@style/editText_style"/>
+        android:inputType="text"
+        android:hint="아이디를 입력하세요" style="@style/editText_style"/>
 
     <Button
         android:id="@+id/btn_search_pwd"
         android:text="비밀번호 찾기" style="@style/button_style"/>
+
+    <LinearLayout
+        android:id="@+id/li_i"
+        android:layout_width="400sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#E2E2E2"
+        android:orientation="vertical"
+        android:layout_marginTop="100sp"
+        android:visibility="invisible">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="회원님의 임시 비밀번호입니다."
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="50sp"
+            android:layout_marginBottom="40sp"/>
+
+        <TextView
+            android:id="@+id/findpw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="비밀번호"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_marginBottom="50sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/li_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70sp"
+            android:layout_gravity="bottom"
+            android:background="@color/main_color_green">
+
+            <Button
+                android:id="@+id/go_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:backgroundTint="@android:color/transparent"
+                android:text="로그인 페이지로 가기"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

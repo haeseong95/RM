@@ -12,10 +12,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Map;
+
 public class Mypage extends AppCompatActivity implements View.OnClickListener{
 
     Button btnLogout;
     ImageView btnBack;
+    TextView userNickname, userLevel;
+    SqliteHelper sqliteHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,15 +29,19 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
 
         btnBack = findViewById(R.id.btn_back);
         btnLogout = findViewById(R.id.btn_logout);
+        userNickname = findViewById(R.id.user_nickname);
+        userLevel = findViewById(R.id.user_level);
 
         btnBack.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
+        sqliteHelper = new SqliteHelper(this);
+
+        displayLoginInfo();
+
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent;
-
         switch (v.getId()){
             case R.id.btn_back: finish(); break;
             case R.id.btn_logout:
@@ -44,7 +53,6 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         PreferenceHelper.logout();
-                        Log.d("메인화면의 하단 툴바 버튼 ", "로그인 여부 : " );
                         Intent i = new Intent(Mypage.this, MainActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(i);
@@ -65,6 +73,17 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
+    // 로그인 정보 가져와서 메인페이지 화면에 표시하기
+    private void displayLoginInfo(){
+        String id = PreferenceHelper.getLoginId(Mypage.this);
+
+        Map<String, String> userInfo = sqliteHelper.getUserInfo(id);
+        String nickname = userInfo.get("nickname");
+        String level = userInfo.get("level");
+
+        userNickname.setText(nickname);
+        userLevel.setText(level);
+    }
 
 
 }

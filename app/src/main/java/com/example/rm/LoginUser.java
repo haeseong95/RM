@@ -18,6 +18,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
     SqliteHelper sqliteHelper;
     ImageView btnBack;     // 뒤로 가기 버튼
+    String userId, userPw = null;
     EditText loginId, loginPwd;       // 아이디, 비밀번호 입력창
     Button btnLogin, searchId, searchPwd, signUp;  // 로그인, 아이디 찾기, 비밀번호 찾기, 회원가입 버튼
 
@@ -53,8 +54,8 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
         if (v.getId() == R.id.btn_back){finish();}
         else if (v.getId() == R.id.btn_login) {
-            String userId = loginId.getText().toString();        // 사용자가 입력한 아이디, 비번 텍스트값 받기
-            String userPw = loginPwd.getText().toString();
+            userId = loginId.getText().toString();        // 사용자가 입력한 아이디, 비번 텍스트값 받기
+            userPw = loginPwd.getText().toString();
 
             // 아이디 또는 비번이 입력되지 않았을 때
             if (userId.isEmpty()){
@@ -67,8 +68,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                 if (sqliteHelper.checkId(userId)){
                     if (sqliteHelper.checkIdPassword(userId, userPw)){
 
-                        PreferenceHelper.setLoginInfo(this, userId, userPw);    // 로그인 시 입력한 아이디, 비번 저장
-                        PreferenceHelper.setLoginState(this, true);        // 로그인 성공 시 true 값 저장
+                        PreferenceHelper.setLoginState(this, true, userId);        // 로그인 성공 시 true 값 저장 + 로그인 시 입력한 아이디 저장
 
                         Toast.makeText(this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(this, MainActivity.class);
