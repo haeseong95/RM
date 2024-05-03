@@ -2,8 +2,8 @@
 <resources>
     <!--카테고리 버튼 레이아웃-->
     <style name="category_layout">
-        <item name="android:layout_width">210sp</item>
-        <item name="android:layout_height">120sp</item>
+        <item name="android:layout_width">150sp</item>
+        <item name="android:layout_height">100sp</item>
         <item name="android:layout_margin">5sp</item>
         <item name="android:paddingTop">20sp</item>
         <item name="android:orientation">vertical</item>
@@ -11,8 +11,8 @@
 
     <!--카테고리 쓰레기 이미지-->
     <style name="category_image">
-        <item name="android:layout_width">45sp</item>
-        <item name="android:layout_height">45sp</item>
+        <item name="android:layout_width">30sp</item>
+        <item name="android:layout_height">30sp</item>
         <item name="android:layout_gravity">center</item>
     </style>
 
