@@ -25,9 +25,89 @@
         android:id="@+id/edit_email"
         android:layout_gravity="center"
         android:layout_marginTop="30sp"
-        android:hint="이메일 입력하기" style="@style/editText_style"/>
+        android:inputType="textEmailAddress"
+        android:hint="이메일을 입력하세요" style="@style/editText_style"/>
 
     <Button
         android:id="@+id/btn_search_id"
         android:text="아이디 찾기" style="@style/button_style"/>
+
+    <LinearLayout
+        android:id="@+id/li_io"
+        android:layout_width="400sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#E2E2E2"
+        android:orientation="vertical"
+        android:layout_marginTop="150sp"
+        android:visibility="invisible">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="검색 결과 아이디는 아래와 같습니다."
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="50sp"
+            android:layout_marginBottom="40sp"/>
+
+        <TextView
+            android:id="@+id/find_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="아이디"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_marginBottom="50sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btn_to"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:visibility="invisible">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="70sp"
+            android:layout_weight="1.8"
+            android:layout_gravity="bottom"
+            android:background="#ced4da">
+
+            <Button
+                android:id="@+id/start_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:layout_weight="1.8"
+                android:text="로그인"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:textColor="#4C4C4C"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="70sp"
+            android:layout_weight="1"
+            android:layout_gravity="bottom"
+            android:background="@color/main_color_green">
+
+            <Button
+                android:id="@+id/search_pw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:layout_gravity="center_vertical"
+                android:text="비밀번호 찾기"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+
 </LinearLayout>

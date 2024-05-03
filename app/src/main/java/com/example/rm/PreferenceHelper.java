@@ -1,6 +1,7 @@
 package com.example.rm;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -17,42 +18,28 @@ public class PreferenceHelper {
         sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);   // 자기 앱 내에서만 사용 (외부 앱 접근X)
     }
 
-    // 로그인 할 때 사용할 메소드
     // 로그인O true / 로그인X false : 로그인 성공했으므로 true 값 저장
-    public static void setLoginState(Context context, boolean login) {
+    public static void setLoginState(Context context, boolean login, String id) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(LOGIN_IN, login);
-        editor.apply();
-        Log.d("LOGIN_IN 상태 ", "로그인O(true) / 로그인X(false) : " + LOGIN_IN);
-    }
-
-    // 로그인 정보(아이디, 비번) 저장
-    public static void setLoginInfo(Context context, String id, String password) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("id", id);
-        editor.putString("password", password);
+        editor.putString("id", id);     // 로그인 시 입력한 아이디 값 저장
         editor.apply();
 
-        Log.d("로그인 정보 저장됨", "userId: " + id + ", userPwd: " + password);
+        Log.d("Preference", "LOGIN_IN 상태 (" + sharedPreferences.getBoolean(LOGIN_IN, false) + ") : 로그인O(true) / 로그인X(false)" + "       로그인 아이디 저장 : " + id);
     }
 
     // 메인페이지에서 로그인/마이페이지 텍스트 변경을 위한 메소드
     public static boolean getLoginState(){
-        Log.d("LOGIN_IN 상태", "마이페이지(true) / 로그인(false) : " + LOGIN_IN);
+        Log.i("Preference : LOGIN_IN", "마이페이지(true) / 로그인(false) : " + sharedPreferences.getBoolean(LOGIN_IN, false));
         return sharedPreferences.getBoolean(LOGIN_IN, false);   // LOGIN_ID 키로 저장된 로그인 상태 조회
     }
 
     // 저장된 로그인 정보 가져오기
-    public static Map<String, String> getLoginInfo(Context context){
+    public static String getLoginId(Context context){
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        Map<String, String> LoginInfo = new HashMap<>();
         String id = preferences.getString("id", "");    // id키가 없으면 문자열"" 반환
-        String password = preferences.getString("password", "");
-
-        LoginInfo.put("id", id);
-        LoginInfo.put("password", password);
-
-        return LoginInfo;
+        Log.i("Preference, getLoginId", "저장된 로그인 정보 가져오기 : " + id);
+        return id;
     }
 
     // 로그아웃 처리 (모든 데이터 초기화)
@@ -60,6 +47,7 @@ public class PreferenceHelper {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();     // 데이터 삭제
         editor.apply();
+        Log.d("Preference : 로그아웃", "사용자 로그아웃 성공");
     }
 
 }
