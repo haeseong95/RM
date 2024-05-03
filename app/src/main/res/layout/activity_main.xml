@@ -11,214 +11,302 @@
 
     <!--검색창, 카메라 레이아웃-->
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar"
         android:layout_width="match_parent"
-        android:layout_height="70sp"
-        android:background="#5DB075"
-        app:contentInsetStart="0sp">
+        android:layout_height="65dp"
+        android:background="@color/main_color_green"
+        app:contentInsetStart="0dp">
 
         <!--RM 로고-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
+            android:layout_marginLeft="20dp"
             android:text="RM"
             android:textColor="@color/white"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:paddingTop="5sp"
+            android:textSize="30dp"
+            android:fontFamily="@font/g_regular"
+            android:textStyle="bold"/>
 
-
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/main_alarm"
+            android:layout_gravity="right"
+            android:layout_marginRight="20dp"/>
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20sp"
-        android:layout_marginTop="30sp"
-        android:layout_marginBottom="50sp">
+        android:layout_height="0dp"
+        android:scrollbars="none"
+        android:layout_weight="1">
 
-        <!--검색창-->
         <LinearLayout
-            android:id="@+id/li_search"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/border_camera">
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="40dp">
+
+                <!--검색창-->
+                <LinearLayout
+                    android:id="@+id/li_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/border_camera">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:text="검색어를 입력하세요"
+                        android:textSize="15dp"
+                        android:textColor="#A0A0A0"
+                        android:fontFamily="@font/g_light"
+                        android:paddingTop="15dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="180dp"/>
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/search_icon"/>
+                </LinearLayout>
+
+                <!--카메라-->
+                <LinearLayout
+                    android:id="@+id/li_camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/border_camera"
+                    android:layout_marginLeft="10dp">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/main_camera"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="7dp"
+                        android:layout_marginTop="7dp" />
+                </LinearLayout>
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="50sp"
-                android:text="검색어를 입력하세요"
-                android:textSize="15sp"
-                android:textColor="#A0A0A0"
-                android:paddingTop="13sp"
-                android:paddingLeft="15sp"
-                android:paddingRight="180sp"/>
+                android:layout_height="wrap_content"
+                android:text="일반 생활 쓰레기"
+                android:textSize="15dp"
+                android:textColor="#000000"
+                android:layout_marginLeft="25dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/g_light"/>
 
-            <ImageView
-                android:layout_width="35sp"
-                android:layout_height="35sp"
-                android:layout_gravity="center"
-                android:layout_marginRight="10sp"
-                android:src="@drawable/search_icon"/>
+            <!--일반 생활 쓰레기-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp">
+
+                <!--1열-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/btn_can"
+                        android:background="@drawable/border_category" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_can" style="@style/category_image"/>
+                        <TextView android:text="고철류" style="@style/category_text"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_plastic_bag"
+                        android:background="@drawable/border_category" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_plastic_bag" style="@style/category_image"/>
+                        <TextView android:text="비닐류" style="@style/category_text"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--2열-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/btn_glass"
+                        style="@style/category_layout"
+                        android:background="@drawable/border_category">
+
+                        <ImageView
+                            style="@style/category_image"
+                            android:src="@drawable/cat_glass" />
+
+                        <TextView
+                            style="@style/category_text"
+                            android:text="유리" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_clothes"
+                        android:background="@drawable/border_category" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_clothes" style="@style/category_image"/>
+                        <TextView android:text="의류" style="@style/category_text"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!--3열-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/btn_paper"
+                        android:background="@drawable/border_category" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_paper" style="@style/category_image"/>
+                        <TextView android:text="종이류" style="@style/category_text"/>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/btn_plastic"
+                        android:background="@drawable/border_category" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_plastic" style="@style/category_image"/>
+                        <TextView android:text="플라스틱류" style="@style/category_text"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="25sp"
+                android:fontFamily="@font/g_light"
+                android:text="특수 쓰레기"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+            <!--특수 쓰레기-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp">
+                <!--1열-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/btn_couch"
+                        android:background="@drawable/border_category" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_couch" style="@style/category_image"/>
+                        <TextView android:text="대형폐기물" style="@style/category_text"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_res"
+                        android:background="@drawable/border_category" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_res" style="@style/category_image"/>
+                        <TextView android:text="폐가전제품" style="@style/category_text"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="유해 및 생분해성 쓰레기"
+                android:textSize="15dp"
+                android:textColor="#000000"
+                android:layout_marginLeft="25dp"
+                android:textStyle="bold"
+                android:layout_marginTop="25sp"
+                android:fontFamily="@font/g_light"/>
+
+            <!--유해 및 생분해성 쓰레기-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp">
+                <!--1열-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/btn_battery"
+                        android:background="@drawable/border_category" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_battery" style="@style/category_image"/>
+                        <TextView android:text="생활유해폐기물" style="@style/category_text"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_stink"
+                        android:background="@drawable/border_category" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_stink" style="@style/category_image"/>
+                        <TextView android:text="음식물쓰레기" style="@style/category_text"/>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
-
-        <!--카메라-->
-        <LinearLayout
-            android:id="@+id/li_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/border_camera"
-            android:layout_marginLeft="10sp">
-
-            <ImageView
-                android:layout_width="35sp"
-                android:layout_height="35sp"
-                android:layout_gravity="center"
-                android:src="@drawable/main_camera"
-                android:layout_marginLeft="10sp"
-                android:layout_marginRight="10sp"
-                android:layout_marginBottom="7sp"
-                android:layout_marginTop="7sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <!--전체 페이지-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginRight="20sp"
-        android:layout_marginLeft="20sp">
-
-        <!--1열 : 고철류, 대형폐기물-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/btn_can"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                    <ImageView android:src="@drawable/cat_can" style="@style/category_image"/>
-                    <TextView android:text="고철류" style="@style/category_text"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btn_couch"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                    <ImageView android:src="@drawable/cat_couch" style="@style/category_image"/>
-                    <TextView android:text="대형폐기물" style="@style/category_text"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <!--2열 : 비닐류, 생활유혜폐기물-->
-        <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/btn_plastic_bag"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                    <ImageView android:src="@drawable/cat_plastic_bag" style="@style/category_image"/>
-                    <TextView android:text="비닐류" style="@style/category_text"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btn_battery"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                    <ImageView android:src="@drawable/cat_battery" style="@style/category_image"/>
-                    <TextView android:text="생활유해폐기물" style="@style/category_text"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <!--3열 : 음식물 쓰레기, 유리병-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/btn_stink"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                <ImageView android:src="@drawable/cat_stink" style="@style/category_image"/>
-                <TextView android:text="음식물쓰레기" style="@style/category_text"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btn_glass"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                <ImageView android:src="@drawable/cat_glass" style="@style/category_image"/>
-                <TextView android:text="유리병" style="@style/category_text"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <!--4열 : 의류, 종이류 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/btn_clothes"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                <ImageView android:src="@drawable/cat_clothes" style="@style/category_image"/>
-                <TextView android:text="의류" style="@style/category_text"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btn_paper"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                <ImageView android:src="@drawable/cat_paper" style="@style/category_image"/>
-                <TextView android:text="종이류" style="@style/category_text"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <!--5열 : 플라스틱류, 폐가전제품-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/btn_plastic"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                <ImageView android:src="@drawable/cat_plastic" style="@style/category_image"/>
-                <TextView android:text="플라스틱류" style="@style/category_text"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btn_res"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                <ImageView android:src="@drawable/cat_res" style="@style/category_image"/>
-                <TextView android:text="폐가전제품" style="@style/category_text"/>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
+    </ScrollView>
 
     <!--하단 툴바 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="5sp">
+            android:layout_marginBottom="5dp">
 
             <Button
                 android:id="@+id/main_map"
+                style="@style/toolbar_icon"
                 android:drawableTop="@drawable/main_map"
-                android:text="분리수거장" style="@style/toolbar_icon"/>
+                android:fontFamily="@font/g_light"
+                android:textStyle="bold"
+                android:text="분리수거장" />
 
             <Button
                 android:id="@+id/main_community"
+                style="@style/toolbar_icon"
+                android:fontFamily="@font/g_light"
+                android:textStyle="bold"
                 android:drawableTop="@drawable/main_community"
-                android:text="커뮤니티" style="@style/toolbar_icon"/>
+                android:text="커뮤니티" />
 
             <Button
                 android:id="@+id/main_userinfo"
+                style="@style/toolbar_icon"
+                android:fontFamily="@font/g_light"
+                android:textStyle="bold"
                 android:drawableTop="@drawable/main_profile"
-                android:text="로그인" style="@style/toolbar_icon"/>
+                android:text="로그인" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

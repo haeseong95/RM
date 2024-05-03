@@ -9,10 +9,10 @@
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
-        app:contentInsetStart="0sp"
+        app:contentInsetStart="0dp"
         android:layout_width="match_parent"
-        android:layout_height="80sp"
-        android:background="@android:color/transparent">
+        android:layout_height="65dp"
+        android:backgroundTint="@android:color/transparent">
 
         <ImageView
             android:id="@+id/btn_back"
@@ -24,7 +24,7 @@
     <EditText
         android:id="@+id/edit_email"
         android:layout_gravity="center"
-        android:layout_marginTop="30sp"
+        android:layout_marginTop="30dp"
         android:inputType="textEmailAddress"
         android:hint="이메일을 입력하세요" style="@style/editText_style"/>
 
@@ -34,21 +34,22 @@
 
     <LinearLayout
         android:id="@+id/li_io"
-        android:layout_width="400sp"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="#E2E2E2"
+        android:visibility="invisible"
         android:orientation="vertical"
-        android:layout_marginTop="150sp"
-        android:visibility="invisible">
+        android:layout_marginTop="150dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="검색 결과 아이디는 아래와 같습니다."
-            android:textSize="20sp"
+            android:textSize="20dp"
             android:layout_gravity="center"
-            android:layout_marginTop="50sp"
-            android:layout_marginBottom="40sp"/>
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="40dp"
+            android:fontFamily="@font/g_regular"/>
 
         <TextView
             android:id="@+id/find_id"
@@ -56,9 +57,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="아이디"
-            android:textSize="20sp"
+            android:textSize="20dp"
             android:gravity="center"
-            android:layout_marginBottom="50sp"
+            android:fontFamily="@font/g_regular"
+            android:layout_marginBottom="50dp"
             android:textStyle="bold"/>
     </LinearLayout>
 
@@ -70,7 +72,7 @@
         android:visibility="invisible">
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="70sp"
+            android:layout_height="70dp"
             android:layout_weight="1.8"
             android:layout_gravity="bottom"
             android:background="#ced4da">
@@ -85,12 +87,13 @@
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"
                 android:textColor="#4C4C4C"
-                android:textSize="20sp" />
+                android:fontFamily="@font/g_regular"
+                android:textSize="20dp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="70sp"
+            android:layout_height="70dp"
             android:layout_weight="1"
             android:layout_gravity="bottom"
             android:background="@color/main_color_green">
@@ -103,8 +106,9 @@
                 android:layout_gravity="center_vertical"
                 android:text="비밀번호 찾기"
                 android:textStyle="bold"
+                android:fontFamily="@font/g_regular"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp"/>
+                android:textSize="20dp"/>
         </LinearLayout>
     </LinearLayout>
 

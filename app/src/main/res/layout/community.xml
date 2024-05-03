@@ -9,9 +9,9 @@
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
-        app:contentInsetStart="0sp"
+        app:contentInsetStart="0dp"
         android:layout_width="match_parent"
-        android:layout_height="80sp"
+        android:layout_height="65dp"
         android:background="@android:color/transparent">
 
         <ImageView
@@ -20,10 +20,5 @@
 
         <TextView android:id="@+id/category_title" android:text="커뮤니티" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/category_gray" />
 
 </LinearLayout>

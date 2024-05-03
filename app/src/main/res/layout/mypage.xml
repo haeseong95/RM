@@ -9,9 +9,9 @@
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
-        app:contentInsetStart="0sp"
+        app:contentInsetStart="0dp"
         android:layout_width="match_parent"
-        android:layout_height="80sp"
+        android:layout_height="65dp"
         android:background="@android:color/transparent">
 
         <ImageView
@@ -26,12 +26,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:layout_marginTop="50sp">
+        android:layout_marginTop="50dp">
 
         <ImageView
             android:id="@+id/user_image"
-            android:layout_width="180sp"
-            android:layout_height="180sp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:src="@drawable/mypage_user"/>
 
         <TextView
@@ -39,45 +39,44 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="닉네임"
-            android:textSize="30sp" />
+            android:fontFamily="@font/g_regular"
+            android:textSize="25dp"/>
 
         <TextView
             android:id="@+id/user_level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="등급"
-            android:textSize="20sp"/>
+            android:layout_marginTop="5dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/g_light"
+            android:textSize="20dp"/>
 
     </LinearLayout>
 
     <View
-        android:layout_width="430sp"
+        android:layout_width="430dp"
         android:layout_height="1dp"
         android:layout_gravity="center"
         android:background="@color/category_gray"
-        android:layout_marginTop="50sp"
-        android:layout_marginBottom="20sp"/>
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="20dp"/>
 
 
     <LinearLayout
         android:id="@+id/li_user"
         android:layout_width="match_parent"
-        android:layout_height="50sp"
-        android:layout_marginBottom="30sp">
+        android:layout_height="50dp"
+        android:layout_marginBottom="30dp">
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="내 정보 설정"
-            android:paddingLeft="40sp"
-            android:layout_gravity="center"
-            android:layout_weight="4"
-            android:textSize="20sp"/>
+            style="@style/mypage_button"/>
 
         <ImageView
-            android:layout_width="30sp"
-            android:layout_height="30sp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_weight="1"
-            android:layout_marginRight="30sp"
+            android:layout_marginRight="40dp"
             android:layout_gravity="center"
             android:src="@drawable/mypage_button"/>
     </LinearLayout>
@@ -85,22 +84,17 @@
     <LinearLayout
         android:id="@+id/li_community"
         android:layout_width="match_parent"
-        android:layout_height="50sp"
-        android:layout_marginBottom="30sp">
+        android:layout_height="50dp"
+        android:layout_marginBottom="30dp">
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="커뮤니티 관리하기"
-            android:paddingLeft="40sp"
-            android:layout_gravity="center"
-            android:layout_weight="4"
-            android:textSize="20sp"/>
+            android:text="게시글/댓글 관리하기"
+            style="@style/mypage_button"/>
 
         <ImageView
-            android:layout_width="30sp"
-            android:layout_height="30sp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_weight="1"
-            android:layout_marginRight="30sp"
+            android:layout_marginRight="40dp"
             android:layout_gravity="center"
             android:src="@drawable/mypage_button"/>
     </LinearLayout>
@@ -108,27 +102,20 @@
     <LinearLayout
         android:id="@+id/li_delete"
         android:layout_width="match_parent"
-        android:layout_height="50sp"
-        android:layout_marginBottom="30sp">
+        android:layout_height="50dp"
+        android:layout_marginBottom="30dp">
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="탈퇴하기"
-            android:paddingLeft="40sp"
-            android:layout_gravity="center"
-            android:layout_weight="4"
-            android:textSize="20sp"/>
+            style="@style/mypage_button"/>
 
         <ImageView
-            android:layout_width="30sp"
-            android:layout_height="30sp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_weight="1"
-            android:layout_marginRight="30sp"
+            android:layout_marginRight="40dp"
             android:layout_gravity="center"
             android:src="@drawable/mypage_button"/>
     </LinearLayout>
-
-
 
     <!--로그아웃-->
     <Button
@@ -136,15 +123,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="200sp"
+        android:layout_marginTop="220dp"
         android:backgroundTint="@android:color/transparent"
         android:gravity="center"
+        android:fontFamily="@font/nanum_regular"
         android:text="로그아웃"
         android:textAlignment="center"
         android:textColor="#858585"
-        android:textSize="20sp" />
-
-
-
+        android:textSize="20dp" />
 
 </LinearLayout>

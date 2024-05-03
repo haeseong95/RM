@@ -9,9 +9,9 @@
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
-        app:contentInsetStart="0sp"
+        app:contentInsetStart="0dp"
         android:layout_width="match_parent"
-        android:layout_height="80sp"
+        android:layout_height="70dp"
         android:background="@android:color/transparent">
 
         <ImageView
@@ -29,10 +29,10 @@
     <TextView
         android:id="@+id/trash_info"
         android:layout_width="match_parent"
-        android:layout_height="700sp"
+        android:layout_height="700dp"
         android:text="분리수거 방법 안내"
-        android:layout_margin="30sp"
-        android:paddingBottom="30sp"/>
+        android:layout_margin="30dp"
+        android:paddingBottom="30dp"/>
 
     <ListView
         android:id="@+id/category_listview"

@@ -20,9 +20,9 @@ import java.util.Map;
 public class SearchPwd extends AppCompatActivity {
 
     String inputUserId, inputUserEmail = null;
-
+    TextView tempPw;
     ImageView btnBack;     // 뒤로가기
-    EditText editId, findPw;    // 아이디, 이메일 입력
+    EditText editId;    // 아이디, 이메일 입력
     Button btnSearchPwd, goLogin;   // 비밀번호 찾기 버튼
     LinearLayout layout, layout2;
     SqliteHelper sqliteHelper;
@@ -35,7 +35,7 @@ public class SearchPwd extends AppCompatActivity {
 
         btnBack = (ImageView) findViewById(R.id.btn_back);
         editId = (EditText)findViewById(R.id.se_id);
-        findPw = (TextView)findViewById(R.id.findpw);
+        tempPw = (TextView)findViewById(R.id.temp_pw);
         btnSearchPwd = (Button)findViewById(R.id.btn_search_pwd);
         layout = findViewById(R.id.li_i);
         layout2 = findViewById(R.id.li_login);
@@ -56,7 +56,7 @@ public class SearchPwd extends AppCompatActivity {
         btnSearchPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SearchPwd.this);
+
                 inputUserId = editId.getText().toString();
 
                 Map<String, String> userInfo = sqliteHelper.getUserInfo(inputUserId);
@@ -65,7 +65,7 @@ public class SearchPwd extends AppCompatActivity {
 
                 String password = userInfo.get("password");
                 Log.i("SearchPwd", "아이디 입력 후 가져온 비밀번호 : " + password);
-                findPw.setText(password);
+                tempPw.setText(password);
 
                 editId.setVisibility(View.INVISIBLE);
                 btnSearchPwd.setVisibility(View.INVISIBLE);

@@ -31,18 +31,19 @@
                 android:paddingLeft="65dp"
                 android:paddingRight="65dp"
                 android:singleLine="true"
+                android:fontFamily="@font/g_regular"
                 android:textColor="#212121"
                 android:textColorHint="#727272"
-                android:textSize="16sp"/>
+                android:textSize="16dp"/>
 
             <!--뒤로 가기 버튼-->
             <ImageButton
                 android:id="@+id/btn_back"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:background="@android:color/transparent"
+                android:backgroundTint="@android:color/transparent"
                 android:layout_centerVertical="true"
-                android:paddingLeft="10sp"
+                android:paddingLeft="10dp"
                 android:src="@drawable/left_button"/>
 
             <!--입력 취소 버튼-->
@@ -50,9 +51,9 @@
                 android:id="@+id/btn_edit_close"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:background="@android:color/transparent"
+                android:backgroundTint="@android:color/transparent"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10sp"
+                android:layout_marginRight="10dp"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/search_close"
                 android:visibility="gone"/>

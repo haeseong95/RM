@@ -9,11 +9,11 @@
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
-        app:contentInsetStart="0sp"
+        app:contentInsetStart="0dp"
         android:layout_width="match_parent"
-        android:layout_height="80sp"
-        android:background="@android:color/transparent"
-        android:layout_marginBottom="130sp">
+        android:layout_height="65dp"
+        android:backgroundTint="@android:color/transparent"
+        android:layout_marginBottom="130dp">
 
         <ImageView
             android:id="@+id/btn_back"
@@ -46,8 +46,9 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#BFBFBF"
                 android:text="확인"
+                android:fontFamily="@font/nanum_regular"
                 android:textColor="@color/black"
-                android:layout_marginLeft="20sp"/>
+                android:layout_marginLeft="20dp"/>
         </LinearLayout>
 
         <!--아이디-->
@@ -66,9 +67,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#BFBFBF"
+                android:fontFamily="@font/nanum_regular"
                 android:text="확인"
                 android:textColor="@color/black"
-                android:layout_marginLeft="20sp"/>
+                android:layout_marginLeft="20dp"/>
         </LinearLayout>
 
         <!--비밀번호-->
@@ -91,5 +93,6 @@
     <!--회원가입 버튼-->
     <Button
         android:id="@+id/btn_sign_up"
-        android:text="회원가입" style="@style/button_style" />
+        style="@style/button_style"
+        android:text="회원가입" />
 </LinearLayout>
