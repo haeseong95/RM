@@ -44,7 +44,7 @@
                 android:backgroundTint="@android:color/transparent"
                 android:layout_centerVertical="true"
                 android:paddingLeft="10dp"
-                android:src="@drawable/left_button"/>
+                android:src="@drawable/btn_left"/>
 
             <!--입력 취소 버튼-->
             <ImageButton

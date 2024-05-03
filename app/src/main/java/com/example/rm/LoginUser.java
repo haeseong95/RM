@@ -70,16 +70,20 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
                         PreferenceHelper.setLoginState(this, true, userId);        // 로그인 성공 시 true 값 저장 + 로그인 시 입력한 아이디 저장
 
+                        Log.i("LoginUser.로그인 성공", "아이디: " + userId + ", 비번: " + userPw );
                         Toast.makeText(this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
+
                         Intent i = new Intent(this, MainActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(i);
                     }
                     else {
+                        Log.e("LoginUser.로그인 실패", "잘못된 비밀번호 : " + userPw);
                         Toast.makeText(this, "잘못된 비밀번호입니다.", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
+                    Log.e("LoginUser.로그인 실패", "잘못된 아이디 : " + userId);
                     Toast.makeText(this, "잘못된 아이디입니다.", Toast.LENGTH_SHORT).show();
                 }
             }

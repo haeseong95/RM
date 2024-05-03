@@ -16,7 +16,7 @@
 
         <ImageView
             android:id="@+id/btn_back"
-            android:src="@drawable/left_button" style="@style/back_icon"/>
+            android:src="@drawable/btn_left" style="@style/back_icon"/>
 
         <TextView android:id="@+id/category_title" android:text="커뮤니티" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>

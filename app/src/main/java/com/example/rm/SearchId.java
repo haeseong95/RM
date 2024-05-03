@@ -68,7 +68,7 @@ public class SearchId extends AppCompatActivity{
 
                     if(id == null){
                         builder.setTitle("아이디 찾기");
-                        builder.setMessage("해당하는 사용자를 찾을 수 없습니다.");
+                        builder.setMessage("해당하는 이메일을 찾을 수 없습니다.");
                         builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();

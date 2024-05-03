@@ -16,7 +16,7 @@
 
         <ImageView
             android:id="@+id/btn_back"
-            android:src="@drawable/left_button" style="@style/back_icon"/>
+            android:src="@drawable/btn_left" style="@style/back_icon"/>
 
         <TextView android:id="@+id/category_title" android:text="마이페이지" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
@@ -30,8 +30,8 @@
 
         <ImageView
             android:id="@+id/user_image"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
             android:src="@drawable/mypage_user"/>
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="닉네임"
             android:fontFamily="@font/g_regular"
-            android:textSize="25dp"/>
+            android:textSize="30dp"/>
 
         <TextView
             android:id="@+id/user_level"
@@ -67,69 +67,68 @@
         android:id="@+id/li_user"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="20dp">
         <TextView
-            android:text="내 정보 설정"
+            android:text="내 정보"
             style="@style/mypage_button"/>
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_weight="1"
-            android:layout_marginRight="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="30dp"
             android:layout_gravity="center"
-            android:src="@drawable/mypage_button"/>
+            android:src="@drawable/btn_right"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/li_community"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="20dp">
         <TextView
             android:text="게시글/댓글 관리하기"
             style="@style/mypage_button"/>
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_weight="1"
-            android:layout_marginRight="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="30dp"
             android:layout_gravity="center"
-            android:src="@drawable/mypage_button"/>
+            android:src="@drawable/btn_right"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btn_logout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:text="로그아웃"
+            style="@style/mypage_button"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_right"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/li_delete"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="20dp">
         <TextView
             android:text="탈퇴하기"
             style="@style/mypage_button"/>
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_weight="1"
-            android:layout_marginRight="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="30dp"
             android:layout_gravity="center"
-            android:src="@drawable/mypage_button"/>
+            android:src="@drawable/btn_right"/>
     </LinearLayout>
-
-    <!--로그아웃-->
-    <Button
-        android:id="@+id/btn_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="220dp"
-        android:backgroundTint="@android:color/transparent"
-        android:gravity="center"
-        android:fontFamily="@font/nanum_regular"
-        android:text="로그아웃"
-        android:textAlignment="center"
-        android:textColor="#858585"
-        android:textSize="20dp" />
 
 </LinearLayout>

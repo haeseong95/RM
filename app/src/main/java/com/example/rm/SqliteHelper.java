@@ -117,7 +117,6 @@ public class SqliteHelper extends SQLiteOpenHelper {
     public static final String SQL_SELECT_USER = "SELECT * FROM user";
 
 
-
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "SQLite.db";  // DB 파일 이름
 
@@ -155,12 +154,14 @@ public class SqliteHelper extends SQLiteOpenHelper {
         long result = sqLiteDatabase.insert("user", null, values);
         if (result == -1) {
             // 추가 실패
-            Log.e("sqliteHelper : user 테이블", "회원정보 추가 실패");
+            Log.e("sqliteHelper.insertData", "회원정보 추가 실패");
+            sqLiteDatabase.close();
             return false;
         }
         else {
             // 추가 성공
-            Log.i("sqliteHelper : user 테이블", "회원정보 추가 성공, 아이디 : " + id + ", 비밀번호: " + password + ", 닉네임: " + nickname + ", 이메일: " + email);
+            Log.i("sqliteHelper.insertData", "user 테이블에 회원정보 추가 성공, 아이디 : " + id + ", 비밀번호: " + password + ", 닉네임: " + nickname + ", 이메일: " + email);
+            sqLiteDatabase.close();
             return true;
         }
     }
@@ -171,8 +172,16 @@ public class SqliteHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from user where u_id=?", new String[]{id});    // SQL 쿼리 결과 출력
 
-        if(cursor.getCount() > 0){return true;}
-        else return false;
+        if(cursor.getCount() > 0){
+            sqLiteDatabase.close();
+            cursor.close();
+            return true;
+        }
+        else {
+            sqLiteDatabase.close();
+            cursor.close();
+            return false;
+        }
     }
 
     // 닉네임 중복 확인
@@ -180,19 +189,32 @@ public class SqliteHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from user where u_nickname=?", new String[]{nickname});
 
-        if(cursor.getCount() > 0){return true;}
-        else return false;
+        if(cursor.getCount() > 0){
+            sqLiteDatabase.close();
+            cursor.close();
+            return true;
+        }
+        else {
+            sqLiteDatabase.close();
+            cursor.close();
+            return false;
+        }
     }
 
     // 사용자 아아디, 비밀번호가 맞는지 검사
     public Boolean checkIdPassword(String id, String password) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from user where u_id=? and u_pw=?", new String[] {id, password});
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("select * from user where u_id=? and u_pw=?", new String[] {id, password});
 
-        if (cursor.getCount()>0)
+        if (cursor.getCount()>0) {
+            sqLiteDatabase.close();
+            cursor.close();
             return true;
-        else
+        } else {
+            sqLiteDatabase.close();
+            cursor.close();
             return false;
+        }
     }
 
     // 이메일을 이용해 아이디 찾기
@@ -202,12 +224,38 @@ public class SqliteHelper extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             @SuppressLint("Range") String id = cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID));
+            sqLiteDatabase.close();
             cursor.close();
             return id;
         }else {
+            sqLiteDatabase.close();
             cursor.close();
             return null;
         }
+    }
+
+    // 비밀번호 찾기 시 기존 비번 삭제
+    public void deletePassword(String id){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("update user set u_pw=NULL where u_id=?", new String[]{id});
+
+        cursor.moveToFirst();
+        @SuppressLint("Range") String con = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PW));
+        Log.i("Sqlite.deletePw", "비번 찾기를 위해 기존 비번 삭제 (null값 정상) : " +  con);
+        sqLiteDatabase.close();
+        cursor.close();
+    }
+
+    // 임시 비번 저장
+    public void updatePassword(String id, String tempPw){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("update user set u_pw=? where u_id=?", new String[]{tempPw, id});
+
+        cursor.moveToFirst();
+        @SuppressLint("Range") String con = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PW));
+        Log.i("Sqlite.updatePw", "임시 비번 저장 (해시값임) : " +  con);
+        sqLiteDatabase.close();
+        cursor.close();
     }
 
     // 아이디를 기반으로 사용자의 닉네임과 등급 가져오기
@@ -223,7 +271,7 @@ public class SqliteHelper extends SQLiteOpenHelper {
             userInfo.put("nickname", nickname);
             userInfo.put("level", level);
 
-            Log.d("Sqlite, getUserInfo", "저장된 로그인 정보 가져오기      닉네임: " + nickname + ", 등급: " + level);
+            Log.i("Sqlite.getUserInfo", "저장된 로그인 정보 가져오기      닉네임: " + nickname + ", 등급: " + level);
         }
 
         // 리소스 해제

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,24 +17,14 @@ import java.util.Map;
 
 public class Mypage extends AppCompatActivity implements View.OnClickListener{
 
-    Button btnLogout;
-    ImageView btnBack;
     TextView userNickname, userLevel;
     SqliteHelper sqliteHelper;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mypage);
 
-        btnBack = findViewById(R.id.btn_back);
-        btnLogout = findViewById(R.id.btn_logout);
-        userNickname = findViewById(R.id.user_nickname);
-        userLevel = findViewById(R.id.user_level);
-
-        btnBack.setOnClickListener(this);
-        btnLogout.setOnClickListener(this);
         sqliteHelper = new SqliteHelper(this);
 
         displayLoginInfo();
@@ -42,10 +33,11 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
         switch (v.getId()){
-            case R.id.btn_back: finish(); break;
-            case R.id.btn_logout:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            case R.id.btn_back: finish(); break;    // 뒤로 가기
+            case R.id.btn_logout:   // 로그아웃
                 builder.setTitle("로그아웃");
                 builder.setMessage("로그아웃 하시겠습니까?");
 
@@ -69,7 +61,26 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 break;
+            case R.id.li_delete:    // 탈퇴하기
+                builder.setTitle("탈퇴");
+                builder.setMessage("로그아웃 하시겠습니까?");
+
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PreferenceHelper.logout();
+                        Intent i = new Intent(Mypage.this, MainActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(i);
+                    }
+                });
+
+                break;
             default: throw new IllegalStateException("Unexpected value: " + v.getId());
+
+
+
+
         }
     }
 

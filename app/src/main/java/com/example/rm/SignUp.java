@@ -3,8 +3,6 @@ package com.example.rm;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -14,7 +12,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.regex.Pattern;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class SignUp extends AppCompatActivity {
 
@@ -90,15 +91,17 @@ public class SignUp extends AppCompatActivity {
                     return;
                 }
 
-                Boolean insert = sqliteHelper.insertData(userId, userPwd, userEmail, userName);
+                String hashPwd = getSHA(userPwd);    // sha로 암호화된 비밀번호
+                Boolean insert = sqliteHelper.insertData(userId, hashPwd, userEmail, userName);
+
                 // 회원가입 성공
                 if (insert){
                     Toast.makeText(SignUp.this, "회원가입에 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                    Log.i("SignUp : 회원가입 성공", "userId: " + userId + ", userPwd: " + userPwd + ", userName: " + userName + ", userEmail: " + userEmail);
+                    Log.i("SignUp : 회원가입 성공", "아이디: " + userId + ", 해시된 비번: " + hashPwd + ", 닉네임: " + userName + ", 이메일: " + userEmail);
                     finish();
                 } else {
                     Toast.makeText(SignUp.this, "회원가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                    Log.e("SignUp : 회원가입 실패", "userId: " + userId + ", userPwd: " + userPwd + ", userName: " + userName + ", userEmail: " + userEmail);
+                    Log.e("SignUp : 회원가입 실패", "아이디: " + userId + ", 해시된 비번: " + hashPwd + ", 닉네임: " + userName + ", 이메일: " + userEmail);
                 }
             }
         });
@@ -117,8 +120,23 @@ public class SignUp extends AppCompatActivity {
         alertDialog.show();
     }
 
+    // 비밀번호 -> 해시값 저장
+    public static String getSHA(String password) {
+        try {
+            StringBuilder stringBuilder = new StringBuilder();      // 해시값을 16진수의 문자열로 변환
+            MessageDigest md = MessageDigest.getInstance("SHA-256");    // SHA-256 알고리즘 사용
 
+            byte[] encodehash = md.digest(password.getBytes(StandardCharsets.UTF_8));       // 해싱에 사용할 비밀번호 -> byte로 변환 후 해시 함수에 추가해 해시 계산함 (utf-8로 문자열 -> byte 변환), digest 호출하면 reset() 필요없이 자동 리셋되므로 필요없음
+            for (int i = 0; i<encodehash.length; i++){
+                String hex = Integer.toHexString(0xff & encodehash[i]);     // 각 바이트 -> 16진수 문자열로 변환
 
+                if(hex.length() == 1) {stringBuilder.append('0');}  // 문자열 조립 시 hex가 단일 문자(1)일 때 0 저장
+                stringBuilder.append(hex);
+            }
+            return stringBuilder.toString();
+
+        } catch (NoSuchAlgorithmException e) {throw new RuntimeException(e);}
+    }
 
 
 

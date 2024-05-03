@@ -16,7 +16,7 @@
 
         <ImageView
             android:id="@+id/btn_back"
-            android:src="@drawable/left_button" style="@style/back_icon"/>
+            android:src="@drawable/btn_left" style="@style/back_icon"/>
 
         <TextView android:text="아이디 찾기" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>

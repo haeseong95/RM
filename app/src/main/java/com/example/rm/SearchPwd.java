@@ -15,11 +15,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.security.SecureRandom;
 import java.util.Map;
 
 public class SearchPwd extends AppCompatActivity {
 
-    String inputUserId, inputUserEmail = null;
+    String inputUserId = null;
     TextView tempPw;
     ImageView btnBack;     // 뒤로가기
     EditText editId;    // 아이디, 이메일 입력
@@ -42,7 +43,6 @@ public class SearchPwd extends AppCompatActivity {
         goLogin = findViewById(R.id.go_login);
         sqliteHelper = new SqliteHelper(SearchPwd.this);
 
-        // 뒤로 가기 버튼
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,25 +52,38 @@ public class SearchPwd extends AppCompatActivity {
             }
         });
 
-        // 비밀번호 찾기 버튼 클릭 시
+        // 비밀번호 찾기 버튼 클릭
         btnSearchPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(SearchPwd.this);
                 inputUserId = editId.getText().toString();
 
-                Map<String, String> userInfo = sqliteHelper.getUserInfo(inputUserId);
+                // 입력한 아이디가 존재X
+                if (!sqliteHelper.checkId(inputUserId)) {
+                    builder.setTitle("비밀번호 찾기");
+                    builder.setMessage("해당하는 아이디를 찾을 수 없습니다.");
+                    builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+                // 아이디의 기존 비번 삭제 후 임시 비번 저장
+                else {
+                    String getTempPw = getTempPassword();       // 임시 비번 지정
+                    tempPw.setText(getTempPw);
+                    Log.i("SearchPwd", "사용자에게 제공되는 임시 비번 : " + getTempPw);
 
-                RamdomPw();
+                    String hashpwd = SignUp.getSHA(getTempPw);
+                    Log.i("SearchPwd", "임시 비번 암호화 된 해시값 : " + hashpwd);
+                    sqliteHelper.updatePassword(inputUserId, hashpwd);        // 임시 비번 저장
 
-                String password = userInfo.get("password");
-                Log.i("SearchPwd", "아이디 입력 후 가져온 비밀번호 : " + password);
-                tempPw.setText(password);
-
-                editId.setVisibility(View.INVISIBLE);
-                btnSearchPwd.setVisibility(View.INVISIBLE);
-                layout.setVisibility(View.VISIBLE);
-                layout2.setVisibility(View.VISIBLE);
+                    tempPw.setText(getTempPw);
+                    editId.setVisibility(View.INVISIBLE);
+                    btnSearchPwd.setVisibility(View.INVISIBLE);
+                    layout.setVisibility(View.VISIBLE);
+                    layout2.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -85,9 +98,19 @@ public class SearchPwd extends AppCompatActivity {
 
     }
 
-    // 기존 비번 삭제 후 임시 비밀번호 생성 후 제공
-    public void RamdomPw(){
+    // 임시 비밀번호 생성
+    public static String getTempPassword(){
+        String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
 
+        for (int i = 0; i < 8; i++) {
+            int index = random.nextInt(str.length());
+            sb.append(str.charAt(index));
+        }
+        return sb.toString();
     }
+
+
 
 }

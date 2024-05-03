@@ -59,15 +59,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
-
     // 앱이 다시 활성화 될 때 로그인 상태에세 따라 로그인/메인페이지 텍스트 갱신
     @Override
     protected void onResume() {
         super.onResume();
 
         if(PreferenceHelper.getLoginState()){   // true(마이페이지), false(로그인)
-            mainUserinfo.setText("마이페이지");
+            mainUserinfo.setText("마이");
         }
         else {
             mainUserinfo.setText("로그인");
