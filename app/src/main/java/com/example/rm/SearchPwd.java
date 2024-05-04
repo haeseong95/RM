@@ -100,11 +100,11 @@ public class SearchPwd extends AppCompatActivity {
 
     // 임시 비밀번호 생성
     public static String getTempPassword(){
-        String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+        String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!";
         SecureRandom random = new SecureRandom();
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 6; i++) {
             int index = random.nextInt(str.length());
             sb.append(str.charAt(index));
         }

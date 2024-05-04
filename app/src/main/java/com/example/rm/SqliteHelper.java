@@ -234,28 +234,13 @@ public class SqliteHelper extends SQLiteOpenHelper {
         }
     }
 
-    // 비밀번호 찾기 시 기존 비번 삭제
-    public void deletePassword(String id){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery("update user set u_pw=NULL where u_id=?", new String[]{id});
-
-        cursor.moveToFirst();
-        @SuppressLint("Range") String con = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PW));
-        Log.i("Sqlite.deletePw", "비번 찾기를 위해 기존 비번 삭제 (null값 정상) : " +  con);
-        sqLiteDatabase.close();
-        cursor.close();
-    }
-
     // 임시 비번 저장
     public void updatePassword(String id, String tempPw){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery("update user set u_pw=? where u_id=?", new String[]{tempPw, id});
+        sqLiteDatabase.execSQL("update user set u_pw=? where u_id=?", new String[]{tempPw, id});
 
-        cursor.moveToFirst();
-        @SuppressLint("Range") String con = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PW));
-        Log.i("Sqlite.updatePw", "임시 비번 저장 (해시값임) : " +  con);
+        Log.i("Sqlite.updatePw", "임시 비번 해시값 user 테이블에 저장됨 : " +  tempPw);
         sqLiteDatabase.close();
-        cursor.close();
     }
 
     // 아이디를 기반으로 사용자의 닉네임과 등급 가져오기

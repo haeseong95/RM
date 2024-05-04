@@ -66,11 +66,14 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             // 아이디, 비번 검사
             else {
                 if (sqliteHelper.checkId(userId)){
-                    if (sqliteHelper.checkIdPassword(userId, userPw)){
+
+                    String hashPw = SignUp.getSHA(userPw);
+
+                    if (sqliteHelper.checkIdPassword(userId, hashPw)){
 
                         PreferenceHelper.setLoginState(this, true, userId);        // 로그인 성공 시 true 값 저장 + 로그인 시 입력한 아이디 저장
 
-                        Log.i("LoginUser.로그인 성공", "아이디: " + userId + ", 비번: " + userPw );
+                        Log.i("LoginUser.로그인 성공", "아이디: " + userId + ", 비번: " + userPw + ", 해시값 : " + hashPw);
                         Toast.makeText(this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
 
                         Intent i = new Intent(this, MainActivity.class);

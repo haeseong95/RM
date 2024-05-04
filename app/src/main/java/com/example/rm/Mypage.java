@@ -17,6 +17,8 @@ import java.util.Map;
 
 public class Mypage extends AppCompatActivity implements View.OnClickListener{
 
+    LinearLayout btnLogout, btnDelete;
+    ImageView btnBack;
     TextView userNickname, userLevel;
     SqliteHelper sqliteHelper;
 
@@ -25,10 +27,27 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mypage);
 
+
+        userNickname = findViewById(R.id.user_nickname);
+        userLevel = findViewById(R.id.user_level);
+        btnBack = findViewById(R.id.btn_back);
+        btnLogout = findViewById(R.id.btn_logout);
+        btnDelete = findViewById(R.id.li_delete);
+
+        btnBack.setOnClickListener(this);
+        btnLogout.setOnClickListener(this);
+        btnDelete.setOnClickListener(this);
         sqliteHelper = new SqliteHelper(this);
 
-        displayLoginInfo();
+        // 로그인 정보 가져와서 메인페이지 화면에 표시하기
+        String id = PreferenceHelper.getLoginId(Mypage.this);
 
+        Map<String, String> userInfo = sqliteHelper.getUserInfo(id);
+        String nickname = userInfo.get("nickname");
+        String level = userInfo.get("level");
+
+        userNickname.setText(nickname);
+        userLevel.setText(level);
     }
 
     @Override
@@ -61,21 +80,7 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 break;
-            case R.id.li_delete:    // 탈퇴하기
-                builder.setTitle("탈퇴");
-                builder.setMessage("로그아웃 하시겠습니까?");
 
-                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        PreferenceHelper.logout();
-                        Intent i = new Intent(Mypage.this, MainActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(i);
-                    }
-                });
-
-                break;
             default: throw new IllegalStateException("Unexpected value: " + v.getId());
 
 
@@ -84,17 +89,6 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    // 로그인 정보 가져와서 메인페이지 화면에 표시하기
-    private void displayLoginInfo(){
-        String id = PreferenceHelper.getLoginId(Mypage.this);
-
-        Map<String, String> userInfo = sqliteHelper.getUserInfo(id);
-        String nickname = userInfo.get("nickname");
-        String level = userInfo.get("level");
-
-        userNickname.setText(nickname);
-        userLevel.setText(level);
-    }
 
 
 }

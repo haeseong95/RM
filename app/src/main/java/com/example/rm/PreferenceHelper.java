@@ -38,7 +38,7 @@ public class PreferenceHelper {
     public static String getLoginId(Context context){
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String id = preferences.getString("id", "");    // id키가 없으면 문자열"" 반환
-        Log.i("Preference, getLoginId", "저장된 로그인 정보 가져오기 : " + id);
+        Log.i("Preference, getLoginId", "저장된 아이디 정보 가져오기 : " + id);
         return id;
     }
 
