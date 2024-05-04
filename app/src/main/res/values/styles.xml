@@ -2,8 +2,8 @@
 <resources>
     <!--카테고리 버튼 레이아웃-->
     <style name="category_layout">
-        <item name="android:layout_width">210dp</item>
-        <item name="android:layout_height">120dp</item>
+        <item name="android:layout_width">160dp</item>
+        <item name="android:layout_height">100dp</item>
         <item name="android:layout_margin">5dp</item>
         <item name="android:paddingTop">20dp</item>
         <item name="android:orientation">vertical</item>
@@ -11,8 +11,8 @@
 
     <!--카테고리 쓰레기 이미지-->
     <style name="category_image">
-        <item name="android:layout_width">45dp</item>
-        <item name="android:layout_height">45dp</item>
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
 
@@ -55,10 +55,11 @@
 
     <!--회원 정보 입력창-->
     <style name="editText_style">
-        <item name="android:layout_width">350dp</item>
+        <item name="android:layout_width">300dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:textSize">13dp</item>
-        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingLeft">10sp</item>
+        <item name="android:layout_gravity">center</item>
         <item name="fontFamily">@font/nanum_regular</item>
         <item name="android:background">@drawable/border_category</item>
     </style>
@@ -77,6 +78,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">15dp</item>
+        <item name="android:layout_marginLeft">45sp</item>
         <item name="fontFamily">@font/nanum_regular</item>
         <item name="android:layout_marginTop">30dp</item>
         <item name="android:layout_marginBottom">5dp</item>
@@ -84,7 +86,7 @@
 
     <!--버튼-->
     <style name="button_style">
-        <item name="android:layout_width">340dp</item>
+        <item name="android:layout_width">300dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:textSize">20dp</item>
         <item name="android:textColor">@color/white</item>
@@ -92,7 +94,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginTop">50dp</item>
         <item name="android:layout_gravity">center</item>
-        <item name="fontFamily">@font/nanum_regular</item>
+        <item name="fontFamily">@font/g_regular</item>
     </style>
 
     <!--마이페이지 버튼-->
