@@ -11,7 +11,7 @@
     <androidx.appcompat.widget.Toolbar
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:background="@android:color/transparent">
 
         <ImageView
@@ -29,7 +29,7 @@
     <TextView
         android:id="@+id/trash_info"
         android:layout_width="match_parent"
-        android:layout_height="700dp"
+        android:layout_height="wrap_content"
         android:text="분리수거 방법 안내"
         android:layout_margin="30dp"
         android:paddingBottom="30dp"/>

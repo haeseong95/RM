@@ -77,7 +77,7 @@ public class SqliteHelper extends SQLiteOpenHelper {
 
     // 쓰레기 테이블
     public static final String SQL_CREATE_TRASH = "CREATE TABLE IF NOT EXISTS " + TABLE_TRASH + " (" +
-            COLUMN_TRASH_ID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_TRASH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_TRASH_CATEGORY + " TEXT, " +
             COLUMN_TRASH_NAME + " TEXT, " +
             COLUMN_TRASH_DESCRIPTION + " TEXT, " +
@@ -92,7 +92,7 @@ public class SqliteHelper extends SQLiteOpenHelper {
 
     // 게시글 테이블
     public static final String SQL_CREATE_POST = "CREATE TABLE IF NOT EXISTS " + TABLE_POST + " (" +
-            COLUMN_POST_ID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_POST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_POST_TITLE + " TEXT, " +
             COLUMN_POST_NICKNAME + " TEXT, " +
             COLUMN_POST_CONTENT + " TEXT, " +
@@ -104,7 +104,7 @@ public class SqliteHelper extends SQLiteOpenHelper {
 
     // 댓글 테이블
     public static final String SQL_CREATE_COMMENT = "CREATE TABLE IF NOT EXISTS " + TABLE_COMMENT + " (" +
-            COLUMN_COMMENT_ID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_COMMENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_COMMENT_NICKNAME + " TEXT, " +
             COLUMN_COMMENT_CONTENT + " TEXT, " +
             COLUMN_COMMENT_HASH + " TEXT, " +
@@ -166,28 +166,25 @@ public class SqliteHelper extends SQLiteOpenHelper {
         }
     }
 
-    // 회원가입 아이디 중복 확인, 로그인 아이디 확인, 아이디 찾기
+    // 닉네임 중복 확인, 탈퇴 시 비번 조회, 회원가입 아이디 중복 확인, 로그인 아이디 확인, 아이디 찾기
     // 사용자 아이디가 맞는지 검사 (USER 테이블에 id가 존재하는지 확인 -> getCount()로 일치한 행의 개수가 1개라도 있으면 true/없으면 false)
-    public Boolean checkId(String id){
+    public Boolean findAccount(String userinfo, String key){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery("Select * from user where u_id=?", new String[]{id});    // SQL 쿼리 결과 출력
+        Cursor cursor = null;
 
-        if(cursor.getCount() > 0){
-            sqLiteDatabase.close();
-            cursor.close();
-            return true;
+        // key에 저장된 문자열이 nickname일 때 실행
+        if (key.equals("nickname")) {
+            cursor = sqLiteDatabase.rawQuery("Select * from user where u_nickname=?", new String[]{userinfo});
         }
-        else {
-            sqLiteDatabase.close();
-            cursor.close();
+        else if (key.equals("password")) {
+            cursor = sqLiteDatabase.rawQuery("Select * from user where u_pw=?", new String[]{userinfo});
+        }
+        else if (key.equals("id")) {
+            cursor = sqLiteDatabase.rawQuery("Select * from user where u_id=?", new String[]{userinfo});
+        }
+        else
             return false;
-        }
-    }
 
-    // 닉네임 중복 확인
-    public Boolean checkNickname(String nickname){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery("Select * from user where u_nickname=?", new String[]{nickname});
 
         if(cursor.getCount() > 0){
             sqLiteDatabase.close();
@@ -240,6 +237,15 @@ public class SqliteHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("update user set u_pw=? where u_id=?", new String[]{tempPw, id});
 
         Log.i("Sqlite.updatePw", "임시 비번 해시값 user 테이블에 저장됨 : " +  tempPw);
+        sqLiteDatabase.close();
+    }
+
+    // DB에 저장된 계정 삭제하기
+    public void delAccount(String id){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("delete from user where u_id=?", new String[]{id});
+
+        Log.i("Sqlite.delAccount", "계정 삭제됨 : " +  id);
         sqLiteDatabase.close();
     }
 

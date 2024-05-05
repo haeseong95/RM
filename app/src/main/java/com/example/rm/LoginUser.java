@@ -65,7 +65,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             }
             // 아이디, 비번 검사
             else {
-                if (sqliteHelper.checkId(userId)){
+                if (sqliteHelper.findAccount(userId, "id")){
 
                     String hashPw = SignUp.getSHA(userPw);
 

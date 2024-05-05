@@ -61,8 +61,7 @@ public class SearchPwd extends AppCompatActivity {
                 inputUserId = editId.getText().toString();
 
                 // 입력한 아이디가 존재X
-                if (!sqliteHelper.checkId(inputUserId)) {
-                    builder.setTitle("비밀번호 찾기");
+                if (!sqliteHelper.findAccount(inputUserId, "id")) {
                     builder.setMessage("해당하는 아이디를 찾을 수 없습니다.");
                     builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
                     AlertDialog alertDialog = builder.create();

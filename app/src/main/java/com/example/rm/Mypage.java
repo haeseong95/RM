@@ -80,7 +80,10 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 break;
-
+            case R.id.li_delete:    // 탈퇴하기 페이지
+                Intent i = new Intent(Mypage.this, DeleteAccount.class);
+                startActivity(i);
+                break;
             default: throw new IllegalStateException("Unexpected value: " + v.getId());
 
 

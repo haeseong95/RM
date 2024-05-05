@@ -3,7 +3,6 @@ package com.example.rm;
 import com.google.gson.annotations.SerializedName;
 
 // Retrofit의 데이터 클래스
-// 영상에선 GetProduct, Product는 테이블명인데 형태가 데이터 클래스인듯
 public class TrashRetroData {
 
     @SerializedName("id")

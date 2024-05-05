@@ -23,7 +23,7 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">13dp</item>
         <item name="android:layout_marginTop">10dp</item>
-        <item name="android:fontFamily">@font/g_regular</item>
+        <item name="android:fontFamily">@font/nanum_regular</item>
     </style>
 
     <!--하단 툴바 아이콘-->
@@ -33,7 +33,7 @@
         <item name="android:layout_weight">1</item>
         <item name="backgroundTint">@android:color/transparent</item>
         <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">13dp</item>
+        <item name="android:textSize">10dp</item>
     </style>
 
     <!--뒤로 가기 버튼-->
@@ -48,7 +48,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">18dp</item>
         <item name="fontFamily">@font/nanum_bold</item>
         <item name="android:layout_gravity">center</item>
     </style>
@@ -66,8 +66,9 @@
 
     <!--아이디, 닉네임 중복 확인 입력창-->
     <style name="editText_check_style">
-        <item name="android:layout_width">250dp</item>
+        <item name="android:layout_width">200dp</item>
         <item name="android:layout_height">50dp</item>
+        <item name="fontFamily">@font/nanum_regular</item>
         <item name="android:textSize">13dp</item>
         <item name="android:paddingLeft">10dp</item>
         <item name="android:background">@drawable/border_category</item>
@@ -84,27 +85,37 @@
         <item name="android:layout_marginBottom">5dp</item>
     </style>
 
+    <!--회원가입 정보 나타냄-->
+    <style name="textView_check_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15dp</item>
+        <item name="fontFamily">@font/nanum_regular</item>
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
     <!--버튼-->
     <style name="button_style">
-        <item name="android:layout_width">300dp</item>
+        <item name="android:layout_width">290dp</item>
         <item name="android:layout_height">60dp</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">17dp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:backgroundTint">@color/main_color_green</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:layout_marginTop">50dp</item>
+        <item name="android:layout_marginTop">40dp</item>
         <item name="android:layout_gravity">center</item>
-        <item name="fontFamily">@font/g_regular</item>
+        android:fontFamily="@font/nanum_regular"
     </style>
 
     <!--마이페이지 버튼-->
     <style name="mypage_button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">15dp</item>
         <item name="android:layout_weight">4</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:paddingLeft">40dp</item>
+        <item name="android:paddingLeft">30dp</item>
         <item name="fontFamily">@font/nanum_regular</item>
     </style>
 

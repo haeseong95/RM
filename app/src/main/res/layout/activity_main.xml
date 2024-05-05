@@ -12,7 +12,7 @@
     <!--검색창, 카메라 레이아웃-->
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="55dp"
         android:background="@color/main_color_green"
         app:contentInsetStart="0dp">
 
@@ -26,12 +26,12 @@
             android:textColor="@color/white"
             android:paddingTop="5dp"
             android:textSize="26dp"
-            android:fontFamily="@font/g_regular"
+            android:fontFamily="@font/nanum_regular"
             android:textStyle="bold"/>
 
         <ImageView
-            android:layout_width="37dp"
-            android:layout_height="37dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:src="@drawable/main_alarm"
             android:layout_gravity="right"
             android:layout_marginRight="20dp"/>
@@ -291,23 +291,20 @@
                 android:id="@+id/main_map"
                 style="@style/toolbar_icon"
                 android:drawableTop="@drawable/main_map"
-                android:fontFamily="@font/g_light"
-                android:textStyle="bold"
+                android:fontFamily="@font/nanum_regular"
                 android:text="분리수거장" />
 
             <Button
                 android:id="@+id/main_community"
                 style="@style/toolbar_icon"
-                android:fontFamily="@font/g_light"
-                android:textStyle="bold"
+                android:fontFamily="@font/nanum_regular"
                 android:drawableTop="@drawable/main_community"
                 android:text="커뮤니티" />
 
             <Button
                 android:id="@+id/main_userinfo"
                 style="@style/toolbar_icon"
-                android:fontFamily="@font/g_light"
-                android:textStyle="bold"
+                android:fontFamily="@font/nanum_regular"
                 android:drawableTop="@drawable/main_profile"
                 android:text="로그인" />
         </LinearLayout>

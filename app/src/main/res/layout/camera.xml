@@ -15,6 +15,7 @@
         android:layout_marginEnd="276dp"
         android:layout_marginBottom="42dp"
         android:text="종류 : "
+        android:fontFamily="@font/nanum_regular"
         android:textSize="24sp" />
 
     <Button
@@ -22,9 +23,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:text="촬영"/>
+        android:layout_marginBottom="18dp"
+        android:text="촬영"
+        android:fontFamily="@font/nanum_regular"/>
 
     <ImageView
         android:id="@+id/result_image"

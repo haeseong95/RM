@@ -51,7 +51,7 @@ public class SignUp extends AppCompatActivity {
         btnCheck.setOnClickListener(v -> {
             userName = signName.getText().toString().trim();
 
-            if (!sqliteHelper.checkNickname(userName)) {
+            if (!sqliteHelper.findAccount(userName, "nickname")) {
                 showDialog("닉네임", false);
             } else {
                 showDialog("닉네임", true);
@@ -62,7 +62,7 @@ public class SignUp extends AppCompatActivity {
         btnCheck2.setOnClickListener(v -> {
             userId = signId.getText().toString().trim();
 
-            if (!sqliteHelper.checkId(userId)) {
+            if (!sqliteHelper.findAccount(userId, "id")) {
                 showDialog("아이디", false);
             }
             else {
@@ -71,6 +71,10 @@ public class SignUp extends AppCompatActivity {
         });
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {       // 회원가입 버튼
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+            AlertDialog alertDialog;
+
             @Override
             public void onClick(View v) {
                 userId = signId.getText().toString().trim();
@@ -78,31 +82,35 @@ public class SignUp extends AppCompatActivity {
                 userEmail = signEmail.getText().toString().trim();
                 userName = signName.getText().toString().trim();
 
-                // 빈칸이 생기면
-                if (userId.isEmpty() || userPwd.isEmpty() || userName.isEmpty() || userEmail.isEmpty()){
-                    Toast.makeText(SignUp.this, "모든 정보를 입력해주세요", Toast.LENGTH_SHORT).show();
+                if (userId.isEmpty() || userPwd.isEmpty() || userName.isEmpty() || userEmail.isEmpty()) {
+                    showMessage("모든 정보를 입력해주세요.");
                     Log.w("SignUp : 정보 입력 덜 함", "userId: " + userId + ", userPwd: " + userPwd + ", userName: " + userName + ", userEmail: " + userEmail);
-                    return;
                 }
+                else {
+                    if(Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+                        String hashPwd = getSHA(userPwd);    // sha로 암호화된 비밀번호
+                        Boolean insert = sqliteHelper.insertData(userId, hashPwd, userEmail, userName);
 
-                // 이메일 형식이 맞는지
-                if(!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-                    Toast.makeText(SignUp.this, "이메일 형식이 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
-                    return;
+                        if (insert){
+                            builder.setMessage("회원가입에 성공하였습니다.");
+                            builder.setPositiveButton("확인", (dialog, which) -> finish());
+                            alertDialog = builder.create();
+                            alertDialog.show();
+                            Log.i("SignUp : 회원가입 성공", "아이디: " + userId + ", 닉네임: " + userName + ", 이메일: " + userEmail);
+                        } else {
+                            showMessage("회원가입에 실패하였습니다.");
+                            Log.e("SignUp : 회원가입 실패", "아이디: " + userId + ", 닉네임: " + userName + ", 이메일: " + userEmail);
+                        }
+                    }
+                    else {showMessage("이메일 형식이 올바르지 않습니다.");}
                 }
+            }
 
-                String hashPwd = getSHA(userPwd);    // sha로 암호화된 비밀번호
-                Boolean insert = sqliteHelper.insertData(userId, hashPwd, userEmail, userName);
-
-                // 회원가입 성공
-                if (insert){
-                    Toast.makeText(SignUp.this, "회원가입에 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                    Log.i("SignUp : 회원가입 성공", "아이디: " + userId + ", 해시된 비번: " + hashPwd + ", 닉네임: " + userName + ", 이메일: " + userEmail);
-                    finish();
-                } else {
-                    Toast.makeText(SignUp.this, "회원가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                    Log.e("SignUp : 회원가입 실패", "아이디: " + userId + ", 해시된 비번: " + hashPwd + ", 닉네임: " + userName + ", 이메일: " + userEmail);
-                }
+            private void showMessage(String message){
+                builder.setMessage(message);
+                builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
+                alertDialog = builder.create();
+                alertDialog.show();
             }
         });
     }

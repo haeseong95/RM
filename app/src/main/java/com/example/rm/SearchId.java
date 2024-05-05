@@ -59,7 +59,10 @@ public class SearchId extends AppCompatActivity{
 
                 // 이메일 형식 틀리면
                 if(!Patterns.EMAIL_ADDRESS.matcher(inputUserEmail).matches()) {
-                    Toast.makeText(SearchId.this, "이메일 형식이 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
+                    builder.setMessage("이메일 형식이 올바르지 않습니다.");
+                    builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
                 }
                 // 이메일 형식 맞으면 아이디 제공
                 else {
@@ -67,7 +70,6 @@ public class SearchId extends AppCompatActivity{
                     Log.i("SearchId", "이메일 입력 후 가져온 ID : " + id);
 
                     if(id == null){
-                        builder.setTitle("아이디 찾기");
                         builder.setMessage("해당하는 이메일을 찾을 수 없습니다.");
                         builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
                         AlertDialog alertDialog = builder.create();
