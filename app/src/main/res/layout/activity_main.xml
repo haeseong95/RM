@@ -193,6 +193,7 @@
             </LinearLayout>
 
             <!--특수 쓰레기-->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -218,16 +219,30 @@
 
                     <LinearLayout
                         android:id="@+id/btn_couch"
-                        android:background="@drawable/border_category" style="@style/category_layout">
-                        <ImageView android:src="@drawable/cat_couch" style="@style/category_image"/>
-                        <TextView android:text="대형폐기물" style="@style/category_text"/>
+                        style="@style/category_layout"
+                        android:background="@drawable/border_category">
+
+                        <ImageView
+                            style="@style/category_image"
+                            android:src="@drawable/cat_couch" />
+
+                        <TextView
+                            style="@style/category_text"
+                            android:text="대형폐기물" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/btn_res"
-                        android:background="@drawable/border_category" style="@style/category_layout">
-                        <ImageView android:src="@drawable/cat_res" style="@style/category_image"/>
-                        <TextView android:text="폐가전제품" style="@style/category_text"/>
+                        style="@style/category_layout"
+                        android:background="@drawable/border_category">
+
+                        <ImageView
+                            style="@style/category_image"
+                            android:src="@drawable/cat_res" />
+
+                        <TextView
+                            style="@style/category_text"
+                            android:text="폐가전제품" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

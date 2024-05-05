@@ -7,8 +7,9 @@
     <TextView
         android:id="@+id/list_trashName"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:text="쓰레기 이름"
+        android:paddingLeft="20sp"
         android:gravity="center_vertical"/>
 
     <TextView
