@@ -21,4 +21,12 @@
         <TextView android:id="@+id/category_title" android:text="커뮤니티" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
+    <TextView
+        android:id="@+id/test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="분리수거 방법 안내"
+        android:layout_margin="30dp"
+        android:paddingBottom="300dp"/>
+
 </LinearLayout>
