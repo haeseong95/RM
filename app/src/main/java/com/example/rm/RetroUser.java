@@ -16,6 +16,12 @@ public class RetroUser {
     @SerializedName("body")
     private String uBody;
 
+    public RetroUser(int userId, int id, String uTitle) {
+        this.userId = userId;
+        this.id = id;
+        this.uTitle = uTitle;
+    }
+
     public int getUserId() {
         return userId;
     }

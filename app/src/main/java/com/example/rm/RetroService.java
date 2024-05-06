@@ -16,4 +16,8 @@ public interface RetroService {
     @GET("/posts")  //~com/posts 라는 곳에 존재한 json 데이터 사용
     Call<List<RetroUser>> getData(@Query("userId") String id);
 
+    @GET("/posts")  // 모든 객체의 필드값 가져옴
+    Call<List<RetroUser>> getUserId(@Query("userId") int userId);
+
+    // Call<List<RetroUser>> getUserId(); 매개변수 필요없으면 걍 써도 상관없음
 }

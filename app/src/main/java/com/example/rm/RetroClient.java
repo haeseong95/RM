@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -20,7 +21,7 @@ public class RetroClient {
     public static final String BASE_URL = "http://jsonplaceholder.typicode.com";    // 로컬 호스트 자리에 서버를 돌리고 있는 서버의 ip 주소를 넣어야 함
     public static Gson gson = new GsonBuilder().setLenient().create();
 
-    public static Retrofit getInstance() {
+    public static Retrofit getInstance() {      // retrofit 객체 생성
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -40,15 +41,14 @@ public class RetroClient {
         //Call<List<RetroUser>> exer = retroService.getData("1");     // id를 1로 수정함
         Call<List<RetroUser>> exer = getRetroService().getData("1");
 
-        exer.enqueue(new Callback<List<RetroUser>>() {
+        exer.enqueue(new Callback<List<RetroUser>>() {      // 큐에 데이터를 집어 넣음
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
                 if(response.isSuccessful()) {
                     List<RetroUser> user = response.body();
 
-                    String name, title, id;
 
-                    // 배열을 리턴해서 커뮤니티에서 settext해보기 
+                    // 배열을 리턴해서 커뮤니티에서 settext해보기
 
                     Log.d("데이터 받기 성공!", user.get(0).getuTitle());
                 }
@@ -60,6 +60,39 @@ public class RetroClient {
                 t.printStackTrace();
             }
         });
+    }
+
+    public List<RetroUser> getDataUserId(){
+        Call<List<RetroUser>> data = getRetroService().getUserId(1);
+        data.enqueue(new Callback<List<RetroUser>>() {
+            @Override
+            public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
+
+                if (response.isSuccessful()){
+
+
+                    int user_id, id;
+                    String title;
+
+                    List<RetroUser> user = response.body();
+                    List<RetroUser> userInfo = new ArrayList<>();
+
+                    for(RetroUser u : user){
+                        userInfo.add(u);
+                    }
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<List<RetroUser>> call, Throwable t) {
+
+            }
+        });
+
     }
 
 
