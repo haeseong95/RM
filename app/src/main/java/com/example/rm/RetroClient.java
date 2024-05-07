@@ -21,7 +21,8 @@ public class RetroClient {
     public static final String BASE_URL = "http://jsonplaceholder.typicode.com";    // 로컬 호스트 자리에 서버를 돌리고 있는 서버의 ip 주소를 넣어야 함
     public static Gson gson = new GsonBuilder().setLenient().create();
 
-    public static Retrofit getInstance() {      // retrofit 객체 생성
+    // retrofit 객체 생성
+    public static Retrofit getInstance() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -31,6 +32,7 @@ public class RetroClient {
         return retrofit;
     }
 
+    // getInstance로 생성된 retrofit 클라이언트로 http API 명세가 담긴 인터페이스 구현체 생성
     public static RetroService getRetroService(){
         return getInstance().create(RetroService.class);
     }
@@ -41,7 +43,7 @@ public class RetroClient {
         //Call<List<RetroUser>> exer = retroService.getData("1");     // id를 1로 수정함
         Call<List<RetroUser>> exer = getRetroService().getData("1");
 
-        exer.enqueue(new Callback<List<RetroUser>>() {      // 큐에 데이터를 집어 넣음
+        exer.enqueue(new Callback<List<RetroUser>>() {      // enqeue 비동기 통신 방식
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
                 if(response.isSuccessful()) {
@@ -62,6 +64,7 @@ public class RetroClient {
         });
     }
 
+    /*
     public List<RetroUser> getDataUserId(){
         Call<List<RetroUser>> data = getRetroService().getUserId(1);
         data.enqueue(new Callback<List<RetroUser>>() {
@@ -95,6 +98,8 @@ public class RetroClient {
 
     }
 
+
+     */
 
 
 

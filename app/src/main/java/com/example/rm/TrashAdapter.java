@@ -49,10 +49,9 @@ class TrashListData {
     public String trashName = "";   // 쓰레기 이름
     public String trashInfo = "";   // 쓰레기 분리수거 방법
 
-    public TrashListData(String name, String info, int image){  // 생성자
+    public TrashListData(String name, String info){  // 생성자
         this.trashName = name;
         this.trashInfo = info;
-        this.trashImage = image;
     }
 
 
