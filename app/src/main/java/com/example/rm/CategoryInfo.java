@@ -56,7 +56,7 @@ public class CategoryInfo extends AppCompatActivity {
         // getroservice() 반환값인 인터페이스 구현체 -> 인터페이스의 getUserId() 메소드에 구현된 API 호출함
         Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);
 
-        call.enqueue(new Callback<List<RetroUser>>() {      // enqueue 비동기 통신
+        call.enqueue(new Callback<List<RetroUser>>() {      // enqueue 비동기 통신, 큐에 삽입
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
 

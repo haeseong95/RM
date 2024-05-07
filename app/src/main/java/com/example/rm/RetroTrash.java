@@ -8,10 +8,8 @@ public class RetroTrash {
     @SerializedName("")       // "JSON 키"
     private String id;      // java에서 사용할 변수 이름
 
-
-    // 쓰레기 정보 : Mysql 속성명, 타입에 맞게 생성하기
-    @SerializedName("trash_name")
-    private String trashName;
+    @SerializedName("")
+    private String trashName;   // 쓰레기 이름
 
     private int title;      // 키=변수명이 같으면 직렬화 안해도 됨
 
