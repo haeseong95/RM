@@ -46,17 +46,10 @@ public class CategoryInfo extends AppCompatActivity {
         });
 
 
-
-
-
-        // 어댑터 초기화
         trashAdapter = new TrashAdapter(this, arrayList); // 어댑터 생성, arrayList는 비어있는 상태
-        setRetrofit();
-
-
-
-        listView.setAdapter(trashAdapter);
-
+        setRetrofit();  // listivew에 json 데이터 추가
+        listView.setAdapter(trashAdapter);      // 리스트 뷰에 어댑터 붙임
+        listView.setClickable(true);        // 목록 클릭O
 
 
         clickListviewItem();    // listview 목록 클릭하면 상세 페이지로 이동
@@ -65,27 +58,26 @@ public class CategoryInfo extends AppCompatActivity {
 
     // retrofit, 네트워크 요청
     private void setRetrofit() {
-        // retrofit 객체 생성
+
         // getroservice() 반환값인 인터페이스 구현체 -> 인터페이스의 getUserId() 메소드에 구현된 API 호출함
         Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);
 
-        call.enqueue(new Callback<List<RetroUser>>() {
+        call.enqueue(new Callback<List<RetroUser>>() {      // enqueue 비동기 통신
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
-                List<RetroUser> user = response.body();
 
-                if (response.isSuccessful()) {
-
+                if (response.isSuccessful()) {  // HTTP 응답의 StatCode가 200~299인 경우 true 반환
                     String title, body = null;
+                    List<RetroUser> retroUser = response.body();    // body()는 서버로부터 받은 응답 형식
 
-                    for (RetroUser user1 : response.body()){
-                        title = user1.getuTitle();
-                        body = user1.getuBody();
-                        arrayList.add(new TrashListData(title, body));
+                    for (RetroUser user : retroUser){   // user는 retroUser 리스트의 각 RetroUser 객체를 순차적으로 참조
+                        title = user.getuTitle();
+                        body = user.getuBody();
+                        arrayList.add(new TrashListData(title, body));  // arrayList에 항목 추가
                         Log.i("값 전달", "title : " + title + ", body : "+ body);
                     }
 
-                    trashAdapter.notifyDataSetChanged();
+                    trashAdapter.notifyDataSetChanged();    // listview 리스트의 크기+아이템 둘 다 변경될 때 사용 (=리스트 업데이트)
 
                     // 리스트뷰의 높이를 계산에서 layout 크기를 설정
                     int totalHeight = 0;
@@ -108,17 +100,15 @@ public class CategoryInfo extends AppCompatActivity {
         });
     }
 
+    /*
+    // 리스트뷰의 높이를 계산하는 코드
+    public void calListview(ListView listView) {
 
-    // 리스트 뷰 설정
-    public void setListView() {
-
-        // arrayList에 항목 추가
-        arrayList.add(new TrashListData("쓰레기 이름1", "설명2"));
-        arrayList.add(new TrashListData("쓰레기 이름1", "설명2"));
-        arrayList.add(new TrashListData("쓰레기 이름1", "설명2"));
-        listView.setAdapter(trashAdapter);      // 리스트 뷰에 어댑터 붙임
-        listView.setClickable(true);        // 목록 클릭O
     }
+
+     */
+
+
 
 
     // listview 목록 클릭하면 쓰레기 상세 페이지로 데이터 전달
