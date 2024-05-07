@@ -19,12 +19,11 @@ import retrofit2.Response;
 
 public class CategoryInfo extends AppCompatActivity {
 
-    TextView categoryTitle, trashInfo;     // 쓰레기 종류
+    TextView categoryTitle, trashInfo;
     ImageView btnBack;
     ListView listView;
     ArrayList<TrashListData> arrayList = new ArrayList<>();;     // TrashListData 클래스 사용
     TrashAdapter trashAdapter;
-    RetroService retroService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,6 @@ public class CategoryInfo extends AppCompatActivity {
         categoryTitle = (TextView)findViewById(R.id.category_title);
         trashInfo = (TextView)findViewById(R.id.trash_info);
         listView = (ListView)findViewById(R.id.category_listview);
-
         categoryTitle.setText(getIntent().getStringExtra("category"));      // 쓰레기 종류의 이름을 상단 툴바에 표시
 
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -45,26 +43,29 @@ public class CategoryInfo extends AppCompatActivity {
             }
         });
 
-
         trashAdapter = new TrashAdapter(this, arrayList); // 어댑터 생성, arrayList는 비어있는 상태
         setRetrofit();  // listivew에 json 데이터 추가
         listView.setAdapter(trashAdapter);      // 리스트 뷰에 어댑터 붙임
         listView.setClickable(true);        // 목록 클릭O
-
-
         clickListviewItem();    // listview 목록 클릭하면 상세 페이지로 이동
 
     }
 
     // retrofit, 네트워크 요청
     private void setRetrofit() {
-
         // getroservice() 반환값인 인터페이스 구현체 -> 인터페이스의 getUserId() 메소드에 구현된 API 호출함
         Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);
 
         call.enqueue(new Callback<List<RetroUser>>() {      // enqueue 비동기 통신
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
+
+                // 쓰레기 종류별로 구분되어야 함 태그
+                String tag = getIntent().getStringExtra("category");
+
+                // 전체 데이터 중 태그를 이용해 값 구별해서 가져오기
+
+
 
                 if (response.isSuccessful()) {  // HTTP 응답의 StatCode가 200~299인 경우 true 반환
                     String title, body = null;
@@ -100,17 +101,6 @@ public class CategoryInfo extends AppCompatActivity {
         });
     }
 
-    /*
-    // 리스트뷰의 높이를 계산하는 코드
-    public void calListview(ListView listView) {
-
-    }
-
-     */
-
-
-
-
     // listview 목록 클릭하면 쓰레기 상세 페이지로 데이터 전달
     public void clickListviewItem() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -124,8 +114,4 @@ public class CategoryInfo extends AppCompatActivity {
             }
         });
     }
-
-
-
-
 }

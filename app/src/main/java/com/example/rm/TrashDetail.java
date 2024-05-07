@@ -22,9 +22,7 @@ public class TrashDetail extends AppCompatActivity {
         trashImage = findViewById(R.id.trash_image);
         trashName = findViewById(R.id.title_trashName);
         trashInfo = findViewById(R.id.trash_info);
-
         btnBack.setOnClickListener(v -> finish());
-
 
         getTrashData();     // 리스트뷰에서 정보 가져온 거 화면에 보여줌
 
@@ -35,7 +33,5 @@ public class TrashDetail extends AppCompatActivity {
         trashImage.setImageResource(Integer.parseInt(getIntent().getStringExtra("trashImage")));
         trashName.setText(getIntent().getStringExtra("trashName"));
         trashInfo.setText(getIntent().getStringExtra("trashInfo"));
-
     }
-
 }
