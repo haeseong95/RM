@@ -10,6 +10,10 @@ public class RetroUser {
 
     private int id;
 
+
+    private long image;
+
+
     @SerializedName("title")
     private String uTitle;
 

@@ -59,8 +59,18 @@ public class SearchTrash extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {  // 검색어 입력할 때마다 실행됨
 
-                ArrayList<RetroUser> filterTrash = new ArrayList<>();
-/*
+                ArrayList<RetroUser> retroUsers = new ArrayList<>();
+
+                // 서버에서 값을 받아오면 user 객체가 받아서
+                for(RetroUser user : retroUsers) {
+
+                }
+
+
+
+
+
+                /*
                 for (int i=0; i<placeList.size(); i++){
                     ListData listData = placeList.get(i);
 
@@ -86,19 +96,13 @@ public class SearchTrash extends AppCompatActivity {
     // 리스트뷰 설정 (검색 전에 이미 만들어져 있어야 함)
     private void setRetrofit() {
 
-        Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);    // retrofit의 인터페이스.API 호출
+        Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);
 
         call.enqueue(new Callback<List<RetroUser>>() {
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
 
-                // 쓰레기 종류별로 구분되어야 함 태그
-                // 사용자가 입력한 텍스트값이 들어가야 함
-                String tag = getIntent().getStringExtra("category");
-
                 // 전체 데이터 중 태그를 이용해 값 구별해서 가져오기
-
-
 
                 if (response.isSuccessful()) {  // HTTP 응답의 StatCode가 200~299인 경우 true 반환
                     String title, body = null;

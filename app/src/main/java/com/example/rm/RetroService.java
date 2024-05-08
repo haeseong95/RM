@@ -5,7 +5,9 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -16,10 +18,16 @@ public interface RetroService {
     @GET("/trash/category")
     Call<List<RetroTrash>> getTrashInfo(@Query("category") String category);     // RetroTrash?category=plastic
 
+    // multipart로 일단 이미지만 가져오는 거 테스트
+    @Multipart
+    @GET("/trash/image")
+    Call<List<RetroUser>> getImage(@Part)
+
     // 중간 끝나고 할 거
     // 커뮤니티 게시판에 사용자가 글을 올릴 때
     @POST("/community")
     Call<List<RetroUser>> addPost(@Body RetroUser user);
+
 
     // 로그인
     @GET("login")
