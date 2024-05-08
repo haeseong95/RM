@@ -19,11 +19,11 @@ import retrofit2.Response;
 
 public class CategoryInfo extends AppCompatActivity {
 
-    TextView categoryTitle, trashInfo;
+    TextView categoryTitle;
     ImageView btnBack;
-    ListView listView;
+    ListView listView, listView2;
     ArrayList<TrashListData> arrayList = new ArrayList<>();;     // TrashListData 클래스 사용
-    TrashAdapter trashAdapter;
+    TrashAdapter trashAdapter, trashAdapter2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +32,8 @@ public class CategoryInfo extends AppCompatActivity {
 
         btnBack = (ImageView)findViewById(R.id.btn_back);
         categoryTitle = (TextView)findViewById(R.id.category_title);
-        trashInfo = (TextView)findViewById(R.id.trash_info);
         listView = (ListView)findViewById(R.id.category_listview);
+        listView = findViewById(R.id.category_main_listview);
         categoryTitle.setText(getIntent().getStringExtra("category"));      // 쓰레기 종류의 이름을 상단 툴바에 표시
 
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -43,15 +43,21 @@ public class CategoryInfo extends AppCompatActivity {
             }
         });
 
-        trashAdapter = new TrashAdapter(this, arrayList); // 어댑터 생성, arrayList는 비어있는 상태
-        setRetrofit();
-        listView.setAdapter(trashAdapter);      // 리스트 뷰에 어댑터 붙임
-        listView.setClickable(true);        // 목록 클릭O
-        clickListviewItem();    // listview 목록 클릭하면 상세 페이지로 이동
+        // 쓰레기 메인 설명
+        trashAdapter2 = new TrashAdapter(this, )
 
+
+        // 쓰레기 목록
+        trashAdapter = new TrashAdapter(this, arrayList);
+        setRetrofit();
+        listView.setAdapter(trashAdapter);
+        listView.setClickable(true);
+        clickListviewItem();
     }
 
-    // retrofit 요청한 값 리스트뷰에 추가
+
+
+    // retrofit, 리스트뷰 목록의 요청한 값 리스트뷰에 추가
     private void setRetrofit() {
 
         Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);    // RetroService()로 인터페이스 구현체 생성
@@ -64,16 +70,13 @@ public class CategoryInfo extends AppCompatActivity {
 
                 // 전체 데이터 중 태그를 이용해 값 구별해서 가져오기
 
-
-
-
                 if (response.isSuccessful()) {  // HTTP 응답의 StatCode가 200~299인 경우 true 반환
                     String title, body = null;
                     List<RetroUser> retroUser = response.body();    // body()는 서버로부터 받은 응답 형식을 변수에 입력
 
                     for (RetroUser user : retroUser){
-                        title = user.getuTitle();
-                        body = user.getuBody();
+                        title = user.getEmail();
+                        body = user.getId();
                         arrayList.add(new TrashListData(title, body));  // arrayList에 항목 추가
                         Log.i("category 리스트뷰 전달 성공", "title : " + title + ", body : "+ body);
                     }

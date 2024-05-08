@@ -18,12 +18,36 @@
             android:id="@+id/btn_back"
             android:src="@drawable/btn_left" style="@style/back_icon"/>
 
-        <TextView android:id="@+id/category_title" android:text="종류" style="@style/toolbar_text" />
+        <TextView android:id="@+id/category_title" android:text="그린보드" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="200dp"
+        android:background="@color/category_gray" />
+
+    <TextView
+        android:id="@+id/trash_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="닉네임"
+        android:layout_marginLeft="30dp"/>
+
+    <TextView
+        android:id="@+id/trash_"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="날짜"
+        android:layout_marginLeft="30sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="내용"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
         android:background="@color/category_gray" />
 
     <ScrollView
@@ -39,16 +63,9 @@
             android:orientation="vertical">
 
             <ListView
-                android:id="@+id/category_main_listview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-            <ListView
-                android:id="@+id/category_listview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="30dp"/>
         </LinearLayout>
 
     </ScrollView>

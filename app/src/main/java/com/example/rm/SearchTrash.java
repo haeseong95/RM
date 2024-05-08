@@ -3,8 +3,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -109,8 +107,8 @@ public class SearchTrash extends AppCompatActivity {
                     List<RetroUser> retroUser = response.body();    // body()는 서버로부터 받은 응답 형식
 
                     for (RetroUser user : retroUser){   // user는 retroUser 리스트의 각 RetroUser 객체를 순차적으로 참조
-                        title = user.getuTitle();
-                        body = user.getuBody();
+                        title = user.getStatus();
+                        body = user.getId();
                         arrayList.add(new TrashListData(title, body));  // arrayList에 항목 추가
                         Log.i("값 전달", "title : " + title + ", body : "+ body);
                     }

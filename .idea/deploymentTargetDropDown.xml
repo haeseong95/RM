@@ -3,24 +3,7 @@
   <component name="deploymentTargetDropDown">
     <value>
       <entry key="app">
-<<<<<<< HEAD
-        <State>
-          <runningDeviceTargetSelectedWithDropDown>
-            <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\admin\.android\avd\a12_API_33.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-05-08T05:48:49.304431100Z" />
-        </State>
-=======
         <State />
->>>>>>> b4a2104bcac402c2e3eeb139382eb48275f3b50d
       </entry>
     </value>
   </component>

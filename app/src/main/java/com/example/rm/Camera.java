@@ -32,8 +32,13 @@ public class Camera extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
+
         btn_capture = findViewById(R.id.capture_btn);
         imageview = findViewById(R.id.result_image);
+
+        Bitmap bitmap = getIntent().getParcelableExtra("picture");
+        imageview.setImageBitmap(bitmap);
+
         //권한 체크
         create()
                 .setPermissionListener(permissionListener)
@@ -48,6 +53,9 @@ public class Camera extends AppCompatActivity {
                 startActivityForResult(cameraIntent, RESULT_CODE);
             }
         });
+
+
+
 
 
     }

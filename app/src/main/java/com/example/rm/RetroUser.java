@@ -1,72 +1,76 @@
 package com.example.rm;
 
+
 import com.google.gson.annotations.SerializedName;
 
-// Retrofit의 사용자 Data class
+// retrofit user 데이터 클래스
 public class RetroUser {
 
-    @SerializedName("userId")
-    private int userId;
+    private String email;
+    private String id;
+    private String nickname;
+    private String place;   // 사용자 랭킹
+    private String status;  // 사용자 상태
+    @SerializedName("passwd")
+    private String password;
 
-    private int id;
-
-
-    private long image;
-
-
-    @SerializedName("title")
-    private String uTitle;
-
-    @SerializedName("body")
-    private String uBody;
-
-    public RetroUser(int userId, int id, String uTitle) {
-        this.userId = userId;
-        this.id = id;
-        this.uTitle = uTitle;
+    public String getEmail() {
+        return email;
     }
 
-    public int getUserId() {
-        return userId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getuTitle() {
-        return uTitle;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setuTitle(String uTitle) {
-        this.uTitle = uTitle;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public String getuBody() {
-        return uBody;
+    public String getPassword() {
+        return password;
     }
 
-    public void setuBody(String uBody) {
-        this.uBody = uBody;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    // toString을 오버라이드 해주지 않으면 객체 주소값을 출력함
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     @Override
     public String toString() {
-        return "RetroUser{" +
-                "userId=" + userId +
-                ", id=" + id +
-                ", uTitle='" + uTitle + '\'' +
-                ", uBody='" + uBody + '\'' +
+        return "Users{" +
+                "email='" + email + '\'' +
+                ", id='" + id + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", password='" + password + '\'' +
+                ", place='" + place + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }
