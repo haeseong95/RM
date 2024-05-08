@@ -22,7 +22,7 @@ public class SearchTrash extends AppCompatActivity {
 
     SearchView searchView;
     ListView listView;
-    ArrayList<TrashAdapter> arrayList = new ArrayList<>();  // 리스트뷰에 넣을 데이터
+    ArrayList<TrashListData> arrayList = new ArrayList<>();  // 리스트뷰에 넣을 데이터
     TrashAdapter trashAdapter;  // 어댑터
 
 
@@ -33,7 +33,13 @@ public class SearchTrash extends AppCompatActivity {
 
         listView = findViewById(R.id.search_listview);
 
-        // 1. 리스트뷰 설정먼저 (1~4)까지
+        // 1. 리스트뷰 설정먼저
+        trashAdapter = new TrashAdapter(SearchTrash.this, arrayList);
+        setRetrofit();
+        listView.setAdapter(trashAdapter);
+        listView.setClickable(true);
+
+
         // 2. 리스트뷰 목록 클릭하면 상세 페이지로 이동
         initSearchView();
 
@@ -53,12 +59,13 @@ public class SearchTrash extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {  // 검색어 입력할 때마다 실행됨
 
-                ArrayList<RetroTrash> filterTrash = new ArrayList<>();
-
+                ArrayList<RetroUser> filterTrash = new ArrayList<>();
+/*
                 for (int i=0; i<placeList.size(); i++){
                     ListData listData = placeList.get(i);
 
-                    if(listData.getName().toLowerCase().contains(newText.toLowerCase())){   // 장소 데이터와 비교해서 사용자가 검색한 장소명이 있으면 filterPlace 리스트에 추가
+                    // 장소 데이터와 비교해서 사용자가 검색한 장소명이 있으면 filterPlace 리스트에 추가
+                    if(listData.getName().toLowerCase().contains(newText.toLowerCase())){
                         filterPlace.add(listData);
                     }
                 }
@@ -67,12 +74,16 @@ public class SearchTrash extends AppCompatActivity {
                 ListViewAdapter adapter2 = new ListViewAdapter(getApplicationContext(), 0, filterPlace);
                 listView.setAdapter(adapter2);
 
+
+ */
                 return false;
+
+
             }
         });
     }
 
-
+    // 리스트뷰 설정 (검색 전에 이미 만들어져 있어야 함)
     private void setRetrofit() {
 
         Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);    // retrofit의 인터페이스.API 호출

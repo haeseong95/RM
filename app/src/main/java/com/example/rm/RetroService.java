@@ -3,22 +3,36 @@ package com.example.rm;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 // Retrofit의 인터페이스 (HTTP 작업 정의)
 public interface RetroService {
 
-    // 쓰레기 종류에 따라 정보 분류해서 가져옴
+    // 카테고리 버튼 클릭할 때 쓰레기 종류에 따라 분류해서 가져옴 (categoryInfo 메인 설명, 쓰레기 이름 -> 쓰레기 종류명, 이미지, 쓰레기 분리수거 방법)
     @GET("/trash/category")
     Call<List<RetroTrash>> getTrashInfo(@Query("category") String category);     // RetroTrash?category=plastic
 
-    @GET("/posts")  //~com/posts 라는 곳에 존재한 json 데이터 사용
+    // 중간 끝나고 할 거
+    // 커뮤니티 게시판에 사용자가 글을 올릴 때
+    @POST("/community")
+    Call<List<RetroUser>> addPost(@Body RetroUser user);
+
+    // 로그인
+    @GET("login")
+    Call<RetroUser> login(@Query("username") String username, @Query("password") String password);
+
+
+
+
+    @GET("/posts")
     Call<List<RetroUser>> getData(@Query("userId") String id);
 
     @GET("/posts")  // 모든 객체의 필드값 가져옴
-    Call<List<RetroUser>> getUserId(@Query("userId") int userId);
+    Call<List<RetroUser>> getUserId(@Query("userId") int userid);
 
 
 }

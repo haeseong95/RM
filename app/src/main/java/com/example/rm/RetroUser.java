@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 // Retrofit의 사용자 Data class
 public class RetroUser {
 
-    @SerializedName("userId")   // "json키"
+    @SerializedName("userId")
     private int userId;
 
     private int id;

@@ -44,43 +44,43 @@ public class CategoryInfo extends AppCompatActivity {
         });
 
         trashAdapter = new TrashAdapter(this, arrayList); // 어댑터 생성, arrayList는 비어있는 상태
-        setRetrofit();  // listivew에 json 데이터 추가
+        setRetrofit();
         listView.setAdapter(trashAdapter);      // 리스트 뷰에 어댑터 붙임
         listView.setClickable(true);        // 목록 클릭O
         clickListviewItem();    // listview 목록 클릭하면 상세 페이지로 이동
 
     }
 
-    // retrofit, 네트워크 요청
+    // retrofit 요청한 값 리스트뷰에 추가
     private void setRetrofit() {
-        // getroservice() 반환값인 인터페이스 구현체 -> 인터페이스의 getUserId() 메소드에 구현된 API 호출함
-        Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);
 
-        call.enqueue(new Callback<List<RetroUser>>() {      // enqueue 비동기 통신, 큐에 삽입
+        Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);    // RetroService()로 인터페이스 구현체 생성
+        String tag = getIntent().getStringExtra("category");    // 쓰레기 종류별 구분해줄 값
+
+        call.enqueue(new Callback<List<RetroUser>>() {
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
 
-                // 쓰레기 종류별로 구분되어야 함 태그
-                String tag = getIntent().getStringExtra("category");
 
                 // 전체 데이터 중 태그를 이용해 값 구별해서 가져오기
 
 
 
+
                 if (response.isSuccessful()) {  // HTTP 응답의 StatCode가 200~299인 경우 true 반환
                     String title, body = null;
-                    List<RetroUser> retroUser = response.body();    // body()는 서버로부터 받은 응답 형식
+                    List<RetroUser> retroUser = response.body();    // body()는 서버로부터 받은 응답 형식을 변수에 입력
 
-                    for (RetroUser user : retroUser){   // user는 retroUser 리스트의 각 RetroUser 객체를 순차적으로 참조
+                    for (RetroUser user : retroUser){
                         title = user.getuTitle();
                         body = user.getuBody();
                         arrayList.add(new TrashListData(title, body));  // arrayList에 항목 추가
-                        Log.i("값 전달", "title : " + title + ", body : "+ body);
+                        Log.i("category 리스트뷰 전달 성공", "title : " + title + ", body : "+ body);
                     }
 
                     trashAdapter.notifyDataSetChanged();    // listview 리스트의 크기+아이템 둘 다 변경될 때 사용 (=리스트 업데이트)
 
-                    // 리스트뷰의 높이를 계산에서 layout 크기를 설정
+                    // 리스트뷰의 높이를 계산에서 layout 크기를 설정해줌
                     int totalHeight = 0;
                     for (int i = 0; i < trashAdapter.getCount(); i++){
                         View listItem = trashAdapter.getView(i, null, listView);
@@ -92,11 +92,14 @@ public class CategoryInfo extends AppCompatActivity {
                     listView.setLayoutParams(params);
 
                 }
+                else {
+                    Log.e("category 리스트뷰", "리스트뷰 출력 실패");
+                }
             }
 
             @Override
             public void onFailure(Call<List<RetroUser>> call, Throwable t) {
-                Log.e("리스트뷰 망", "ㅇ");
+                Log.e("category 리스트뷰", "예외, 네트워크 오류 등");
             }
         });
     }
