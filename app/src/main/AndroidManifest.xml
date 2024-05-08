@@ -27,15 +27,6 @@
         tools:replace="android:appComponentFactory"
         android:appComponentFactory="whateverString">
 
-        <provider
-            android:authorities="com.example.practice11"
-            android:name="androidx.core.content.FileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
-        </provider>
 
         <activity
             android:name=".MainActivity"
@@ -43,11 +34,21 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.media.action.IMAGE_CAPTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <provider
+            android:authorities="com.example.rm"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
 
 
         <activity android:name="com.example.rm.LoginUser"/>
