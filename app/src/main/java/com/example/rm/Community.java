@@ -43,7 +43,7 @@ public class Community extends AppCompatActivity {
         call.enqueue(new Callback<RetroApi>() {
             @Override
             public void onResponse(Call<RetroApi> call, Response<RetroApi> response) {
-                ArrayList<RetroUser> users = response.body().getUser();     // User 객체들의 리스트 반환
+                ArrayList<RetroUser> users = response.body().getRetroUser();     // User 객체들의 리스트 반환
 
                 if (response.isSuccessful()){
                     Log.i("json 연결 성공", users.get(0).getEmail());
@@ -54,7 +54,7 @@ public class Community extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<RetroApi> call, Throwable t) {
-                Log.e("네트워크 연결 실패", "망", t);
+                Log.e("커뮤니티 네트워크 연결", "실패", t);
             }
         });
     }

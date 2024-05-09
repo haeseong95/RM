@@ -11,17 +11,19 @@ import retrofit2.http.Query;
 // Retrofit의 인터페이스 (HTTP 작업 정의)
 public interface RetroService {
 
-    // 카테고리 버튼 클릭할 때 쓰레기 종류에 따라 분류해서 가져옴 (categoryInfo 메인 설명, 쓰레기 이름 -> 쓰레기 종류명, 이미지, 쓰레기 분리수거 방법)
-    @GET("/trash/category")
-    Call<List<RetroWriting>> getTrashInfo(@Query("category") String category);     // RetroTrash?category=plastic
 
     // 커뮤니티에 테스트로 써 봄
     @GET("/api/User/list")
     Call<RetroApi> getUser();
 
-    // 카테고리에서 종류 구분해서 넣을
-     @GET("/api/")
-    Call<RetroApi> setCategory(@Query("category") String cat);
+    // 카테고리 메인 설명 (이것도 cateogory 값 받아서 다르게 출력되어야 함), 리스트뷰에 쓰레기 이름/설명/이미지 3개 가져오기)
+    // 테스트
+    @GET("/api/Writing")
+    Call<RetroApi> setCategoryMain();
+
+    // 카테고리 품목 리스트 (버튼 종류별로 다르게 나와야 함)
+     @GET("/api/Trash")
+    Call<RetroApi> setCategoryItem(@Query("category") String cat);
 
     // multipart로 일단 이미지만 가져오는 거 테스트
 
@@ -31,6 +33,8 @@ public interface RetroService {
     Call<List<RetroUser>> getImage(@Part)
 
      */
+
+
 
     // 중간 끝나고 할 거
     // 커뮤니티 게시판에 사용자가 글을 올릴 때

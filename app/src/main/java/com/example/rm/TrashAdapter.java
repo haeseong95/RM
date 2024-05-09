@@ -10,12 +10,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-// Listview의 어댑터, Listview와 데이터 항목(TrashListData 객체 목록)-뷰 중간다리 역할
-// 어댑터 : 인터페이스, 데이터 관리 + 뷰 형태로 출력 -> 가공할 data, 어떤 형태로 item 구성할지 layout -> data + layout 매핑
+// 쓰레기 품목 종류를 나타내는 리스트뷰 어댑터
 public class TrashAdapter extends ArrayAdapter<TrashListData> {
 
     public TrashAdapter(@NonNull Context context, ArrayList<TrashListData> arrayList) {     // 현재 컨텍스트(nullX), 뷰 만들 때 사용할 레이아웃 리소스 파일
@@ -53,7 +51,6 @@ class TrashListData {
         this.trashName = name;
         this.trashInfo = info;
     }
-
 
     public int getTrashImage() {return trashImage;}
     public void setTrashImage(int trashImage) {this.trashImage = trashImage;}

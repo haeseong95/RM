@@ -29,7 +29,7 @@ public class RetroWriting {
     private String category;    // 카테고리 10종류 구분
 
     @SerializedName("fileType")
-    private String image;   // 이미지가 저장된 경로
+    private String image;   // 이미지가 저장된 경로, PNG/JPG 형태로 저장된 String 타입임
 
     public String getHash() {
         return hash;

@@ -17,13 +17,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// 메인화면에서 쓰레기 종류 버튼 클릭 시 쓰레기 메인 설명+품목 보여줌
 public class CategoryInfo extends AppCompatActivity {
 
     TextView categoryTitle;
     ImageView btnBack;
     ListView listView, listView2;
-    ArrayList<TrashListData> arrayList = new ArrayList<>();;     // TrashListData 클래스 사용
-    TrashAdapter trashAdapter, trashAdapter2;
+    
+    // 쓰레기 품목
+    ArrayList<TrashListData> arrayList = new ArrayList<>();;    
+    TrashAdapter trashAdapter;
+
+    // 메인 설명
+    ArrayList<TrashMainListData> arrayList2 = new ArrayList<>();    
+    TrashAdapter2 trashAdapter2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +39,8 @@ public class CategoryInfo extends AppCompatActivity {
 
         btnBack = (ImageView)findViewById(R.id.btn_back);
         categoryTitle = (TextView)findViewById(R.id.category_title);
-        listView = (ListView)findViewById(R.id.category_listview);
-        listView = findViewById(R.id.category_main_listview);
+        listView = (ListView)findViewById(R.id.category_listview);  // 쓰레기 품목 
+        listView2 = findViewById(R.id.category_main_listview);      // 메인 설명
         categoryTitle.setText(getIntent().getStringExtra("category"));      // 쓰레기 종류의 이름을 상단 툴바에 표시
 
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -43,26 +50,54 @@ public class CategoryInfo extends AppCompatActivity {
             }
         });
 
-        // 쓰레기 메인 설명
-        trashAdapter2 = new TrashAdapter(this, )
-
-
+        // 메인 설명
+        trashAdapter2 = new TrashAdapter2(this, arrayList2);
+        setRetroTrashMain();
+        listView2.setAdapter(trashAdapter2);
+        
         // 쓰레기 목록
         trashAdapter = new TrashAdapter(this, arrayList);
-        setRetrofit();
+        setRetroTrashItem();
         listView.setAdapter(trashAdapter);
         listView.setClickable(true);
         clickListviewItem();
     }
 
+    // retrofit, 쓰레기 메인 설명을 리스트뷰에 추가 
+    private void setRetroTrashMain(){
+        
+    }
+    
+    
+
+    // retrofit, 쓰레기 품목 종류를 요청한 값을 리스트뷰에 추가
+    private void setRetroTrashItem() {
+
+        String tag = getIntent().getStringExtra("category");    // 쓰레기 종류 구분해 줄 값
+        Call<RetroApi> call = RetroClient.getRetroService().setCategoryItem(tag);  //RetroService()로 인터페이스 구현체 생성
+
+        call.enqueue(new Callback<RetroApi>() {
+            @Override
+            public void onResponse(Call<RetroApi> call, Response<RetroApi> response) {
+                ArrayList<RetroWriting> retroWritings = response.body().getRetroWriting();  // Writing 객체 리스트 반환
+                String name, info;
 
 
-    // retrofit, 리스트뷰 목록의 요청한 값 리스트뷰에 추가
-    private void setRetrofit() {
+                if (response.isSuccessful()){
+                    for (RetroWriting writing : retroWritings) {
 
-        Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);    // RetroService()로 인터페이스 구현체 생성
-        String tag = getIntent().getStringExtra("category");    // 쓰레기 종류별 구분해줄 값
+                    }
 
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroApi> call, Throwable t) {
+                Log.e("네트워크 연결 실패", "망", t);
+            }
+        });
+
+        /*
         call.enqueue(new Callback<List<RetroUser>>() {
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
@@ -105,6 +140,9 @@ public class CategoryInfo extends AppCompatActivity {
                 Log.e("category 리스트뷰", "예외, 네트워크 오류 등");
             }
         });
+
+         */
+
     }
 
     // listview 목록 클릭하면 쓰레기 상세 페이지로 데이터 전달
