@@ -4,6 +4,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -27,12 +28,22 @@ public interface RetroService {
 
 
 
+     // content로 이미지 가져오기 (지도에서 테스트, 쓰레기 정보 <-> 이미지를 따로 가져올 거임)
+    @FormUrlEncoded
+    @GET("/api/contents")
+    Call<RetroApi> getCategoryItem();
+
+
+
+
+
 
 
     // multipart로 일단 이미지만 가져오는 거 테스트
 
     @GET("/photos")
     Call<List<RetroUser>> getImage();
+
 
 
 

@@ -1,11 +1,15 @@
 package com.example.rm;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.reflect.Array;
@@ -24,6 +28,9 @@ public class RecycleLocation extends AppCompatActivity {
     ListView listView;
     ArrayList<TrashMainListData> arrayList = new ArrayList<>();
     TrashAdapter2 trashAdapter2;
+
+    // 이미지
+    private final int GALLERY = 1;
 
 
     @Override
@@ -48,16 +55,29 @@ public class RecycleLocation extends AppCompatActivity {
 
     }
 
+    // 이미지
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    // 이미지 업로드
+    private void upLoadImage(Bitmap bitmap){
+
+    }
+
+
     private void test(){
         Call<List<RetroUser>> call = RetroClient.getRetroService().getImage();
         call.enqueue(new Callback<List<RetroUser>>() {
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
-                if (response.isSuccessful()) {  // HTTP 응답의 StatCode가 200~299인 경우 true 반환
+                if (response.isSuccessful()) {
 
                     int id = 0;
                     String title, url = null;
-                    List<RetroUser> retroUser = response.body();    // body()는 서버로부터 받은 응답 형식을 변수에 입력
+                    List<RetroUser> retroUser = response.body();
 
                     for (int i=0; i<7; i++){
                         RetroUser user = retroUser.get(i);
@@ -69,12 +89,7 @@ public class RecycleLocation extends AppCompatActivity {
                         Log.i("category 리스트뷰 전달 성공", "title : " + title + ", body : "+ url);
                     }
 
-
-
                     trashAdapter2.notifyDataSetChanged();    // listview 리스트의 크기+아이템 둘 다 변경될 때 사용 (=리스트 업데이트)
-
-
-
                 }
                 else {
                     Log.e("category 리스트뷰", "리스트뷰 출력 실패");
