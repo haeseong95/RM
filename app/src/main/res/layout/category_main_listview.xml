@@ -41,8 +41,8 @@
 
         <ImageView
             android:id="@+id/main_image"
-            android:layout_width="100sp"
-            android:layout_height="100sp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/ic_launcher_background"
             android:scaleType="centerCrop"/>
 

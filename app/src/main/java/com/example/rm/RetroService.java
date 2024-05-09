@@ -25,14 +25,16 @@ public interface RetroService {
      @GET("/api/Trash")
     Call<RetroApi> setCategoryItem(@Query("category") String cat);
 
+
+
+
+
     // multipart로 일단 이미지만 가져오는 거 테스트
 
-    /*
-    @Multipart
-    @GET("/trash/image")
-    Call<List<RetroUser>> getImage(@Part)
+    @GET("/photos")
+    Call<List<RetroUser>> getImage();
 
-     */
+
 
 
 

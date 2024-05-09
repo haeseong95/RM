@@ -1,8 +1,12 @@
 package com.example.rm;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import androidx.appcompat.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -17,125 +21,106 @@ import retrofit2.Response;
 
 public class SearchTrash extends AppCompatActivity {
 
-
-    SearchView searchView;
     ListView listView;
-    ArrayList<TrashListData> arrayList = new ArrayList<>();  // 리스트뷰에 넣을 데이터
-    TrashAdapter trashAdapter;  // 어댑터
 
+    ArrayList<TrashMainListData> arrayList = new ArrayList<>();  // 리스트뷰에 넣을 데이터
+    ArrayList<TrashMainListData> searchList = new ArrayList<>();    // 검색 결과 저장할 리스트
+    TrashAdapter2 trashAdapter;  // 어댑터
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchtrash);
-
         listView = findViewById(R.id.search_listview);
 
+        Toolbar toolbar = (Toolbar)findViewById(R.id.search_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         // 1. 리스트뷰 설정먼저
-        trashAdapter = new TrashAdapter(SearchTrash.this, arrayList);
+        trashAdapter = new TrashAdapter2(SearchTrash.this, arrayList);
         setRetrofit();
         listView.setAdapter(trashAdapter);
-        listView.setClickable(true);
-
-
-        // 2. 리스트뷰 목록 클릭하면 상세 페이지로 이동
-        initSearchView();
-
-
     }
 
-    private void initSearchView() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        menuItem.expandActionView();
 
-        searchView = findViewById(R.id.searchview);
-        searchView.setSubmitButtonEnabled(true);    // 검색 버튼 활성화
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {    // 검색창에 일어나는 이벤트 구현
+
+
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("검색어를 입력하세요 ");
+        searchView.setIconifiedByDefault(false);    // 항상 확장된 상태
+        searchView.setFocusable(true);
+        searchView.setIconified(false);
+        searchView.requestFocus();  // searchview에 포커스 요청+키보드 자동
+        searchView.post(() ->{
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);  //show_inplicit 하던가 아님 아예 0으로 처리
+            Log.i("searchview 실행", "검색창 자동 실행 성공");
+        });
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {        // 검색창에 일어나는 이벤트 구현
             @Override
-            public boolean onQueryTextSubmit(String query) {    // 검색 완료 시 실행됨 (false 검색 키보드 내림)
+            public boolean onQueryTextSubmit(String s) {    // 검색 버튼을 눌렀을 때
                 return false;
-            }   // 검색 버튼을 눌렀을 때
-
+            }
             @Override
-            public boolean onQueryTextChange(String newText) {  // 검색어 입력할 때마다 실행됨
+            public boolean onQueryTextChange(String text) {    // 검색어 입력/변경할 때마다 실행됨
 
-                ArrayList<RetroUser> retroUsers = new ArrayList<>();
+                ArrayList<TrashMainListData> result = new ArrayList<>();
 
-                // 서버에서 값을 받아오면 user 객체가 받아서
-                for(RetroUser user : retroUsers) {
+                for(int i=0; i<searchList.size(); i++) {
+                    TrashMainListData trashMainListData = searchList.get(i);
 
-                }
-
-
-
-
-
-                /*
-                for (int i=0; i<placeList.size(); i++){
-                    ListData listData = placeList.get(i);
-
-                    // 장소 데이터와 비교해서 사용자가 검색한 장소명이 있으면 filterPlace 리스트에 추가
-                    if(listData.getName().toLowerCase().contains(newText.toLowerCase())){
-                        filterPlace.add(listData);
+                    if(trashMainListData.getMainName().toLowerCase().contains(text.toLowerCase())) {
+                        result.add(trashMainListData);
                     }
                 }
-
-
-                ListViewAdapter adapter2 = new ListViewAdapter(getApplicationContext(), 0, filterPlace);
-                listView.setAdapter(adapter2);
-
-
- */
+                TrashAdapter2 trashAdapter2 = new TrashAdapter2(getApplicationContext(), result);
+                listView.setAdapter(trashAdapter2);
                 return false;
-
-
             }
         });
+
+        return true;
     }
 
     // 리스트뷰 설정 (검색 전에 이미 만들어져 있어야 함)
     private void setRetrofit() {
-
         Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);
 
         call.enqueue(new Callback<List<RetroUser>>() {
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
+                if (response.isSuccessful()) {
+                    int id = 0;
+                    String title, url = null;
+                    List<RetroUser> retroUser = response.body();
 
-                // 전체 데이터 중 태그를 이용해 값 구별해서 가져오기
-
-                if (response.isSuccessful()) {  // HTTP 응답의 StatCode가 200~299인 경우 true 반환
-                    String title, body = null;
-                    List<RetroUser> retroUser = response.body();    // body()는 서버로부터 받은 응답 형식
-
-                    for (RetroUser user : retroUser){   // user는 retroUser 리스트의 각 RetroUser 객체를 순차적으로 참조
-                        title = user.getStatus();
-                        body = user.getId();
-                        arrayList.add(new TrashListData(title, body));  // arrayList에 항목 추가
-                        Log.i("값 전달", "title : " + title + ", body : "+ body);
+                    for (int i=0; i<7; i++){
+                        RetroUser user = retroUser.get(i);
+                        title = user.getTitle();
+                        id = user.getId();
+                        url = user.getUrl();
+                        arrayList.add(new TrashMainListData(url, title));
+                        Log.i("SearchTrash.listview 성공O", "title : " + title + ", body : "+ url);
                     }
+                    trashAdapter.notifyDataSetChanged();
 
-                    trashAdapter.notifyDataSetChanged();    // listview 리스트의 크기+아이템 둘 다 변경될 때 사용 (=리스트 업데이트)
-
-                    // 리스트뷰의 높이를 계산에서 layout 크기를 설정
-                    int totalHeight = 0;
-                    for (int i = 0; i < trashAdapter.getCount(); i++){
-                        View listItem = trashAdapter.getView(i, null, listView);
-                        listItem.measure(0, 0);
-                        totalHeight += listItem.getMeasuredHeight();
+                    for(int i=0; i<arrayList.size(); i++) {
+                        searchList.add(arrayList.get(i));
                     }
-                    ViewGroup.LayoutParams params = listView.getLayoutParams();
-                    params.height = totalHeight + (listView.getDividerHeight() * (trashAdapter.getCount() - 1));
-                    listView.setLayoutParams(params);
-
                 }
+                else {Log.e("SearchTrash.listview 출력X", "");}
             }
-
             @Override
-            public void onFailure(Call<List<RetroUser>> call, Throwable t) {
-                Log.e("리스트뷰 망", "ㅇ");
-            }
+            public void onFailure(Call<List<RetroUser>> call, Throwable t) {Log.e("SearchTrash 네트워크 오류", "");}
         });
     }
-
-
-
 }

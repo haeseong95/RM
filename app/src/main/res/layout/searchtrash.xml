@@ -7,29 +7,19 @@
     android:orientation="vertical"
     tools:context=".SearchTrash">
 
-
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:contentInsetStart="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+        <ImageView
+            android:id="@+id/btn_back"
+            style="@style/back_icon"
+            android:src="@drawable/btn_left" />
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:queryHint="검색어를 입력하세요"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <ListView

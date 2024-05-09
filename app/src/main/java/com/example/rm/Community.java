@@ -45,11 +45,14 @@ public class Community extends AppCompatActivity {
             public void onResponse(Call<RetroApi> call, Response<RetroApi> response) {
                 ArrayList<RetroUser> users = response.body().getRetroUser();     // User 객체들의 리스트 반환
 
+                /*
                 if (response.isSuccessful()){
                     Log.i("json 연결 성공", users.get(0).getEmail());
                 } else {
                     Log.e("json 연결 실패", users.get(0).getEmail());
                 }
+
+                 */
             }
 
             @Override
