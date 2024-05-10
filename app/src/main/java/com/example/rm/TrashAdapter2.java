@@ -23,8 +23,11 @@ import java.util.List;
 
 // 쓰레기 메인 설명을 나타내는 리스트뷰 어댑터
 public class TrashAdapter2 extends ArrayAdapter<TrashMainListData> {
-    public TrashAdapter2(@NonNull Context context, @NonNull ArrayList<TrashMainListData> arrayList2) {
-        super(context, 0, arrayList2);
+    private ArrayList<TrashMainListData> arrayList;
+
+    public TrashAdapter2(@NonNull Context context, @NonNull ArrayList<TrashMainListData> arrayList) {
+        super(context, 0, arrayList);
+        this.arrayList = arrayList;
     }
 
     @NonNull
@@ -62,11 +65,16 @@ public class TrashAdapter2 extends ArrayAdapter<TrashMainListData> {
                 return true;
             }
         });
-
          */
 
-
         return convertView;
+    }
+
+    // 어댑터 내 데이터 변경 + 뷰 업데이트
+    public void updateListviewItem(ArrayList<TrashMainListData> newItem) {
+        arrayList.clear();      // 데이터 초기화
+        arrayList.addAll(newItem);  // 매개변수로 받은 ArrayList의 모든 요소를 추가(=업데이트)
+        notifyDataSetChanged(); // listview와 연결된 어댑터에 new 데이터 반영함
     }
 }
 
