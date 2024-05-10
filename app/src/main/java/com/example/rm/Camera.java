@@ -5,7 +5,6 @@ import static com.gun0912.tedpermission.normal.TedPermission.create;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -21,13 +20,10 @@ import com.gun0912.tedpermission.PermissionListener;
 import java.util.List;
 
 public class Camera extends AppCompatActivity {
-    private static final int REQUEST_IMAGE_CAPTURE = 672;
     private static final int RESULT_CODE = 22;
-    private String imageFilePath;
-    private Uri photoUri;
-
     Button btn_capture;
     ImageView imageview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +44,6 @@ public class Camera extends AppCompatActivity {
                 startActivityForResult(cameraIntent, RESULT_CODE);
             }
         });
-
 
     }
 
