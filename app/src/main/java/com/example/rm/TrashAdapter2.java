@@ -53,6 +53,8 @@ public class TrashAdapter2 extends ArrayAdapter<TrashMainListData> {
                 .placeholder(R.drawable.ic_launcher_background) // 이미지 로딩 중 보여줄 이미지
                 .into(mainImage);   // 어떤 imageView에 넣어줄 지 정함
 
+
+        /*
         // listview의 아이템 클릭 시 반응X (카테고리 메인 설명에 넣을 거임)
         convertView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -60,6 +62,8 @@ public class TrashAdapter2 extends ArrayAdapter<TrashMainListData> {
                 return true;
             }
         });
+
+         */
 
 
         return convertView;

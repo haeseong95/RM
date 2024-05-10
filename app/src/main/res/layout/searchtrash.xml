@@ -16,17 +16,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/btn_back"
-            style="@style/back_icon"
-            android:src="@drawable/btn_left" />
-
+            android:id="@+id/backButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/btn_left"/>
     </androidx.appcompat.widget.Toolbar>
 
     <ListView
         android:id="@+id/search_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="0dp"
-        android:divider="@null"/>
-
+        android:layout_height="match_parent"/>
 </LinearLayout>

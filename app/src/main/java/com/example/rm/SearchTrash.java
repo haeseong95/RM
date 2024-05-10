@@ -1,15 +1,20 @@
 package com.example.rm;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import androidx.appcompat.widget.SearchView;
+
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SearchView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -22,7 +27,7 @@ import retrofit2.Response;
 public class SearchTrash extends AppCompatActivity {
 
     ListView listView;
-
+    ImageView imageView;
     ArrayList<TrashMainListData> arrayList = new ArrayList<>();  // 리스트뷰에 넣을 데이터
     ArrayList<TrashMainListData> searchList = new ArrayList<>();    // 검색 결과 저장할 리스트
     TrashAdapter2 trashAdapter;  // 어댑터
@@ -32,15 +37,24 @@ public class SearchTrash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchtrash);
         listView = findViewById(R.id.search_listview);
+        imageView = findViewById(R.id.backButton);
+        imageView.setOnClickListener(v -> finish());
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.search_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setSupportActionBar(toolbar);   // 액션바 변경
+        getSupportActionBar().setDisplayShowTitleEnabled(false);    // 툴바 프로젝트 이름 제거
+        toolbar.setContentInsetsAbsolute(0, 0);
 
-        // 1. 리스트뷰 설정먼저
+
+
         trashAdapter = new TrashAdapter2(SearchTrash.this, arrayList);
         setRetrofit();
-        listView.setAdapter(trashAdapter);
+        listView.setClickable(true);
+
+
+        for(int i=0; i<arrayList.size(); i++) {
+            searchList.add(arrayList.get(i));
+        }
     }
 
     @Override
@@ -51,7 +65,6 @@ public class SearchTrash extends AppCompatActivity {
         menuItem.expandActionView();
 
         SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("검색어를 입력하세요 ");
         searchView.setIconifiedByDefault(false);    // 항상 확장된 상태
         searchView.setFocusable(true);
         searchView.setIconified(false);
@@ -89,6 +102,18 @@ public class SearchTrash extends AppCompatActivity {
         return true;
     }
 
+    // 툴바에 추가한 메뉴 아이템을 선택하면 id 값을 확인한 후에 기능 추가
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+        if(id == R.id.action_search){
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     // 리스트뷰 설정 (검색 전에 이미 만들어져 있어야 함)
     private void setRetrofit() {
         Call<List<RetroUser>> call = RetroClient.getRetroService().getImage();
@@ -112,11 +137,8 @@ public class SearchTrash extends AppCompatActivity {
                         searchList.add(data);
                         Log.i("SearchTrash.listview 성공O", "title : " + arrayList.get(i).getMainName() + ", body : "+ url);
                     }
-                    trashAdapter.notifyDataSetChanged();
 
-                    for(int i=0; i<arrayList.size(); i++) {
-                        searchList.add(arrayList.get(i));
-                    }
+                    listView.setAdapter(trashAdapter);
                 }
                 else {Log.e("SearchTrash.listview 출력X", "");}
             }
@@ -124,4 +146,22 @@ public class SearchTrash extends AppCompatActivity {
             public void onFailure(Call<List<RetroUser>> call, Throwable t) {Log.e("SearchTrash 네트워크 오류", "");}
         });
     }
+
+    public void clickItem(){
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                /*
+                Intent intent = new Intent(SearchTrash.this, TrashDetail.class);
+                intent.putExtra("trashName", arrayList.get(position).);
+                intent.putExtra("trashImage", Integer.toString(arrayList.get(position).trashImage));
+                intent.putExtra("trashInfo", arrayList.get(position).trashInfo);
+                startActivity(intent);
+
+                 */
+            }
+        });
+    }
+
+
 }
