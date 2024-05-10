@@ -50,8 +50,6 @@ public class SearchTrash extends AppCompatActivity {
         MenuItem menuItem = menu.findItem(R.id.action_search);
         menuItem.expandActionView();
 
-
-
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setQueryHint("검색어를 입력하세요 ");
         searchView.setIconifiedByDefault(false);    // 항상 확장된 상태
