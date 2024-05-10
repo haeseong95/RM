@@ -62,7 +62,6 @@ public class SearchTrash extends AppCompatActivity {
             Log.i("searchview 실행", "검색창 자동 실행 성공");
         });
 
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {        // 검색창에 일어나는 이벤트 구현
             @Override
             public boolean onQueryTextSubmit(String s) {    // 검색 버튼을 눌렀을 때
@@ -80,6 +79,7 @@ public class SearchTrash extends AppCompatActivity {
                         result.add(trashMainListData);
                     }
                 }
+
                 TrashAdapter2 trashAdapter2 = new TrashAdapter2(getApplicationContext(), result);
                 listView.setAdapter(trashAdapter2);
                 return false;
@@ -91,7 +91,7 @@ public class SearchTrash extends AppCompatActivity {
 
     // 리스트뷰 설정 (검색 전에 이미 만들어져 있어야 함)
     private void setRetrofit() {
-        Call<List<RetroUser>> call = RetroClient.getRetroService().getUserId(1);
+        Call<List<RetroUser>> call = RetroClient.getRetroService().getImage();
 
         call.enqueue(new Callback<List<RetroUser>>() {
             @Override
@@ -103,11 +103,14 @@ public class SearchTrash extends AppCompatActivity {
 
                     for (int i=0; i<7; i++){
                         RetroUser user = retroUser.get(i);
+
                         title = user.getTitle();
-                        id = user.getId();
                         url = user.getUrl();
                         arrayList.add(new TrashMainListData(url, title));
-                        Log.i("SearchTrash.listview 성공O", "title : " + title + ", body : "+ url);
+
+                        TrashMainListData data = new TrashMainListData(url, title);
+                        searchList.add(data);
+                        Log.i("SearchTrash.listview 성공O", "title : " + arrayList.get(i).getMainName() + ", body : "+ url);
                     }
                     trashAdapter.notifyDataSetChanged();
 

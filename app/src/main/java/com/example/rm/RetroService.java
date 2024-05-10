@@ -40,7 +40,7 @@ public interface RetroService {
 
 
     // multipart로 일단 이미지만 가져오는 거 테스트
-
+//searchTrash에서 title, url을 listview를 출력 -> 검색창에서 title을 검색해서 겹치는 거 뽑음
     @GET("/photos")
     Call<List<RetroUser>> getImage();
 
@@ -64,6 +64,9 @@ public interface RetroService {
 
     @GET("/posts")
     Call<List<RetroUser>> getData(@Query("userId") String id);
+
+
+
 
     @GET("/posts")  // 모든 객체의 필드값 가져옴
     Call<List<RetroUser>> getUserId(@Query("userId") int userid);

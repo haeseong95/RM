@@ -10,8 +10,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetroClient {
     private static Retrofit retrofit = null;
 
-    //public static final String BASE_URL = "https://jsonplaceholder.typicode.com";
-    public static final String BASE_URL = "http://192.168.0.36:5901";
+    public static final String BASE_URL = "https://jsonplaceholder.typicode.com";
+    //public static final String BASE_URL = "http://192.168.0.36:5901";
     public static Gson gson = new GsonBuilder().setLenient().create();
 
     // retrofit 객체 생성

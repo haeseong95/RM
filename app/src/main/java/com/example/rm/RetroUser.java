@@ -6,21 +6,12 @@ import com.google.gson.annotations.SerializedName;
 // retrofit user 데이터 클래스
 public class RetroUser {
 
-    // jsonplaceholder 테스트
+    // jsonplaceholder/photos 테스트
     private int albumId;
     private int id;
     private String title;
-    private String body;
-
+    private String thumbnailUrl;
     private String url;
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public int getAlbumId() {
         return albumId;
@@ -46,18 +37,25 @@ public class RetroUser {
         this.title = title;
     }
 
-    public String getBody() {
-        return body;
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 
-    public RetroUser(String title, String body, String image) {
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public RetroUser(String title, String url) {
         this.title = title;
-        this.body = body;
-        this.url = image;
+        this.url = url;
     }
 
     /*
