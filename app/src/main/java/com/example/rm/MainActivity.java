@@ -1,18 +1,13 @@
 package com.example.rm;
 
-import static com.gun0912.tedpermission.normal.TedPermission.create;
-import android.Manifest;
-import android.graphics.Bitmap;
+
+import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.content.Intent;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -61,33 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainUserinfo.setOnClickListener(this);
         PreferenceHelper.init(this);
 
-    }
 
-    /*
-    // 카메라 권한 허용
-    private void cameraPermission(){
-        create()
-                .setRationaleMessage("카메라 권한이 필요합니다.")
-                .setDeniedMessage("거부하셨습니다.")
-                .setPermissions(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-                .check();
     }
 
 
-    // 카메라 결과를 camera.java에 전달함
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RESULT_CODE && resultCode == RESULT_OK) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            Intent intent = new Intent(MainActivity.this, Camera.class);
-            intent.putExtra("picture", bitmap);
-            startActivity(intent);
-        }
-    }
-
-     */
-
-    // 앱이 다시 활성화 될 때 로그인 상태에세 따라 로그인/메인페이지 텍스트 갱신, true(마이페이지)/false(로그인)
     @Override
     protected void onResume() {
         super.onResume();
@@ -120,8 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.li_search: intent = new Intent(MainActivity.this, SearchTrash.class); break;
             case R.id.li_camera:
-                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, RESULT_CODE);
+                intent = new Intent(MainActivity.this, Camera.class);
                 break;
             case R.id.btn_can:
             case R.id.btn_couch:

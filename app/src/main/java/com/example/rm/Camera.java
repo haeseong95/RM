@@ -54,10 +54,6 @@ public class Camera extends AppCompatActivity {
             }
         });
 
-
-
-
-
     }
 
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

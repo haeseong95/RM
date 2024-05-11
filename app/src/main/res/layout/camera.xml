@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     tools:context=".Camera">
 
-
-    <TextView
-        android:id="@+id/resultTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/capture_btn"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="276dp"
-        android:layout_marginBottom="42dp"
-        android:text="종류 : "
-        android:fontFamily="@font/nanum_regular"
-        android:textSize="24sp" />
+    <ImageView
+        android:id="@+id/result_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true" />
 
     <Button
         android:id="@+id/capture_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="29dp"
-        android:fontFamily="@font/nanum_regular"
-        android:text="촬영" />
+        android:layout_above="@id/resultTextView"
+        android:layout_centerHorizontal="true"
+        style="@style/button_style"
+        android:layout_marginBottom="20dp"
+        android:text="사진 촬영" />
 
-    <ImageView
-        android:id="@+id/result_image"
-        android:layout_width="wrap_content"
-        android:layout_height="300dp" />
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="47dp"
+        android:gravity="center"
+        android:text="캡처 결과가 여기에 나타납니다."
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+
 </RelativeLayout>
+
