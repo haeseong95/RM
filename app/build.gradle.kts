@@ -41,6 +41,7 @@ dependencies {
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
     implementation("com.android.support:appcompat-v7:28.0.0")
     implementation("com.android.support:support-media-compat:28.0.0")
     implementation("com.android.support:support-v4:28.0.0")

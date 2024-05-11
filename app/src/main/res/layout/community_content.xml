@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".CategoryInfo">
+    android:orientation="vertical">
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
@@ -18,7 +17,7 @@
             android:id="@+id/btn_back"
             android:src="@drawable/btn_left" style="@style/back_icon"/>
 
-        <TextView android:id="@+id/category_title" android:text="그린보드" style="@style/toolbar_text" />
+        <TextView android:id="@+id/category_title" android:text="게시판" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
     <View

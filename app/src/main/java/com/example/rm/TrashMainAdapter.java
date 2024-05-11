@@ -1,6 +1,7 @@
 package com.example.rm;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +26,7 @@ public class TrashMainAdapter extends ArrayAdapter<TrashMainListData> {
     public TrashMainAdapter(@NonNull Context context, @NonNull ArrayList<TrashMainListData> arrayList) {
         super(context, 0, arrayList);
         this.arrayList = arrayList;
+        Log.i("TrashMain 어댑터 (메인 설명)", "어댑터 연결 성공" + arrayList.size());
     }
 
     @NonNull

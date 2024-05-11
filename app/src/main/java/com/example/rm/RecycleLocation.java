@@ -4,39 +4,22 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-<<<<<<< HEAD
-import android.util.Base64;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
-=======
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
->>>>>>> 5de0025bb082e9876bac18e4f289d9a950dc94d0
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-<<<<<<< HEAD
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
-=======
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdate;
@@ -47,14 +30,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 public class RecycleLocation extends AppCompatActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
->>>>>>> 5de0025bb082e9876bac18e4f289d9a950dc94d0
 
     private GoogleMap mMap;
     private Marker currentMarker = null;
@@ -64,19 +41,16 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
     private static final int UPDATE_INTERVAL_MS = 1000; // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
 
-<<<<<<< HEAD
     // 테스트
     ListView listView;
     ArrayList<TrashMainListData> arrayList = new ArrayList<>();
     TrashMainAdapter trashMainAdapter;
-=======
     // OnRequestPermissionsResultCallback에서 수신된 결과에서 ActivityCompat.OnRequestPermissionsResultCallback를 사용한 퍼미션 요청을 구별하기 위함
     private static final int PERMISSION_REQUEST_CODE = 100;
     boolean needRequest = false;
->>>>>>> 5de0025bb082e9876bac18e4f289d9a950dc94d0
 
     // 앱을 실행하기 위해 필요한 퍼미션 정의
-    String[] REQUIRED_PERMISSION = {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION };
+    String[] REQUIRED_PERMISSION = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
     Location mCurrentLocation;
     LatLng currentPosition;
@@ -100,11 +74,8 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
 
-<<<<<<< HEAD
         trashMainAdapter = new TrashMainAdapter(this, arrayList);
-        //test();
         listView.setAdapter(trashMainAdapter);
-=======
         builder.addLocationRequest(locationRequest);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -112,34 +83,33 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
->>>>>>> 5de0025bb082e9876bac18e4f289d9a950dc94d0
 
     }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
 
+
+        /*
         Log.d(TAG, "onMapReady: 들어옴 ");
 
         mMap = googleMap;
 
         // 지도의 초기위치 이동
-        setDefaultLocation();
+        //setDefaultLocation();
 
         // 런타임 퍼미션 처리
         // 1. 위치 퍼미션을 가지고 있는지 확인합니다.
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
 
-<<<<<<< HEAD
-    /*
     private void test(){
         Call<List<RetroUser>> call = RetroClient.getRetroService().getImage();
         call.enqueue(new Callback<List<RetroUser>>() {
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
                 if (response.isSuccessful()) {
-=======
         if(hasFineLocationPermission == PackageManager.PERMISSION_GRANTED && hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED){
             // 2. 이미 퍼미션을 가지고 있다면
             startLocationUpdates(); // 3. 위치 업데이트 실행
@@ -150,7 +120,6 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
                 Snackbar.make(mLayout, "이 앱을 실행하려면 위치 접근 권한이 필요합니다.", Snackbar.LENGTH_INDEFINITE).setAction("확인", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
->>>>>>> 5de0025bb082e9876bac18e4f289d9a950dc94d0
 
                         // 사용자에게 퍼미션 요청, 요청 결과는 onRequestPermisionResult에서 수신
                         ActivityCompat.requestPermissions(RecycleLocation.this, REQUIRED_PERMISSION, PERMISSION_REQUEST_CODE);
@@ -170,8 +139,12 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
                 Log.d(TAG, "onMapClick: ");
             }
         });
+
+         */
     }
 
+
+/*
     LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(@NonNull LocationResult locationResult) {
@@ -249,123 +222,123 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
         mMap.moveCamera(cameraUpdate);
     }
 
-     */
 
 
 
-    private void startLocationUpdates() {
-        if(!checkLocationServicesStatus()){
-            showDiologForLocationServiceSetting();
+        private void startLocationUpdates () {
+            if (!checkLocationServicesStatus()) {
+                showDiologForLocationServiceSetting();
 
-        }else{
+            } else {
+                int hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+                int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+
+                if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED || hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
+
+                    Log.d(TAG, "startLocationUpdates: 퍼미션 없음");
+                    return;
+                }
+
+                mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+                if (checkPermission()) {
+                    mMap.setMyLocationEnabled(true);
+                }
+            }
+
+        }
+
+        @Override
+        protected void onStart () {
+            super.onStart();
+
+            Log.d(TAG, "onStart: ");
+
+            if (checkPermission()) {
+                mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+
+                if (mMap != null) {
+                    mMap.setMyLocationEnabled(true);
+                }
+            }
+        }
+
+        @Override
+        protected void onStop () {
+            super.onStop();
+
+            if (mFusedLocationClient != null) {
+                mFusedLocationClient.removeLocationUpdates(locationCallback);
+            }
+        }
+
+        private boolean checkPermission () {
+
             int hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
             int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
 
-            if(hasFineLocationPermission != PackageManager.PERMISSION_GRANTED|| hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED ){
+            if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED || hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
 
                 Log.d(TAG, "startLocationUpdates: 퍼미션 없음");
-                return;
+                return false;
+
+            } else {
+                return true;
             }
 
-            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-            if(checkPermission()){
-                mMap.setMyLocationEnabled(true);
+        }
+
+        private void showDiologForLocationServiceSetting () {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(RecycleLocation.this);
+            builder.setTitle("위치 서비스 비활성화");
+            builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다. 위치설정을 수정하시겠습니까?");
+            builder.setCancelable(true);
+            builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent callGPSSettingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
+                }
+            });
+            builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+            builder.create().show();
+        }
+
+        private boolean checkLocationServicesStatus () {
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        }
+
+        private void setDefaultLocation () {
+
+            // 기본 위치
+            LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
+            String markerTitle = "위치 정보 가져올 수 없음";
+            String markerSnippet = "위치 퍼미션과 GPS 활성 여부를 확인하세요";
+
+            if (currentMarker != null) {
+                currentMarker.remove();
             }
-        }
 
-    }
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(DEFAULT_LOCATION);
+            markerOptions.title(markerTitle);
+            markerOptions.snippet(markerSnippet);
+            markerOptions.draggable(true);
+            currentMarker = mMap.addMarker(markerOptions);
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Log.d(TAG, "onStart: ");
-
-        if(checkPermission()){
-            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-
-            if(mMap!=null){
-                mMap.setMyLocationEnabled(true);
-            }
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
+            mMap.moveCamera(cameraUpdate);
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
+    */
 
-        if(mFusedLocationClient != null){
-            mFusedLocationClient.removeLocationUpdates(locationCallback);
-        }
-    }
-
-    private boolean checkPermission(){
-
-        int hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-
-        if(hasFineLocationPermission != PackageManager.PERMISSION_GRANTED|| hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED ){
-
-            Log.d(TAG, "startLocationUpdates: 퍼미션 없음");
-            return false;
-
-        }else{
-            return true;
-        }
-
-    }
-
-    private void showDiologForLocationServiceSetting() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(RecycleLocation.this);
-        builder.setTitle("위치 서비스 비활성화");
-        builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다. 위치설정을 수정하시겠습니까?");
-        builder.setCancelable(true);
-        builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent callGPSSettingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
-            }
-        });
-        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        builder.create().show();
-    }
-
-    private boolean checkLocationServicesStatus() {
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-    }
-
-    private void setDefaultLocation() {
-
-        // 기본 위치
-        LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
-        String markerTitle = "위치 정보 가져올 수 없음";
-        String markerSnippet = "위치 퍼미션과 GPS 활성 여부를 확인하세요";
-
-        if(currentMarker != null){
-            currentMarker.remove();
-        }
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(DEFAULT_LOCATION);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-        currentMarker = mMap.addMarker(markerOptions);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
-        mMap.moveCamera(cameraUpdate);
-    }
 }
-
-
-
 

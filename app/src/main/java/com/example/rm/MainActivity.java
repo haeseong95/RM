@@ -55,10 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainCommunity.setOnClickListener(this);
         mainUserinfo.setOnClickListener(this);
         PreferenceHelper.init(this);
-
-
     }
-
 
     @Override
     protected void onResume() {

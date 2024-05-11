@@ -31,10 +31,11 @@ public class TrashDetail extends AppCompatActivity {
     }
 
     public void getTrashData(){
-        String imageUrl = getIntent().getStringExtra("trashImage"); // 이미지 URL 가져오기
+        String imageUrl = getIntent().getStringExtra("trashImage");
         Glide.with(this)
                 .load(imageUrl)
                 .into(trashImage); // 로드할 ImageView 지정
         trashName.setText(getIntent().getStringExtra("trashName"));
+        trashInfo.setText(getIntent().getStringExtra("trashInfo"));
     }
 }

@@ -105,15 +105,17 @@ public class SearchTrash extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<RetroWriting>> call, Response<List<RetroWriting>> response) {
                 if (response.isSuccessful()) {
-                    String title, url = null;
+                    String title, url, thum = null;
                     List<RetroWriting> retroWritings = response.body();
 
                     for (int i=0; i<7; i++){
                         RetroWriting writing = retroWritings.get(i);
                         title = writing.getTitle();
                         url = writing.getUrl();
-                        arrayList.add(new TrashListData(url, title));
-                        Log.i("SearchTrash 데이터 가져옴O", "title : " + arrayList.get(i).getTrashListName() + ", body : "+ url);
+                        thum = writing.getThumbnailUrl();
+
+                        arrayList.add(new TrashListData(url, title, thum));
+                        Log.i("SearchTrash 데이터 가져옴O", "title : " + arrayList.get(i).getTrashListName() + ", url: " + url + "thum : " + thum);
                     }
                 }
                 else {Log.e("SearchTrash.listview 출력X", "");}
@@ -133,6 +135,7 @@ public class SearchTrash extends AppCompatActivity {
                 Intent intent = new Intent(SearchTrash.this, TrashDetail.class);
                 intent.putExtra("trashName", arrayList.get(position).getTrashListName());
                 intent.putExtra("trashImage", arrayList.get(position).getTrashListImage());
+                intent.putExtra("trashInfo", arrayList.get(position).getTrashListInfo());
                 startActivity(intent);
             }
         });

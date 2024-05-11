@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,92 +58,92 @@ public class CategoryInfo extends AppCompatActivity {
         clickListviewItem();
     }
 
-    // retrofit, 쓰레기 메인 설명을 리스트뷰에 추가 
+    //albumId값에 따라 카테고리 버튼 누르면 분류되게함
+    private int categoryToNumber(String sort) {
+        int result;
+
+        switch (sort) {
+            case "고철류": result = 1; break;
+            case "대형폐기물": result = 2; break;
+            case "비닐류": result = 3; break;
+            case "생활유혜폐기물": result = 4; break;
+            case "음식물쓰레기": result = 5; break;
+            case "유리병": result = 6; break;
+            case "의류": result = 7; break;
+            case "종이류": result = 8; break;
+            case "플라스틱류": result = 9; break;
+            case "폐가전제품": result = 10; break;
+            default: result = -1;
+        }
+
+        Log.i("카테고리 분류 값", "리턴값: " + result);
+        return result;
+    }
+
+    // retrofit, 쓰레기 메인 설명
     private void getMain(){
-        
-    }
-
-
-    // retrofit, 쓰레기 품목 종류를 요청한 값을 리스트뷰에 추가
-    private void getList() {
-
-    }
-    
-
-    /*
-    private void setRetroTrashItem() {
-
         String tag = getIntent().getStringExtra("category");    // 쓰레기 종류 구분해 줄 값
-        Call<RetroApi> call = RetroClient.getRetroService().setCategoryItem(tag);  //RetroService()로 인터페이스 구현체 생성
-
-        call.enqueue(new Callback<RetroApi>() {
+        Call<List<RetroWriting>> call = RetroClient.getRetroService().getCategoryMain(categoryToNumber(tag));
+        call.enqueue(new Callback<List<RetroWriting>>() {
             @Override
-            public void onResponse(Call<RetroApi> call, Response<RetroApi> response) {
-                ArrayList<RetroWriting> retroWritings = response.body().getRetroWriting();  // Writing 객체 리스트 반환
-                String name, info;
+            public void onResponse(Call<List<RetroWriting>> call, Response<List<RetroWriting>> response) {
+                if (response.isSuccessful()) {
+                    String title, url, thum= null;
+                    List<RetroWriting> retroWritings = response.body();
 
-
-                if (response.isSuccessful()){
-                    for (RetroWriting writing : retroWritings) {
-
+                    for (int i=0; i<5; i++){
+                        RetroWriting writing = retroWritings.get(i);
+                        title = writing.getTitle();
+                        url = writing.getUrl();
+                        thum = writing.getThumbnailUrl();
+                        mainArrayList.add(new TrashMainListData(url, title, thum));
+                        Log.i("CateogoryInfo 메인 설명O", "title : " + mainArrayList.get(i).getTrashMainName() + ", url : " + url);
                     }
-
+                    trashMainAdapter.notifyDataSetChanged();
+                    setListviewHeight(mainListview, trashMainAdapter);
                 }
+                else {Log.e("CateogoryInfo.메인 설명 출력X", "");}
             }
 
             @Override
-            public void onFailure(Call<RetroApi> call, Throwable t) {
-                Log.e("네트워크 연결 실패", "망", t);
+            public void onFailure(Call<List<RetroWriting>> call, Throwable t) {
+                Log.e("categoryInfo 네트워크 오류", "", t);
             }
         });
-
-
-
-        call.enqueue(new Callback<List<RetroUser>>() {
-            @Override
-            public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
-
-
-                // 전체 데이터 중 태그를 이용해 값 구별해서 가져오기
-
-                if (response.isSuccessful()) {  // HTTP 응답의 StatCode가 200~299인 경우 true 반환
-                    String title, body = null;
-                    List<RetroUser> retroUser = response.body();    // body()는 서버로부터 받은 응답 형식을 변수에 입력
-
-                    for (RetroUser user : retroUser){
-                        title = user.getEmail();
-                        body = user.getId();
-                        arrayList.add(new TrashListData(title, body));  // arrayList에 항목 추가
-                        Log.i("category 리스트뷰 전달 성공", "title : " + title + ", body : "+ body);
-                    }
-
-                    trashAdapter.notifyDataSetChanged();    // listview 리스트의 크기+아이템 둘 다 변경될 때 사용 (=리스트 업데이트)
-
-                    // 리스트뷰의 높이를 계산에서 layout 크기를 설정해줌
-                    int totalHeight = 0;
-                    for (int i = 0; i < trashAdapter.getCount(); i++){
-                        View listItem = trashAdapter.getView(i, null, listView);
-                        listItem.measure(0, 0);
-                        totalHeight += listItem.getMeasuredHeight();
-                    }
-                    ViewGroup.LayoutParams params = listView.getLayoutParams();
-                    params.height = totalHeight + (listView.getDividerHeight() * (trashAdapter.getCount() - 1));
-                    listView.setLayoutParams(params);
-
-                }
-                else {
-                    Log.e("category 리스트뷰", "리스트뷰 출력 실패");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<RetroUser>> call, Throwable t) {
-                Log.e("category 리스트뷰", "예외, 네트워크 오류 등");
-            }
-        });
-
     }
-    */
+
+
+    // retrofit, 쓰레기 품목 종류
+    private void getList() {
+        String tag = getIntent().getStringExtra("category");
+        Call<List<RetroWriting>> call = RetroClient.getRetroService().getCategoryList(categoryToNumber(tag));
+        call.enqueue(new Callback<List<RetroWriting>>() {
+            @Override
+            public void onResponse(Call<List<RetroWriting>> call, Response<List<RetroWriting>> response) {
+                if (response.isSuccessful()) {
+                    String title, url, thum = null;
+                    List<RetroWriting> retroWritings = response.body();
+
+                    for (int i=0; i<10; i++){
+                        RetroWriting writing = retroWritings.get(i);
+                        title = writing.getTitle();
+                        url = writing.getUrl();
+                        thum = writing.getThumbnailUrl();
+                        arrayList.add(new TrashListData(url, title, thum));
+                        Log.i("CateogoryInfo 품목 리스트O", "title : " + arrayList.get(i).getTrashListName() + ", url : "+ url + "thum : " + thum);
+                    }
+                    trashAdapter.notifyDataSetChanged();
+                    setListviewHeight(itemListView, trashAdapter);
+                }
+                else {Log.e("CateogoryInfo. 품목 리스트X", "");}
+            }
+
+            @Override
+            public void onFailure(Call<List<RetroWriting>> call, Throwable t) {
+                Log.e("categoryInfo 네트워크 오류", "", t);
+            }
+        });
+    }
 
     // listview 목록 클릭하면 쓰레기 상세 페이지로 데이터 전달
     public void clickListviewItem() {
@@ -147,11 +151,24 @@ public class CategoryInfo extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long I) {
                 Intent intent = new Intent(CategoryInfo.this, TrashDetail.class);
-                intent.putExtra("trashName", arrayList.get(position).trashListInfo);
-               //intent.putExtra("trashImage", Integer.toString(arrayList.get(position).trashListInfo));
-                intent.putExtra("trashInfo", arrayList.get(position).trashListInfo);
+                intent.putExtra("trashName", arrayList.get(position).getTrashListName());
+                intent.putExtra("trashImage", arrayList.get(position).getTrashListImage());
+                intent.putExtra("trashInfo", arrayList.get(position).getTrashListInfo());
                 startActivity(intent);
             }
         });
+    }
+
+    // listview의 높이 계산
+    private void setListviewHeight(ListView listView, ListAdapter adapter){
+        int totalHeight = 0;
+        for (int i = 0; i < adapter.getCount(); i++){
+            View listItem = adapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 }

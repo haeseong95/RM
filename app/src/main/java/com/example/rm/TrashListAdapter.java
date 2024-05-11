@@ -1,6 +1,7 @@
 package com.example.rm;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 import android.view.View;
@@ -24,6 +25,7 @@ public class TrashListAdapter extends ArrayAdapter<TrashListData> {
     public TrashListAdapter(@NonNull Context context, ArrayList<TrashListData> arrayList) {     // 현재 컨텍스트(nullX), 뷰 만들 때 사용할 레이아웃 리소스 파일
         super(context, 0, arrayList);
         this.arrayList = arrayList;
+        Log.i("TrashList어댑터 (품목)", "어댑터 연결 성공" + arrayList.size());
     }
 
     @NonNull
@@ -39,9 +41,9 @@ public class TrashListAdapter extends ArrayAdapter<TrashListData> {
         ImageView listImage = convertView.findViewById(R.id.list_trashImage);
 
         TrashListData trashListData = getItem(position);        // positon에 데이터 추가해 해당 위치의 데이터 가져옴
+        String imageUrl = trashListData.getTrashListImage();    // 이미지를 받을 때는 setimageResource는 리소스 id를 참고하는데 타입이 안맞으니 string에 저장해야 할듯
         listName.setText(trashListData.getTrashListName());     // 각 뷰에 대한 데이터 전달
         listInfo.setText(trashListData.getTrashListInfo());
-        String imageUrl = trashListData.getTrashListImage();    // 이미지를 받을 때는 setimageResource는 리소스 id를 참고하는데 타입이 안맞으니 string에 저장해야 할듯
         Glide.with(getContext()).load(imageUrl).encodeQuality(80).diskCacheStrategy(DiskCacheStrategy.ALL).into(listImage);
         return convertView;
     }
@@ -83,8 +85,11 @@ class TrashListData {
         this.trashListInfo = trashListInfo;
     }
 
-    public TrashListData(String trashListImage, String trashListName) {
+
+    //
+    public TrashListData(String trashListImage, String trashListName, String trashListInfo) {
         this.trashListImage = trashListImage;
         this.trashListName = trashListName;
+        this.trashListInfo = trashListInfo;
     }
 }

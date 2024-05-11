@@ -58,7 +58,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCrIrcE2mGVIhgmg7yasM4rAVmyMWeccSU" />
 
-
         <activity android:name="com.example.rm.LoginUser"/>
         <activity android:name="com.example.rm.SignUp"/>
         <activity android:name="com.example.rm.SearchId"/>
@@ -71,6 +70,8 @@
         <activity android:name="com.example.rm.RecycleLocation"/>
         <activity android:name="com.example.rm.Community"/>
         <activity android:name="com.example.rm.DeleteAccount"/>
+        <activity android:name="com.example.rm.CommunityPostEditor"/>
+
     </application>
 
 </manifest>
