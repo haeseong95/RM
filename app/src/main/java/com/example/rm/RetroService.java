@@ -12,11 +12,6 @@ import retrofit2.http.Query;
 // Retrofit의 인터페이스 (HTTP 작업 정의)
 public interface RetroService {
 
-
-    // 커뮤니티에 테스트로 써 봄
-    @GET("/api/User/list")
-    Call<RetroApi> getUser();
-
     // 카테고리 메인 설명 (이것도 cateogory 값 받아서 다르게 출력되어야 함), 리스트뷰에 쓰레기 이름/설명/이미지 3개 가져오기)
     // 테스트
     @GET("/api/Writing")
@@ -28,21 +23,28 @@ public interface RetroService {
 
 
 
-     // content로 이미지 가져오기 (지도에서 테스트, 쓰레기 정보 <-> 이미지를 따로 가져올 거임)
-    @FormUrlEncoded
-    @GET("/api/contents")
-    Call<RetroApi> getCategoryItem();
 
 
 
 
 
 
-
-    // multipart로 일단 이미지만 가져오는 거 테스트
-//searchTrash에서 title, url을 listview를 출력 -> 검색창에서 title을 검색해서 겹치는 거 뽑음
+    //searchTrash에서 title, url을 listview를 출력 -> 검색창에서 title을 검색해서 겹치는 거 뽑음
     @GET("/photos")
-    Call<List<RetroUser>> getImage();
+    Call<List<RetroUser>> getSearchTrashData();
+
+    // categoryInfo에선
+
+    /*
+    retrouser : 사용자 User 정의 / json의
+    retrowriting : 쓰레기 정보 Wrting 정의
+
+
+    listview
+    1. searchview : 쓰레기 이름만 출력(태그는 나중에 생각) trashName -> trashNane,
+
+     */
+
 
 
 

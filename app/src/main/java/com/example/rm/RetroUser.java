@@ -1,11 +1,6 @@
 package com.example.rm;
 
-
-import com.google.gson.annotations.SerializedName;
-
-// retrofit user 데이터 클래스
 public class RetroUser {
-
     // jsonplaceholder/photos 테스트
     private int albumId;
     private int id;

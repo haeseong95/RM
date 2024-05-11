@@ -30,7 +30,6 @@ public class TrashDetail extends AppCompatActivity {
 
     }
 
-
     public void getTrashData(){
         String imageUrl = getIntent().getStringExtra("trashImage"); // 이미지 URL 가져오기
         Glide.with(this)

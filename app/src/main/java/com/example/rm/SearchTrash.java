@@ -31,7 +31,7 @@ import retrofit2.Response;
 public class SearchTrash extends AppCompatActivity {
     ListView listView;
     ImageView imageView;
-    ArrayList<TrashMainListData> arrayList = new ArrayList<>();  // retrofit GET으로 결과를 저장할 그릇, 이걸 listview 출력X, arraylist는 사용자가 입력 시 onQueryTextchagne에서 출력값만 listview로 출력하는 형식으로 가는 게 나을 듯, 일단 해 봄
+    ArrayList<TrashMainListData> arrayList = new ArrayList<>();  // retrofit GET으로 결과를 저장할 그릇, 이걸 listview 출력X, arraylist는 사용자가 입력 시 onQueryTextchagne에서 출력값만 listview로 출력하는 형식으로 가는 게 나을 듯
     TrashAdapter2 trashAdapter2;
 
     @Override
@@ -99,7 +99,7 @@ public class SearchTrash extends AppCompatActivity {
     }
 
     private void getTrashData() {       // 리스트뷰에 출력할 데이터 서버에서 가져와 arrayList에 저장 (검색 전에 이미 만들어져 있어야 하고, 데이터를 가져오기만 하므로 화면에 출력할 필요는 없을 듯)
-        Call<List<RetroUser>> call = RetroClient.getRetroService().getImage();
+        Call<List<RetroUser>> call = RetroClient.getRetroService().getSearchTrashData();
 
         call.enqueue(new Callback<List<RetroUser>>() {
             @Override
@@ -135,6 +135,4 @@ public class SearchTrash extends AppCompatActivity {
             }
         });
     }
-
-
 }
