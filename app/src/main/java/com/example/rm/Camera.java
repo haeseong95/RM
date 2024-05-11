@@ -53,7 +53,7 @@ public class Camera extends AppCompatActivity {
                 startActivityForResult(cameraIntent, RESULT_CODE);
             }
         });
-        
+
     }
 
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

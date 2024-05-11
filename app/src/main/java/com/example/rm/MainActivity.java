@@ -1,26 +1,14 @@
 package com.example.rm;
 
-<<<<<<< HEAD
+
 import android.content.Intent;
-=======
-import static com.gun0912.tedpermission.normal.TedPermission.create;
-import android.Manifest;
-import android.graphics.Bitmap;
->>>>>>> 458f2aa9835baff6179ff2a02a16123d0b4e9c1b
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-<<<<<<< HEAD
 import android.widget.LinearLayout;
-=======
-import android.content.Intent;
-import android.widget.LinearLayout;
-import android.widget.Toast;
->>>>>>> 458f2aa9835baff6179ff2a02a16123d0b4e9c1b
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -30,8 +18,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayout btnSearch, btnCamera;      // 검색창, 카메라
     LinearLayout btnCan, btnCouch, btnPlasticBag, btnBattery, btnStink, btnGlass, btnClothes, btnPaper, btnPlastic, btnRes;      // 카테고리 버튼
     Button mainMap, mainCommunity, mainUserinfo;        // 툴바 아이콘
-    private static final int REQUEST_IMAGE_CAPTURE = 672;
-    private static final int RESULT_CODE = 22;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,36 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-<<<<<<< HEAD
 
-    // 앱이 다시 활성화 될 때 로그인 상태에세 따라 로그인/메인페이지 텍스트 갱신
-=======
-    /*
-    // 카메라 권한 허용
-    private void cameraPermission(){
-        create()
-                .setRationaleMessage("카메라 권한이 필요합니다.")
-                .setDeniedMessage("거부하셨습니다.")
-                .setPermissions(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-                .check();
-    }
-
-
-    // 카메라 결과를 camera.java에 전달함
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RESULT_CODE && resultCode == RESULT_OK) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            Intent intent = new Intent(MainActivity.this, Camera.class);
-            intent.putExtra("picture", bitmap);
-            startActivity(intent);
-        }
-    }
-
-     */
-
-    // 앱이 다시 활성화 될 때 로그인 상태에세 따라 로그인/메인페이지 텍스트 갱신, true(마이페이지)/false(로그인)
->>>>>>> 458f2aa9835baff6179ff2a02a16123d0b4e9c1b
     @Override
     protected void onResume() {
         super.onResume();
