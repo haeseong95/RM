@@ -3,7 +3,6 @@ package com.example.rm;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -93,8 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.li_search: intent = new Intent(MainActivity.this, SearchTrash.class); break;
             case R.id.li_camera:
-                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, RESULT_CODE);
+                intent = new Intent(MainActivity.this, Camera.class);
                 break;
             case R.id.btn_can:
             case R.id.btn_couch:

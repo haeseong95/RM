@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/resultTextView"
         android:layout_centerHorizontal="true"
+        style="@style/button_style"
         android:layout_marginBottom="20dp"
         android:text="사진 촬영" />
 
