@@ -4,14 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,18 +17,17 @@ import retrofit2.Response;
 
 // 메인화면에서 쓰레기 종류 버튼 클릭 시 쓰레기 메인 설명+품목 보여줌
 public class CategoryInfo extends AppCompatActivity {
-
     TextView categoryTitle;
     ImageView btnBack;
-    ListView listView, listView2;
-    
-    // 쓰레기 품목
-    ArrayList<TrashListData> arrayList = new ArrayList<>();;    
-    TrashAdapter trashAdapter;
+    ListView itemListView, mainListview;
+
+    // 쓰레기 종류 목록
+    ArrayList<TrashListData> arrayList = new ArrayList<>();;
+    TrashListAdapter trashAdapter;
 
     // 메인 설명
-    ArrayList<TrashMainListData> arrayList2 = new ArrayList<>();    
-    TrashAdapter2 trashAdapter2;
+    ArrayList<TrashMainListData> mainArrayList = new ArrayList<>();
+    TrashMainAdapter trashMainAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,38 +36,37 @@ public class CategoryInfo extends AppCompatActivity {
 
         btnBack = (ImageView)findViewById(R.id.btn_back);
         categoryTitle = (TextView)findViewById(R.id.category_title);
-        listView = (ListView)findViewById(R.id.category_listview);  // 쓰레기 품목 
-        listView2 = findViewById(R.id.category_main_listview);      // 메인 설명
+        itemListView = (ListView)findViewById(R.id.category_listview);  // 쓰레기 품목
+        mainListview = findViewById(R.id.category_main_listview);      // 메인 설명
+        btnBack.setOnClickListener(v -> finish());
         categoryTitle.setText(getIntent().getStringExtra("category"));      // 쓰레기 종류의 이름을 상단 툴바에 표시
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         // 메인 설명
-        trashAdapter2 = new TrashAdapter2(this, arrayList2);
-        setRetroTrashMain();
-        listView2.setAdapter(trashAdapter2);
+        trashMainAdapter = new TrashMainAdapter(this, mainArrayList);
+        getMain();
+        mainListview.setAdapter(trashMainAdapter);
         
         // 쓰레기 목록
-        trashAdapter = new TrashAdapter(this, arrayList);
-        setRetroTrashItem();
-        listView.setAdapter(trashAdapter);
-        listView.setClickable(true);
+        trashAdapter = new TrashListAdapter(this, arrayList);
+        getList();
+        itemListView.setAdapter(trashAdapter);
+        itemListView.setClickable(true);
         clickListviewItem();
     }
 
     // retrofit, 쓰레기 메인 설명을 리스트뷰에 추가 
-    private void setRetroTrashMain(){
+    private void getMain(){
         
     }
-    
-    
+
 
     // retrofit, 쓰레기 품목 종류를 요청한 값을 리스트뷰에 추가
+    private void getList() {
+
+    }
+    
+
+    /*
     private void setRetroTrashItem() {
 
         String tag = getIntent().getStringExtra("category");    // 쓰레기 종류 구분해 줄 값
@@ -97,7 +93,8 @@ public class CategoryInfo extends AppCompatActivity {
             }
         });
 
-        /*
+
+
         call.enqueue(new Callback<List<RetroUser>>() {
             @Override
             public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
@@ -141,19 +138,18 @@ public class CategoryInfo extends AppCompatActivity {
             }
         });
 
-         */
-
     }
+    */
 
     // listview 목록 클릭하면 쓰레기 상세 페이지로 데이터 전달
     public void clickListviewItem() {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long I) {
                 Intent intent = new Intent(CategoryInfo.this, TrashDetail.class);
-                intent.putExtra("trashName", arrayList.get(position).trashName);
-                intent.putExtra("trashImage", Integer.toString(arrayList.get(position).trashImage));
-                intent.putExtra("trashInfo", arrayList.get(position).trashInfo);
+                intent.putExtra("trashName", arrayList.get(position).trashListInfo);
+               //intent.putExtra("trashImage", Integer.toString(arrayList.get(position).trashListInfo));
+                intent.putExtra("trashInfo", arrayList.get(position).trashListInfo);
                 startActivity(intent);
             }
         });

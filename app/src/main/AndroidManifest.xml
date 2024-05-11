@@ -62,7 +62,6 @@
         <activity android:name="com.example.rm.RecycleLocation"/>
         <activity android:name="com.example.rm.Community"/>
         <activity android:name="com.example.rm.DeleteAccount"/>
-        <activity android:name="com.example.rm.RetroImage"/>
     </application>
 
 </manifest>

@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -14,14 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RecycleLocation extends AppCompatActivity {
 
@@ -30,7 +22,7 @@ public class RecycleLocation extends AppCompatActivity {
     // 테스트
     ListView listView;
     ArrayList<TrashMainListData> arrayList = new ArrayList<>();
-    TrashAdapter2 trashAdapter2;
+    TrashMainAdapter trashMainAdapter;
 
     // 이미지
     private final int GALLERY = 1;
@@ -52,9 +44,9 @@ public class RecycleLocation extends AppCompatActivity {
             }
         });
 
-        trashAdapter2 = new TrashAdapter2(this, arrayList);
-        test();
-        listView.setAdapter(trashAdapter2);
+        trashMainAdapter = new TrashMainAdapter(this, arrayList);
+        //test();
+        listView.setAdapter(trashMainAdapter);
 
     }
 
@@ -75,6 +67,7 @@ public class RecycleLocation extends AppCompatActivity {
     }
 
 
+    /*
     private void test(){
         Call<List<RetroUser>> call = RetroClient.getRetroService().getImage();
         call.enqueue(new Callback<List<RetroUser>>() {
@@ -110,6 +103,8 @@ public class RecycleLocation extends AppCompatActivity {
         });
 
     }
+
+     */
 
 
     /*

@@ -31,8 +31,8 @@ import retrofit2.Response;
 public class SearchTrash extends AppCompatActivity {
     ListView listView;
     ImageView imageView;
-    ArrayList<TrashMainListData> arrayList = new ArrayList<>();  // retrofit GET으로 결과를 저장할 그릇, 이걸 listview 출력X, arraylist는 사용자가 입력 시 onQueryTextchagne에서 출력값만 listview로 출력하는 형식으로 가는 게 나을 듯
-    TrashAdapter2 trashAdapter2;
+    ArrayList<TrashListData> arrayList = new ArrayList<>();  // retrofit GET으로 결과를 저장할 그릇, 이걸 listview 출력X, arraylist는 사용자가 입력 시 onQueryTextchagne에서 출력값만 listview로 출력하는 형식으로 가는 게 나을 듯
+    TrashListAdapter trashListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +46,8 @@ public class SearchTrash extends AppCompatActivity {
         setSupportActionBar(toolbar);   // 액션바 변경
         getSupportActionBar().setDisplayShowTitleEnabled(false);    // 툴바 프로젝트 이름 제거
 
-        trashAdapter2 = new TrashAdapter2(SearchTrash.this, new ArrayList<>());     // 어댑터 초기화, 비어 있는 리스트로 시작
-        listView.setAdapter(trashAdapter2);
+        trashListAdapter = new TrashListAdapter(SearchTrash.this, new ArrayList<>());
+        listView.setAdapter(trashListAdapter);
         listView.setClickable(true);
         getTrashData();
         clickItem();
@@ -77,7 +77,7 @@ public class SearchTrash extends AppCompatActivity {
             public boolean onQueryTextSubmit(String str) {return false;}    // 키보드의 검색 버튼을 눌렀을 때 이벤트(=검색 업무 처리), 입력한 값을 str로 받아서 처리
             @Override
             public boolean onQueryTextChange(String text) {    // 검색어 입력할 때마다 실행됨
-                if(text.isEmpty()){trashAdapter2.updateListviewItem(new ArrayList<>());}
+                if(text.isEmpty()){trashListAdapter.updateListviewItem(new ArrayList<>());}
                 else {filterTrash(text);}
                 return true;
             }
@@ -87,40 +87,42 @@ public class SearchTrash extends AppCompatActivity {
     }
 
     private void filterTrash(String text){      // 검색창에 입력한 텍스트가 있으면 텍스트값과 비교해서 같은 데이터를 result에 추가
-        ArrayList<TrashMainListData> result = new ArrayList<>();
+        ArrayList<TrashListData> result = new ArrayList<>();
 
         for(int i=0; i<arrayList.size(); i++) {
-            TrashMainListData trashMainListData = arrayList.get(i);
-            if(trashMainListData.getMainName().toLowerCase().contains(text.toLowerCase())) {    // 입력한 텍스트가 포함되어 있는지 확인 (대소문자 구분X)
-                result.add(trashMainListData);
+            TrashListData trashListData = arrayList.get(i);
+            if(trashListData.getTrashListName().toLowerCase().contains(text.toLowerCase())) {    // 입력한 텍스트가 포함되어 있는지 확인 (대소문자 구분X)
+                result.add(trashListData);
             }
         }
-        trashAdapter2.updateListviewItem(result);   // listview 업데이트 (초기화 문제인듯)
+        trashListAdapter.updateListviewItem(result);   // listview 업데이트 (초기화 문제인듯)
     }
 
     private void getTrashData() {       // 리스트뷰에 출력할 데이터 서버에서 가져와 arrayList에 저장 (검색 전에 이미 만들어져 있어야 하고, 데이터를 가져오기만 하므로 화면에 출력할 필요는 없을 듯)
-        Call<List<RetroUser>> call = RetroClient.getRetroService().getSearchTrashData();
 
-        call.enqueue(new Callback<List<RetroUser>>() {
+        Call<List<RetroWriting>> call = RetroClient.getRetroService().getSearchTrashData();
+        call.enqueue(new Callback<List<RetroWriting>>() {
             @Override
-            public void onResponse(Call<List<RetroUser>> call, Response<List<RetroUser>> response) {
+            public void onResponse(Call<List<RetroWriting>> call, Response<List<RetroWriting>> response) {
                 if (response.isSuccessful()) {
                     String title, url = null;
-                    List<RetroUser> retroUser = response.body();
+                    List<RetroWriting> retroWritings = response.body();
 
                     for (int i=0; i<7; i++){
-                        RetroUser user = retroUser.get(i);
-
-                        title = user.getTitle();
-                        url = user.getUrl();
-                        arrayList.add(new TrashMainListData(url, title));
-                        Log.i("SearchTrash 데이터 가져옴O", "title : " + arrayList.get(i).getMainName() + ", body : "+ url);
+                        RetroWriting writing = retroWritings.get(i);
+                        title = writing.getTitle();
+                        url = writing.getUrl();
+                        arrayList.add(new TrashListData(url, title));
+                        Log.i("SearchTrash 데이터 가져옴O", "title : " + arrayList.get(i).getTrashListName() + ", body : "+ url);
                     }
                 }
                 else {Log.e("SearchTrash.listview 출력X", "");}
             }
+
             @Override
-            public void onFailure(Call<List<RetroUser>> call, Throwable t) {Log.e("SearchTrash 네트워크 오류", "", t);}
+            public void onFailure(Call<List<RetroWriting>> call, Throwable t) {
+                Log.e("SearchTrash 네트워크 오류", "", t);
+            }
         });
     }
 
@@ -129,8 +131,8 @@ public class SearchTrash extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(SearchTrash.this, TrashDetail.class);
-                intent.putExtra("trashName", arrayList.get(position).getMainName());
-                intent.putExtra("trashImage", arrayList.get(position).getMainImage());
+                intent.putExtra("trashName", arrayList.get(position).getTrashListName());
+                intent.putExtra("trashImage", arrayList.get(position).getTrashListImage());
                 startActivity(intent);
             }
         });
