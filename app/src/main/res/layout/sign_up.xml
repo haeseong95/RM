@@ -45,7 +45,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#BFBFBF"
-                android:text="확인"
+                android:text="중복확인"
+                android:textSize="10dp"
                 android:fontFamily="@font/nanum_regular"
                 android:textColor="@color/black"
                 android:layout_marginLeft="20dp"/>
@@ -68,7 +69,8 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#BFBFBF"
                 android:fontFamily="@font/nanum_regular"
-                android:text="확인"
+                android:text="중복확인"
+                android:textSize="10dp"
                 android:textColor="@color/black"
                 android:layout_marginLeft="20dp"/>
         </LinearLayout>

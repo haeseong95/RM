@@ -53,11 +53,14 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
+<<<<<<< HEAD
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCrIrcE2mGVIhgmg7yasM4rAVmyMWeccSU" />
 
 
+=======
+>>>>>>> 458f2aa9835baff6179ff2a02a16123d0b4e9c1b
         <activity android:name="com.example.rm.LoginUser"/>
         <activity android:name="com.example.rm.SignUp"/>
         <activity android:name="com.example.rm.SearchId"/>
@@ -70,6 +73,7 @@
         <activity android:name="com.example.rm.RecycleLocation"/>
         <activity android:name="com.example.rm.Community"/>
         <activity android:name="com.example.rm.DeleteAccount"/>
+        <activity android:name="com.example.rm.RetroImage"/>
     </application>
 
 </manifest>

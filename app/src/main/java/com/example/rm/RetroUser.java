@@ -1,33 +1,19 @@
 package com.example.rm;
 
-import com.google.gson.annotations.SerializedName;
-
-// Retrofit의 사용자 Data class
 public class RetroUser {
-
-    @SerializedName("userId")
-    private int userId;
-
+    // jsonplaceholder/photos 테스트
+    private int albumId;
     private int id;
+    private String title;
+    private String thumbnailUrl;
+    private String url;
 
-    @SerializedName("title")
-    private String uTitle;
-
-    @SerializedName("body")
-    private String uBody;
-
-    public RetroUser(int userId, int id, String uTitle) {
-        this.userId = userId;
-        this.id = id;
-        this.uTitle = uTitle;
+    public int getAlbumId() {
+        return albumId;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setAlbumId(int albumId) {
+        this.albumId = albumId;
     }
 
     public int getId() {
@@ -38,31 +24,104 @@ public class RetroUser {
         this.id = id;
     }
 
-    public String getuTitle() {
-        return uTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setuTitle(String uTitle) {
-        this.uTitle = uTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getuBody() {
-        return uBody;
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
     }
 
-    public void setuBody(String uBody) {
-        this.uBody = uBody;
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 
-    // toString을 오버라이드 해주지 않으면 객체 주소값을 출력함
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public RetroUser(String title, String url) {
+        this.title = title;
+        this.url = url;
+    }
+
+    /*
+    // 원래 코드
+    private String email;
+    private String id;
+    private String nickname;
+    private String place;   // 사용자 랭킹
+    private String status;  // 사용자 상태
+    @SerializedName("passwd")
+    private String password;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     @Override
     public String toString() {
-        return "RetroUser{" +
-                "userId=" + userId +
-                ", id=" + id +
-                ", uTitle='" + uTitle + '\'' +
-                ", uBody='" + uBody + '\'' +
+        return "Users{" +
+                "email='" + email + '\'' +
+                ", id='" + id + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", password='" + password + '\'' +
+                ", place='" + place + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
+
+ */
 }

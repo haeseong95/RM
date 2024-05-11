@@ -7,6 +7,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+
 public class TrashDetail extends AppCompatActivity {
 
     ImageView btnBack, trashImage;
@@ -28,10 +30,11 @@ public class TrashDetail extends AppCompatActivity {
 
     }
 
-
     public void getTrashData(){
-        trashImage.setImageResource(Integer.parseInt(getIntent().getStringExtra("trashImage")));
+        String imageUrl = getIntent().getStringExtra("trashImage"); // 이미지 URL 가져오기
+        Glide.with(this)
+                .load(imageUrl)
+                .into(trashImage); // 로드할 ImageView 지정
         trashName.setText(getIntent().getStringExtra("trashName"));
-        trashInfo.setText(getIntent().getStringExtra("trashInfo"));
     }
 }
