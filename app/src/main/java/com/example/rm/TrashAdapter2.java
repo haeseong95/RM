@@ -2,24 +2,20 @@ package com.example.rm;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
-import java.util.List;
 
 // 쓰레기 메인 설명을 나타내는 리스트뷰 어댑터
 public class TrashAdapter2 extends ArrayAdapter<TrashMainListData> {
@@ -44,18 +40,17 @@ public class TrashAdapter2 extends ArrayAdapter<TrashMainListData> {
 
         TrashMainListData trashMainListData = getItem(position);
         mainName.setText(trashMainListData.getMainName());
-        mainDescription.setText(trashMainListData.getMainIfo());
+        mainDescription.setText(trashMainListData.getMainInfo());
+
+        String imageUrl = trashMainListData.getMainImage();
 
         // 이미지 전송
         Glide.with(getContext())
-                .load(trashMainListData.getMainImage())   // with : 어떤 뷰에 넣을 지, load : 원하는 이미지의 URL
+                .load(imageUrl)   // with : 어떤 뷰에 넣을 지, load : 원하는 이미지의 URL(.getMainImage()로 사용하면 이미지 리소스 ID를 쓰는거라 아이템 전달 시 형식 안맞는듯
                 .encodeQuality(80)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .dontAnimate()
                 .priority(Priority.LOW)
-                .placeholder(R.drawable.ic_launcher_background) // 이미지 로딩 중 보여줄 이미지
                 .into(mainImage);   // 어떤 imageView에 넣어줄 지 정함
-
 
         /*
         // listview의 아이템 클릭 시 반응X (카테고리 메인 설명에 넣을 거임)
@@ -70,6 +65,7 @@ public class TrashAdapter2 extends ArrayAdapter<TrashMainListData> {
         return convertView;
     }
 
+
     // 어댑터 내 데이터 변경 + 뷰 업데이트
     public void updateListviewItem(ArrayList<TrashMainListData> newItem) {
         arrayList.clear();      // 데이터 초기화
@@ -82,7 +78,7 @@ public class TrashAdapter2 extends ArrayAdapter<TrashMainListData> {
 class TrashMainListData {
     public String mainImage = "";  // 쓰레기 이미지, 이미지 url을 저장하므로 String임
     public String mainName = "";    // 쓰레기 이름
-    public String mainIfo="";   // 쓰레기 분리수거 방법
+    public String mainInfo="";   // 쓰레기 분리수거 방법
 
     public String getMainImage() {return mainImage;}
     public void setMainImage(String mainImage) {this.mainImage = mainImage;}
@@ -95,12 +91,12 @@ class TrashMainListData {
         this.mainName = mainName;
     }
 
-    public String getMainIfo() {
-        return mainIfo;
+    public String getMainInfo() {
+        return mainInfo;
     }
 
-    public void setMainIfo(String mainIfo) {
-        this.mainIfo = mainIfo;
+    public void setMainInfo(String mainIfo) {
+        this.mainInfo = mainIfo;
     }
 
     public TrashMainListData(String mainImage, String mainName) {
