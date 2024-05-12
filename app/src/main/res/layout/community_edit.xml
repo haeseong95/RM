@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".CommunityPostEditor">
+    tools:context=".community.CommunityEdit">
 
     <androidx.appcompat.widget.Toolbar
         app:contentInsetStart="0dp"
@@ -26,59 +26,104 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- 제목 입력 -->
-
-        <!-- 내용 입력 -->
         <EditText
             android:id="@+id/editTextTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/category_gray"
             android:fontFamily="@font/nanum_regular"
             android:hint="제목"
+            android:paddingLeft="10dp"
+            android:textSize="15dp"
+            android:textStyle="bold"
             android:inputType="text"/>
 
         <EditText
             android:id="@+id/editTextContent"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:hint="게시글 내용"
-            android:inputType="textMultiLine"
-            android:gravity="top"/>
+            android:layout_height="350dp"
+            android:layout_marginTop="10dp"
+            android:gravity="top"
+            android:textSize="14dp"
+            android:hint="내용을 입력하세요"
+            android:fontFamily="@font/nanum_regular"
+            android:padding="15dp"
+            android:background="@drawable/border_community"
+            android:inputType="textMultiLine"/>
 
-        <!-- 이미지 추가 버튼 -->
         <Button
-            android:id="@+id/buttonAddImage"
-            android:layout_width="match_parent"
+            android:id="@+id/btn_plusimage"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="이미지 첨부하기"/>
+            android:backgroundTint="@android:color/transparent"
+            android:gravity="center"
+            android:text="이미지 첨부하기"
+            android:fontFamily="@font/nanum_regular"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:textAlignment="center"
+            android:layout_gravity="right"/>
 
-        <!-- 버튼 컨테이너 -->
+        <RelativeLayout
+            android:id="@+id/post_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp">
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#ffaadd"
+                android:layout_margin="20dp" />
+
+            <Button
+                android:id="@+id/btn_image_delete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:backgroundTint="@null"
+                android:background="@drawable/community_delete"/>
+        </RelativeLayout>
+
+        <!-- 글쓰기 확인/취소 버튼 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
+            android:gravity="right"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal">
 
-            <!-- 게시 버튼 -->
-            <Button
-                android:id="@+id/buttonPost"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/btn_postdelete"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="게시"
-                android:background="#FF0000"
-                android:textColor="#FFFFFF"/>
-
-            <!-- 취소 버튼 -->
-            <Button
-                android:id="@+id/buttonCancel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="취소"
-                android:background="#CCCCCC"/>
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginRight="20dp"
+                android:backgroundTint="#FF0000"
+                android:background="@drawable/border_trash_tag"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/btn_postcreate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="작성"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginRight="10dp"
+                android:backgroundTint="#0038FF"
+                android:background="@drawable/border_trash_tag"
+                android:layout_gravity="right"/>
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

@@ -1,35 +1,22 @@
 package com.example.rm;
 
 import android.Manifest;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ListView;
-import android.os.Looper;
-import android.provider.Settings;
-import android.util.Log;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import java.util.ArrayList;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 public class RecycleLocation extends AppCompatActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -41,10 +28,6 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
     private static final int UPDATE_INTERVAL_MS = 1000; // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
 
-    // 테스트
-    ListView listView;
-    ArrayList<TrashMainListData> arrayList = new ArrayList<>();
-    TrashMainAdapter trashMainAdapter;
     // OnRequestPermissionsResultCallback에서 수신된 결과에서 ActivityCompat.OnRequestPermissionsResultCallback를 사용한 퍼미션 요청을 구별하기 위함
     private static final int PERMISSION_REQUEST_CODE = 100;
     boolean needRequest = false;
@@ -73,10 +56,6 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
                 .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-
-        trashMainAdapter = new TrashMainAdapter(this, arrayList);
-        listView.setAdapter(trashMainAdapter);
-        builder.addLocationRequest(locationRequest);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 

@@ -40,8 +40,6 @@ public class SignUp extends AppCompatActivity {
         signPwd = findViewById(R.id.sign_pwd);
         signEmail = findViewById(R.id.sign_email);
 
-
-
         sqliteHelper = new SqliteHelper(this);
 
         // 뒤로 가기 버튼

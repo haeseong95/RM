@@ -1,4 +1,4 @@
-package com.example.rm;
+package com.example.rm.category;
 
 import android.content.Context;
 import android.util.Log;
@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.rm.R;
 
 import java.util.ArrayList;
 

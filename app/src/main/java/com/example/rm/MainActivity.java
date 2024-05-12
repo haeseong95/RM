@@ -10,6 +10,10 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.rm.category.CategoryInfo;
+import com.example.rm.category.SearchTrash;
+import com.example.rm.community.Community;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final int RESULT_CODE = 22;

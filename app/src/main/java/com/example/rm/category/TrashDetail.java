@@ -1,4 +1,4 @@
-package com.example.rm;
+package com.example.rm.category;
 
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.rm.R;
 
 public class TrashDetail extends AppCompatActivity {
 
