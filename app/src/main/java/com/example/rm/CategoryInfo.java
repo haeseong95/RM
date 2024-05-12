@@ -91,7 +91,7 @@ public class CategoryInfo extends AppCompatActivity {
                     String title, url, thum= null;
                     List<RetroWriting> retroWritings = response.body();
 
-                    for (int i=0; i<5; i++){
+                    for (int i=0; i<3; i++){
                         RetroWriting writing = retroWritings.get(i);
                         title = writing.getTitle();
                         url = writing.getUrl();

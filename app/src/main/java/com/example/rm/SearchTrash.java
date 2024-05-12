@@ -30,7 +30,6 @@ import retrofit2.Response;
 
 public class SearchTrash extends AppCompatActivity {
     ListView listView;
-    ImageView imageView;
     ArrayList<TrashListData> arrayList = new ArrayList<>();  // retrofit GET으로 결과를 저장할 그릇, 이걸 listview 출력X, arraylist는 사용자가 입력 시 onQueryTextchagne에서 출력값만 listview로 출력하는 형식으로 가는 게 나을 듯
     TrashListAdapter trashListAdapter;
 
@@ -39,8 +38,6 @@ public class SearchTrash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchtrash);
         listView = findViewById(R.id.search_listview);
-        imageView = findViewById(R.id.backButton);
-        imageView.setOnClickListener(v -> finish());
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.search_toolbar);
         setSupportActionBar(toolbar);   // 액션바 변경
@@ -63,9 +60,6 @@ public class SearchTrash extends AppCompatActivity {
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setIconifiedByDefault(false);    // 항상 확장된 상태O
         searchView.requestFocus();  // searchview에 포커스 요청+키보드 자동O
-
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;   // 검색창-뒤로가기 버튼이 겹치지 않게 가로 길이 조절해줌
-        searchView.setMaxWidth(screenWidth - 50);
 
         searchView.post(() ->{
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
