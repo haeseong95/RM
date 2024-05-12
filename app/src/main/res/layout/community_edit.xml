@@ -20,6 +20,65 @@
         <TextView android:text="글쓰기" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
+        <!-- 제목 입력 -->
+
+        <!-- 내용 입력 -->
+        <EditText
+            android:id="@+id/editTextTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/category_gray"
+            android:fontFamily="@font/nanum_regular"
+            android:hint="제목"
+            android:inputType="text"/>
+
+        <EditText
+            android:id="@+id/editTextContent"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:hint="게시글 내용"
+            android:inputType="textMultiLine"
+            android:gravity="top"/>
+
+        <!-- 이미지 추가 버튼 -->
+        <Button
+            android:id="@+id/buttonAddImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="이미지 첨부하기"/>
+
+        <!-- 버튼 컨테이너 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <!-- 게시 버튼 -->
+            <Button
+                android:id="@+id/buttonPost"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="게시"
+                android:background="#FF0000"
+                android:textColor="#FFFFFF"/>
+
+            <!-- 취소 버튼 -->
+            <Button
+                android:id="@+id/buttonCancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="취소"
+                android:background="#CCCCCC"/>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>
