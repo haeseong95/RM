@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#FF0000</color>
     <color name="search_layover_view">#50000000</color>
     <color name="main_color_green">#5DB075</color>
     <color name="category_gray">#C7C7C7</color>

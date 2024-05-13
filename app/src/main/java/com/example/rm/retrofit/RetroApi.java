@@ -1,4 +1,4 @@
-package com.example.rm;
+package com.example.rm.retrofit;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;

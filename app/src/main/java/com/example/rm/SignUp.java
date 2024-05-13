@@ -43,8 +43,6 @@ public class SignUp extends AppCompatActivity {
         signPwdDoubleCheck = findViewById(R.id.sign_pwdDoubleCheck);
         signEmail = findViewById(R.id.sign_email);
 
-
-
         sqliteHelper = new SqliteHelper(this);
 
         // 뒤로 가기 버튼

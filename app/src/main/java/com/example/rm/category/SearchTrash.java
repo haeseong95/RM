@@ -1,14 +1,9 @@
-package com.example.rm;
+package com.example.rm.category;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,9 +12,12 @@ import androidx.appcompat.widget.SearchView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.rm.R;
+import com.example.rm.retrofit.RetroClient;
+import com.example.rm.retrofit.RetroWriting;
 
 import java.util.ArrayList;
 import java.util.List;

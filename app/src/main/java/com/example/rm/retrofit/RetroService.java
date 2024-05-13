@@ -1,12 +1,9 @@
-package com.example.rm;
+package com.example.rm.retrofit;
 
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 // Retrofit의 인터페이스
@@ -15,6 +12,7 @@ public interface RetroService {
     // 카테고리 품목 리스트 (버튼 종류별로 다르게 나와야 함)
      @GET("/api/Trash")
     Call<RetroApi> setCategoryItem(@Query("category") String cat);
+     //
 
 
 

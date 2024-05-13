@@ -19,7 +19,7 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
 
     LinearLayout btnLogout, btnDelete;
     ImageView btnBack;
-    TextView userNickname, userLevel;
+    TextView userNickname;
     SqliteHelper sqliteHelper;
 
     @Override
@@ -27,9 +27,7 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mypage);
 
-
         userNickname = findViewById(R.id.user_nickname);
-        userLevel = findViewById(R.id.user_level);
         btnBack = findViewById(R.id.btn_back);
         btnLogout = findViewById(R.id.btn_logout);
         btnDelete = findViewById(R.id.li_delete);
@@ -47,7 +45,6 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener{
         String level = userInfo.get("level");
 
         userNickname.setText(nickname);
-        userLevel.setText(level);
     }
 
     @Override

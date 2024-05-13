@@ -105,7 +105,19 @@
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginTop">40dp</item>
         <item name="android:layout_gravity">center</item>
-        android:fontFamily="@font/nanum_regular"
+        <item name="fontFamily">@font/nanum_regular</item>
+    </style>
+
+    <!-- 커뮤니티 글쓰기 작성 확인/취소 버튼-->
+    <style name="button_community_edit">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:textSize">17dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:backgroundTint">@color/main_color_green</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="fontFamily">@font/nanum_regular</item>
     </style>
 
     <!--마이페이지 버튼-->

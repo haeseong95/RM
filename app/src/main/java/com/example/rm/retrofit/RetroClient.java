@@ -1,6 +1,4 @@
-package com.example.rm;
-
-import android.graphics.Bitmap;
+package com.example.rm.retrofit;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
