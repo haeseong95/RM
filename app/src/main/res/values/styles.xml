@@ -55,21 +55,21 @@
 
     <!--회원 정보 입력창-->
     <style name="editText_style">
-        <item name="android:layout_width">300dp</item>
+        <item name="android:layout_width">310dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:textSize">13dp</item>
         <item name="android:paddingLeft">10sp</item>
-        <item name="android:layout_gravity">center</item>
         <item name="fontFamily">@font/nanum_regular</item>
         <item name="android:background">@drawable/border_category</item>
     </style>
 
     <!--아이디, 닉네임 중복 확인 입력창-->
     <style name="editText_check_style">
-        <item name="android:layout_width">180dp</item>
+        <item name="android:layout_width">200dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="fontFamily">@font/nanum_regular</item>
         <item name="android:textSize">13dp</item>
+        <item name="android:layout_marginRight">10dp</item>
         <item name="android:paddingLeft">10dp</item>
         <item name="android:background">@drawable/border_category</item>
     </style>

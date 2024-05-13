@@ -12,8 +12,7 @@
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:backgroundTint="@android:color/transparent"
-        android:layout_marginBottom="100dp">
+        android:backgroundTint="@android:color/transparent">
 
         <ImageView
             android:id="@+id/btn_back"
@@ -29,33 +28,10 @@
         android:orientation="vertical"
         android:layout_gravity="center">
 
-        <!--닉네임-->
-        <TextView android:text="닉네임" style="@style/textView_check_style"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/sign_name"
-                android:hint="닉네임" style="@style/editText_check_style"
-                android:inputType="text"/>
-
-            <Button
-                android:id="@+id/btn_check"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#BFBFBF"
-                android:text="중복확인"
-                android:textSize="10dp"
-                android:fontFamily="@font/nanum_regular"
-                android:textColor="@color/black"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>
-
         <!--아이디-->
         <TextView android:text="아이디" style="@style/textView_check_style"/>
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <EditText
@@ -64,15 +40,36 @@
                 android:inputType="text"/>
 
             <Button
-                android:id="@+id/btn_check2"
+                android:id="@+id/idCheckButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#BFBFBF"
                 android:fontFamily="@font/nanum_regular"
                 android:text="중복확인"
                 android:textSize="10dp"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
+        <!--닉네임-->
+        <TextView android:text="닉네임" style="@style/textView_check_style"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/sign_name"
+                android:hint="닉네임" style="@style/editText_check_style"
+                android:inputType="text"/>
+
+            <Button
+                android:id="@+id/nicknameCheckButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#BFBFBF"
+                android:fontFamily="@font/nanum_regular"
+                android:text="중복확인"
                 android:textColor="@color/black"
-                android:layout_marginLeft="20dp"/>
+                android:textSize="10dp" />
         </LinearLayout>
 
         <!--비밀번호-->
@@ -80,16 +77,64 @@
 
         <EditText
             android:id="@+id/sign_pwd"
-            android:hint="비밀번호" style="@style/editText_style"
+            style="@style/editText_style"
+            android:hint="비밀번호"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/sign_pwdDoubleCheck"
+            android:layout_marginTop="10dp"
+            android:hint="비밀번호 재입력" style="@style/editText_style"
             android:inputType="textPassword"/>
 
         <!--이메일-->
         <TextView android:text="이메일" style="@style/textView_check_style"/>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/sign_email"
+                android:hint="이메일" style="@style/editText_check_style"
+                android:inputType="textEmailAddress"/>
+
+            <Button
+                android:id="@+id/sendVerifyCodeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#BFBFBF"
+                android:fontFamily="@font/nanum_regular"
+                android:text="인증코드 전송"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+
+        </LinearLayout>
+
         <EditText
-            android:id="@+id/sign_email"
-            android:hint="이메일" style="@style/editText_style"
-            android:inputType="textEmailAddress"/>
+            android:id="@+id/verifyCodeTextInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="인증코드를 입력하세요"/>
+
+        <Chronometer
+            android:id="@+id/stopWatchChronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
+
+        <Button
+            android:id="@+id/verifyCodeCheckButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="인증코드 확인" />
+
+        <TextView
+            android:id="@+id/verifyResultText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <!--회원가입 버튼-->
