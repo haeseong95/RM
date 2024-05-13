@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -17,10 +18,14 @@ import com.example.rm.R;
 // 커뮤니티 글쓰기 화면
 public class CommunityEdit extends AppCompatActivity {
 
-    ImageView btnBack;
+    ImageView btnBack, image;   // 갤러리에서 가져온 이미지를 띄움
     EditText postTitle, postContent;    // 제목, 내용 입력창
     Button btnAttachImage;     // 이미지 첨부하기 버튼
+    RelativeLayout relativeLayout;
+
     TextView btnCreate, btnDelete;   // 작성, 취소 버튼
+
+
     AlertDialog.Builder builder = new AlertDialog.Builder(CommunityEdit.this);
     AlertDialog.Builder builder2 = new AlertDialog.Builder(CommunityEdit.this);
     AlertDialog alertDialog;

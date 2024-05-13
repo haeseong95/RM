@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.rm.category.CategoryInfo;
 import com.example.rm.category.SearchTrash;
 import com.example.rm.community.Community;
+import com.example.rm.community.CommunityEdit;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra("category", categoryText(v.getId()));
                 break;
             case R.id.main_map: intent = new Intent(MainActivity.this, RecycleLocation.class); break;
-            case R.id.main_community: intent = new Intent(MainActivity.this, Community.class); break;
+            case R.id.main_community: intent = new Intent(MainActivity.this, CommunityEdit.class); break;
             case R.id.main_userinfo:
 
                 boolean login = PreferenceHelper.getLoginState();
