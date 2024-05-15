@@ -1,11 +1,15 @@
 package com.example.rm.community;
 
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,35 +22,36 @@ import com.example.rm.R;
 // 커뮤니티 글쓰기 화면
 public class CommunityEdit extends AppCompatActivity {
 
-    ImageView btnBack, image;   // 갤러리에서 가져온 이미지를 띄움
+    ListView listView;
+    ImageView btnBack;
     EditText postTitle, postContent;    // 제목, 내용 입력창
-    Button btnAttachImage;     // 이미지 첨부하기 버튼
-    RelativeLayout relativeLayout;
-
     TextView btnCreate, btnDelete;   // 작성, 취소 버튼
-
-
-    AlertDialog.Builder builder = new AlertDialog.Builder(CommunityEdit.this);
-    AlertDialog.Builder builder2 = new AlertDialog.Builder(CommunityEdit.this);
-    AlertDialog alertDialog;
+    Button btnAttachImage;     // 이미지 첨부하기 버튼, 이미지 삭제하기 버튼
 
     // 이미지는 어떻게 해야 할지 모르게씅ㅁ (가려야 하나)
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.community_edit);
 
+        listView = findViewById(R.id.listview_image);
         btnBack = findViewById(R.id.btn_back);
         postTitle = findViewById(R.id.editTextTitle);
         postContent = findViewById(R.id.editTextContent);
         btnAttachImage = findViewById(R.id.btn_plusimage);
         btnCreate = findViewById(R.id.btn_postcreate);
         btnDelete = findViewById(R.id.btn_postdelete);
+        //btnDeleteImage.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#d5dee8")));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(CommunityEdit.this);
+        AlertDialog.Builder builder2 = new AlertDialog.Builder(CommunityEdit.this);
+        AlertDialog alertDialog;
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMessage();
+                finish();
             }
         });
 
@@ -58,6 +63,7 @@ public class CommunityEdit extends AppCompatActivity {
             }
         });
 
+        /*
         // 작성 버튼을 클릭하면 입력한 내용이 db에 저장되면서 커뮤니티 게시글에 추가되어야 함
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +95,8 @@ public class CommunityEdit extends AppCompatActivity {
             }
         });
 
+
+         */
     }
 
     // 제목창에 제목 입력하기
@@ -106,6 +114,7 @@ public class CommunityEdit extends AppCompatActivity {
 
     }
 
+    /*
 
     // 뒤로가기/취소 버튼을 누르면 게시글 작성을 취소하겠냐는 메시지 띄우기
     private void showMessage(){
@@ -121,5 +130,7 @@ public class CommunityEdit extends AppCompatActivity {
         alertDialog = builder2.create();
         alertDialog.show();
     }
+
+     */
 
 }

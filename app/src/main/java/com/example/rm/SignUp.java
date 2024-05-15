@@ -49,7 +49,7 @@ public class SignUp extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         // 닉네임 중복 검사
-        btnCheck.setOnClickListener(v -> {
+        btnNicknameCheck.setOnClickListener(v -> {
             userName = signName.getText().toString().trim();
 
             if (!sqliteHelper.findAccount(userName, "nickname")) {
@@ -60,7 +60,7 @@ public class SignUp extends AppCompatActivity {
         });
 
         // 아이디 중복 검사
-        btnCheck2.setOnClickListener(v -> {
+        btnIdCheck.setOnClickListener(v -> {
             userId = signId.getText().toString().trim();
 
             if (!sqliteHelper.findAccount(userId, "id")) {
