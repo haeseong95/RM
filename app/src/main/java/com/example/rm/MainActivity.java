@@ -6,19 +6,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rm.category.CategoryInfo;
 import com.example.rm.category.SearchTrash;
-import com.example.rm.community.Community;
 import com.example.rm.community.CommunityEdit;
+import com.example.rm.community.Notice;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private static final int RESULT_CODE = 22;
-
+    ImageView mainNotice;
     LinearLayout btnSearch, btnCamera;      // 검색창, 카메라
     LinearLayout btnCan, btnCouch, btnPlasticBag, btnBattery, btnStink, btnGlass, btnClothes, btnPaper, btnPlastic, btnRes;      // 카테고리 버튼
     Button mainMap, mainCommunity, mainUserinfo;        // 툴바 아이콘
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMap = (Button)findViewById(R.id.main_map);
         mainCommunity = (Button)findViewById(R.id.main_community);
         mainUserinfo = (Button)findViewById(R.id.main_userinfo);
+        mainNotice = (ImageView) findViewById(R.id.main_notice);
 
         btnSearch.setOnClickListener(this);
         btnCamera.setOnClickListener(this);
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMap.setOnClickListener(this);
         mainCommunity.setOnClickListener(this);
         mainUserinfo.setOnClickListener(this);
+        mainNotice.setOnClickListener(this);
         PreferenceHelper.init(this);
     }
 
@@ -109,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(MainActivity.this, CategoryInfo.class);
                 intent.putExtra("category", categoryText(v.getId()));
                 break;
+            case R.id.main_notice: intent = new Intent(MainActivity.this, Notice.class); break;
             case R.id.main_map: intent = new Intent(MainActivity.this, RecycleLocation.class); break;
             case R.id.main_community: intent = new Intent(MainActivity.this, CommunityEdit.class); break;
             case R.id.main_userinfo:

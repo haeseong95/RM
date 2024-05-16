@@ -56,18 +56,34 @@
                 android:padding="15dp"
                 android:textSize="14dp" />
 
-            <Button
-                android:id="@+id/btn_plusimage"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:backgroundTint="@android:color/transparent"
-                android:fontFamily="@font/nanum_regular"
-                android:gravity="center"
-                android:text="이미지 첨부하기"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="15dp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/btn_addImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="이미지 첨부하기"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/nanum_regular"
+                    android:layout_marginRight="40dp"
+                    android:textSize="15sp"
+                    android:layout_alignParentEnd="true"/>
+
+                <TextView
+                    android:id="@+id/image_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(0/5)"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/nanum_regular"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="15sp"/>
+
+            </RelativeLayout>
 
             <ListView
                 android:id="@+id/listview_image"

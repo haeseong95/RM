@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,14 +20,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rm.R;
 
+import java.util.ArrayList;
+
 // 커뮤니티 글쓰기 화면
 public class CommunityEdit extends AppCompatActivity {
 
     ListView listView;
+    CommunityImageAdapter communityImageAdapter;
+    ArrayList<ImageData> imageData = new ArrayList<>();
     ImageView btnBack;
     EditText postTitle, postContent;    // 제목, 내용 입력창
-    TextView btnCreate, btnDelete;   // 작성, 취소 버튼
-    Button btnAttachImage;     // 이미지 첨부하기 버튼, 이미지 삭제하기 버튼
+    TextView btnCreate, btnDelete, btnAddImage, textImageCount;   // 작성, 취소, 이미지 추가 버튼
 
     // 이미지는 어떻게 해야 할지 모르게씅ㅁ (가려야 하나)
 
@@ -39,14 +43,25 @@ public class CommunityEdit extends AppCompatActivity {
         btnBack = findViewById(R.id.btn_back);
         postTitle = findViewById(R.id.editTextTitle);
         postContent = findViewById(R.id.editTextContent);
-        btnAttachImage = findViewById(R.id.btn_plusimage);
         btnCreate = findViewById(R.id.btn_postcreate);
         btnDelete = findViewById(R.id.btn_postdelete);
-        //btnDeleteImage.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#d5dee8")));
+        btnAddImage = findViewById(R.id.btn_addImage);
+        textImageCount = findViewById(R.id.image_count);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(CommunityEdit.this);
         AlertDialog.Builder builder2 = new AlertDialog.Builder(CommunityEdit.this);
         AlertDialog alertDialog;
+
+        communityImageAdapter = new CommunityImageAdapter(CommunityEdit.this, R.layout.community_listview_image, imageData);
+        listView.setAdapter(communityImageAdapter);
+
+
+        btnAddImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,10 +70,10 @@ public class CommunityEdit extends AppCompatActivity {
             }
         });
 
-        // 이미지 첨부하기 버튼을 클릭하면 갤러리에서 사진 가져오기 (최대 10장)
-        btnAttachImage.setOnClickListener(new View.OnClickListener() {
+        // listview의 클릭 이벤트 정의: lsitview 안 버튼인 x 버튼을 클릭하면 선택된 사진을 지움
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             }
         });

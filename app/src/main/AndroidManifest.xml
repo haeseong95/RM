@@ -8,7 +8,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>      <!--이미지 다중 선택-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
@@ -72,6 +72,7 @@
         <activity android:name="com.example.rm.DeleteAccount"/>
         <activity android:name="com.example.rm.community.CommunityEdit"/>
         <activity android:name="com.example.rm.community.CommunityContent"/>
+        <activity android:name="com.example.rm.community.Notice"/>
 
 
     </application>
