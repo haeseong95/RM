@@ -41,14 +41,7 @@ public class SearchId extends AppCompatActivity{
         btnLogin = findViewById(R.id.start_login);
         btnBtnSearchPw = findViewById(R.id.search_pw);
         sqliteHelper = new SqliteHelper(SearchId.this);
-
-        // 뒤로 가기 버튼
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btnBack.setOnClickListener(v -> finish());
 
         // 아이디 찾기 버튼 클릭 시
         btnSearchId.setOnClickListener(new View.OnClickListener() {

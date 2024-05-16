@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/ccc_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="닉네임"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:fontFamily="@font/nanum_regular"
+                android:layout_alignParentStart="true"
+                android:textSize="20sp"
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:id="@+id/ccc_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="등급"
+                android:textColor="#000000"
+                android:fontFamily="@font/nanum_regular"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/ccc_nickname"
+                android:layout_alignBottom="@id/ccc_nickname"
+                android:textSize="15sp"
+                android:layout_marginRight="15dp"/>
+
+            <TextView
+                android:id="@+id/ccc_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="생성날짜"
+                android:textColor="#000000"
+                android:layout_alignBottom="@id/ccc_nickname"
+                android:fontFamily="@font/nanum_regular"
+                android:textSize="15sp"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/ccc_commen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="댓글"
+            android:textColor="#000000"
+            android:fontFamily="@font/nanum_regular"
+            android:textSize="20sp"
+            android:layout_marginRight="10dp"/>
+    </LinearLayout>
+</LinearLayout>

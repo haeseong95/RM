@@ -23,8 +23,8 @@ public class SignUp extends AppCompatActivity {
     String userName, userId, userPwd, userEmail = null;        // 회원 정보 저장
 
     ImageView btnBack;
-    Button btnCheck, btnCheck2, btnSignUp;
-    EditText signName, signId, signPwd, signEmail;
+    Button btnNicknameCheck, btnIdCheck, btnSignUp;
+    EditText signName, signId, signPwd, signPwdDoubleCheck, signEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +32,16 @@ public class SignUp extends AppCompatActivity {
         setContentView(R.layout.sign_up);
 
         btnBack = findViewById(R.id.btn_back);
-        btnCheck = findViewById(R.id.btn_check);
-        btnCheck2 = findViewById(R.id.btn_check2);
+        btnNicknameCheck = findViewById(R.id.nicknameCheckButton);
+
+
+        btnIdCheck = findViewById(R.id.idCheckButton);
         btnSignUp = findViewById(R.id.btn_sign_up);
         signName = findViewById(R.id.sign_name);
         signId = findViewById(R.id.sign_id);
         signPwd = findViewById(R.id.sign_pwd);
+        signPwdDoubleCheck = findViewById(R.id.sign_pwdDoubleCheck);
         signEmail = findViewById(R.id.sign_email);
-
-
 
         sqliteHelper = new SqliteHelper(this);
 
@@ -48,7 +49,7 @@ public class SignUp extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         // 닉네임 중복 검사
-        btnCheck.setOnClickListener(v -> {
+        btnNicknameCheck.setOnClickListener(v -> {
             userName = signName.getText().toString().trim();
 
             if (!sqliteHelper.findAccount(userName, "nickname")) {
@@ -59,7 +60,7 @@ public class SignUp extends AppCompatActivity {
         });
 
         // 아이디 중복 검사
-        btnCheck2.setOnClickListener(v -> {
+        btnIdCheck.setOnClickListener(v -> {
             userId = signId.getText().toString().trim();
 
             if (!sqliteHelper.findAccount(userId, "id")) {

@@ -31,20 +31,22 @@
         <!--아이디-->
         <TextView android:text="아이디" style="@style/textView_title_style"/>
 
+        <!--비밀번호-->
         <EditText
             android:id="@+id/login_id"
-            android:hint="아이디" style="@style/editText_style"
-            android:inputType="text"/>
+            style="@style/editText_style"
+            android:hint="아이디"
+            android:inputType="text" />
 
-        <!--비밀번호-->
         <TextView
             style="@style/textView_title_style"
             android:text="비밀번호" />
 
         <EditText
             android:id="@+id/login_pwd"
-            android:hint="비밀번호" style="@style/editText_style"
-            android:inputType="textPassword"/>
+            style="@style/editText_style"
+            android:hint="비밀번호"
+            android:inputType="textPassword" />
     </LinearLayout>
 
     <Button

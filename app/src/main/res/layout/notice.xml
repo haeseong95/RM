@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".community.Notice">
+
+    <!--툴바-->
+    <androidx.appcompat.widget.Toolbar
+        app:contentInsetStart="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:src="@drawable/btn_left" style="@style/back_icon"/>
+
+        <TextView android:id="@+id/category_title" android:text="공지사항" style="@style/toolbar_text" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/category_gray" />
+
+    <Button
+        android:id="@+id/test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="사진 가져오기"
+        android:textColor="@color/black"/>
+
+    <ListView
+        android:id="@+id/list_test"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:id="@+id/all_image_test"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_margin="20dp">
+
+        <ImageView
+            android:id="@+id/images_test"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="15dp"
+            android:background="#ffaadd"
+            android:scaleType="centerCrop"/>
+
+        <Button
+            android:id="@+id/btn_image_delete_test"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/community_delete_test"
+            android:backgroundTint="@null"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
+    </RelativeLayout>
+
+
+
+</LinearLayout>

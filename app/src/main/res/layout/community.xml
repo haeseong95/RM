@@ -2,10 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
+
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Community">
+    tools:context=".community.Community">
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
@@ -21,4 +24,92 @@
         <TextView android:id="@+id/category_title" android:text="커뮤니티" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/category_gray" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scrollbars="none"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp">
+
+                <!--검색창-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:background="@drawable/border_community">
+
+                    <EditText
+                        android:id="@+id/c_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:fontFamily="@font/nanum_regular"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="135dp"
+                        android:hint="검색어를 입력하세요"
+                        android:textColor="#000000"
+                        android:background="@null"
+                        android:inputType="text"
+                        android:textSize="13dp"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/search_icon"/>
+                </LinearLayout>
+
+                <!--글쓰기-->
+                <LinearLayout
+                    android:id="@+id/c_write"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/community_write"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/com_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <Button
+                android:id="@+id/btn_morepost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:gravity="center"
+                android:text="더보기"
+                android:fontFamily="@font/nanum_regular"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textAlignment="center"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

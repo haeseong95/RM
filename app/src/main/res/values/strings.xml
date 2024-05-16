@@ -1,3 +1,61 @@
 <resources>
     <string name="app_name">RM</string>
+
+    <!--테스트에서 가져온 거-->
+    <string name="comma">, </string>
+    <string name="openParenthesis">(</string>
+    <string name="closeParenthesis">)</string>
+
+    <string name="app_name_KO">Real2</string>
+    <string name="nickname_KO">닉네임</string>
+    <string name="login_KO">로그인</string>
+    <string name="register_KO">회원가입</string>
+    <string name="id_KO">아이디</string>
+    <string name="idSearch_KO">아이디 찾기</string>
+    <string name="email_KO">이메일</string>
+    <string name="emailCheck_KO">이메일 확인</string>
+    <string name="passwd_KO">비밀번호</string>
+    <string name="passwdAgain_KO">비밀번호 재입력</string>
+    <string name="passwdSearch_KO">비밀번호 찾기</string>
+    <string name="getNewPasswd_KO">비밀번호 발급받기</string>
+    <string name="idDoubleCheck_KO">ID 중복 확인</string>
+    <string name="idExist_KO">존재하는 ID 입니다.</string>
+    <string name="idAlreadyExist_KO">ID가 이미 존재합니다.</string>
+    <string name="idNotExist_KO">ID가 존재하지 않습니다.</string>
+    <string name="idCanUse_KO">해당 ID를 사용할 수 있습니다.</string>
+    <string name="nicknameAlreadyExist_KO">닉네임이 이미 존재합니다.</string>
+    <string name="nicknameCanUse_KO">해당 닉네임을 사용할 수 있습니다.</string>
+    <string name="passwordSame_KO">비밀번호가 일치합니다.</string>
+    <string name="passwordNotSame_KO">비밀번호가 일치하지 않습니다.</string>
+    <string name="emailRegexSatisfied_KO">이메일 형식이 맞지 않습니다.</string>
+    <string name="nicknameDoubleCheck_KO">닉네임 중복 확인</string>
+    <string name="emailVerified_KO">인증코드가 일치합니다.</string>
+    <string name="emailVerifyFirst_KO">이메일 검증을 먼저 해주세요.</string>
+    <string name="emailNotVerify_KO">인증코드가 일치하지 않습니다.</string>
+    <string name="registerWelcome_KO">님, 환영합니다.</string>
+    <string name="registerSuccess_KO">회원가입에 성공하였습니다.</string>
+    <string name="registerFailed_KO">회원가입에 실패하였습니다. 나중에 다시 시도 부탁드립니다.</string>
+    <string name="registerFormNotFilled_KO">회원가입에 필요한 모든 값들을 채우고 확인부탁드립니다.</string>
+    <string name="noIsRegisterSuccessKeyForIndent_KO">isRegisterSuccess에 대한 키를 받을 수 없습니다.</string>
+    <string name="emailInDB_KO">존재하는 이메일입니다.</string>
+    <string name="emailNotInDB_KO">존재하지 않는 이메일입니다.</string>
+    <string name="emailAlreadyInDB_KO">이미 존재하는 이메일입니다.</string>
+    <string name="sendVerifyCode_KO">인증코드 전송</string>
+    <string name="serverConnectIssue_KO">서버에서 데이터를 읽는데 문제가 발생했습니다.</string>
+    <string name="httpRequestFailed_KO">인터넷 요청에 실패하였습니다.</string>
+    <string name="sendEmailForFindID_KO">이메일로 아이디 보내기</string>
+    <string name="verifyCodeInput_KO">인증코드를 입력하세요</string>
+    <string name="verifyCodeExpired_KO">인증코드가 만료되어서 다시 받아야 합니다.</string>
+    <string name="verifyCodeCheckButton_KO">인증코드 확인</string>
+    <string name="smtpEmailAddress_KO">psk153777@gmail.com</string>
+    <string name="smtpAppPasswd">fznl rudj ndua wihu</string>
+    <string name="smtpVerifyEmailSubject_KO">"Recycle Mate 인증 코드"</string>
+    <string name="smtpVerifyEmailBody_KO">"인증 코드를 입력해 주세요 -> "</string>
+    <string name="smtpSender">psk153777@gmail.com</string>
+    <string name="smtpMailhost">smtp.gmail.com</string>
+    <string name="smtpFailed_KO">이메일 발송에 실패하였습니다.</string>
+    <string name="sendEmailForID_KO">해당 이메일로 아이디를 보냈습니다. 확인 부탁드립니다.</string>
+    <string name="smtpSendIDSubject_KO">Recycle Mate 아이디</string>
+    <string name="smtpSendIDBody_KO">"아이디를 확인해 주세요 -> "</string>
+
 </resources>

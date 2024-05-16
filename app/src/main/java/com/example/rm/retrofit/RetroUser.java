@@ -1,59 +1,10 @@
-package com.example.rm;
+package com.example.rm.retrofit;
 
+import com.google.gson.annotations.SerializedName;
+
+// Retorfit의 사용자 User 데이터 클래스
 public class RetroUser {
-    // jsonplaceholder/photos 테스트
-    private int albumId;
-    private int id;
-    private String title;
-    private String thumbnailUrl;
-    private String url;
 
-    public int getAlbumId() {
-        return albumId;
-    }
-
-    public void setAlbumId(int albumId) {
-        this.albumId = albumId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
-    }
-
-    public void setThumbnailUrl(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public RetroUser(String title, String url) {
-        this.title = title;
-        this.url = url;
-    }
-
-    /*
     // 원래 코드
     private String email;
     private String id;
@@ -122,6 +73,4 @@ public class RetroUser {
                 ", status='" + status + '\'' +
                 '}';
     }
-
- */
 }
