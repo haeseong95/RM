@@ -23,10 +23,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     static final String tag = "ImageAdapter";
     private ArrayList<Uri> uriArrayList = new ArrayList<>();
     private Context context;
+    private Runnable updateImageCount;
 
-    ImageAdapter(ArrayList<Uri> list, Context context) {    // 생성자는 데이터 리스트 객체, context를 전달받음
+    ImageAdapter(ArrayList<Uri> list, Context context, Runnable updateImageCount) {    // 생성자는 데이터 리스트 객체, context를 전달받음
         this.uriArrayList = list;
         this.context = context;
+        this.updateImageCount = updateImageCount;
     }
 
     @Override
@@ -48,6 +50,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 uriArrayList.remove(adapterPosition);  // 리스트 위치의 데이터 삭제
                 notifyItemRemoved(adapterPosition);    // 리사이클뷰의 ui 항목 제거 알림
                 notifyItemRangeChanged(adapterPosition, uriArrayList.size());  // 제거하면 다른 목록들의 위치 업데이트
+                if(updateImageCount != null){
+                    updateImageCount.run();
+                }
                 Log.i(tag + " X 버튼", "X버튼 클릭 시 목록 위치 업데이트 성공");
             }
         });
