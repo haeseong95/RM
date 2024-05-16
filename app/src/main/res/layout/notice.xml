@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".community.Notice">
+    tools:context=".Notice">
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
@@ -25,67 +25,5 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/category_gray" />
-
-    <Button
-        android:id="@+id/test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="사진 가져오기"
-        android:textColor="@color/black"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp">
-
-        <TextView
-            android:id="@+id/max_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="(0/5)"
-            android:textColor="#000000"
-            android:fontFamily="@font/nanum_regular"
-            android:layout_alignParentEnd="true"
-            android:textSize="15sp"/>
-
-    </RelativeLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="start"/>
-
-    <RelativeLayout
-        android:id="@+id/all_image_test"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center"
-        android:layout_margin="20dp">
-
-        <ImageView
-            android:id="@+id/images_test"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_margin="15dp"
-            android:background="#ffaadd"
-            android:scaleType="centerCrop"/>
-
-        <Button
-            android:id="@+id/btn_image_delete_test"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/community_delete_test"
-            android:backgroundTint="@null"
-            android:focusable="false"
-            android:focusableInTouchMode="false"/>
-    </RelativeLayout>
-
-
 
 </LinearLayout>

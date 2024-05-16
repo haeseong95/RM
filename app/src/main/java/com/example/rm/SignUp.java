@@ -112,6 +112,7 @@ public class SignUp extends AppCompatActivity {
                 builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
                 alertDialog = builder.create();
                 alertDialog.show();
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
             }
         });
     }
@@ -127,6 +128,7 @@ public class SignUp extends AppCompatActivity {
         builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
     }
 
     // 비밀번호 -> 해시값 저장

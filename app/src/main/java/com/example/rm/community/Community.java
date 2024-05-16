@@ -14,25 +14,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.rm.R;
 
 public class Community extends AppCompatActivity {
+    // 레이아웃
     ImageView btnBack;
     EditText searchBar;     // 검색창
     LinearLayout btnWrite;  // 글쓰기 아이콘
     ListView listView;
-    Button btnMorePost;     // 더보기 버튼
+    Button btnMorePost, test;     // 더보기 버튼
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.community);
 
+        test = findViewById(R.id.content_test);
         btnBack = findViewById(R.id.btn_back);
         btnWrite = findViewById(R.id.c_write);
         searchBar = findViewById(R.id.c_search);
-        listView = findViewById(R.id.com_listview);
         btnMorePost = findViewById(R.id.btn_morepost);
         btnBack.setOnClickListener(v -> finish());
 
-        btnWrite.setOnClickListener(new View.OnClickListener() {    // 연필 아이콘을 클릭하면 글쓰기 화면으로 넘어감
+        btnWrite.setOnClickListener(new View.OnClickListener() {    // 연필 아이콘 클릭 -> 글쓰기 화면
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Community.this, CommunityEdit.class);
@@ -40,7 +41,15 @@ public class Community extends AppCompatActivity {
             }
         });
 
-        // 1. edittext로 설정한 검색창에 입력값이랑 같은 게시글 제목을 입력하면 listview에 뜨게 함 (제목만 할거임)
+        test.setOnClickListener(new View.OnClickListener() {    // 연필 아이콘 클릭 -> 글쓰기 화면
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Community.this, CommunityContent.class);
+                startActivity(intent);
+            }
+        });
+
+        // edittext로 설정한 검색창에 입력값이랑 같은 게시글 제목을 입력하면 listview에 뜨게 함 (제목만 할거임)
         searchBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,7 +57,7 @@ public class Community extends AppCompatActivity {
             }
         });
 
-        // 2. 더보기 버튼을 클릭하면 listview 목록이 10개씩 추가되게 하기
+        // 더보기 버튼을 클릭하면 listview 목록이 10개씩 추가되게 하기
         btnMorePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +67,6 @@ public class Community extends AppCompatActivity {
 
     }
 
-    // 3. listview엔 사용자들이 작성한 게시물들이 최신순으로 올라오는데 기본 10개
 
 
 

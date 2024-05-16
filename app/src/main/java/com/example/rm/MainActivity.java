@@ -20,8 +20,8 @@ import java.security.NoSuchAlgorithmException;
 
 import com.example.rm.category.CategoryInfo;
 import com.example.rm.category.SearchTrash;
+import com.example.rm.community.Community;
 import com.example.rm.community.CommunityEdit;
-import com.example.rm.community.Notice;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.main_notice: intent = new Intent(MainActivity.this, Notice.class); break;
             case R.id.main_map: intent = new Intent(MainActivity.this, RecycleLocation.class); break;
-            case R.id.main_community: intent = new Intent(MainActivity.this, CommunityEdit.class); break;
+            case R.id.main_community: intent = new Intent(MainActivity.this, Community.class); break;
             case R.id.main_userinfo:
 
                 boolean login = PreferenceHelper.getLoginState();

@@ -19,13 +19,14 @@ import com.example.rm.R;
 
 import java.util.ArrayList;
 
+// 커뮤니티 글쓰기에서 이미지 5장 추가하기
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
     static final String tag = "ImageAdapter";
     private ArrayList<Uri> uriArrayList = new ArrayList<>();
     private Context context;
     private Runnable updateImageCount;
 
-    ImageAdapter(ArrayList<Uri> list, Context context, Runnable updateImageCount) {    // 생성자는 데이터 리스트 객체, context를 전달받음
+    public ImageAdapter(ArrayList<Uri> list, Context context, Runnable updateImageCount) {    // 생성자는 데이터 리스트 객체, context를 전달받음
         this.uriArrayList = list;
         this.context = context;
         this.updateImageCount = updateImageCount;
@@ -78,11 +79,5 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             delete = itemView.findViewById(R.id.btn_image_delete);
             delete.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#000000")));
         }
-    }
-
-    public void updateRecyclerViewItem(ArrayList<Uri> newItem){
-        uriArrayList.clear();
-        uriArrayList.addAll(newItem);
-        notifyDataSetChanged();
     }
 }

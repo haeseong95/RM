@@ -1,10 +1,15 @@
 package com.example.rm.community;
 
+import android.content.ClipData;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -14,9 +19,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
 
@@ -24,22 +33,23 @@ import java.util.ArrayList;
 
 // 커뮤니티 글쓰기 화면
 public class CommunityEdit extends AppCompatActivity {
-
-    ListView listView;
-    CommunityImageAdapter communityImageAdapter;
-    ArrayList<ImageData> imageData = new ArrayList<>();
+    // 레이아웃
     ImageView btnBack;
-    EditText postTitle, postContent;    // 제목, 내용 입력창
-    TextView btnCreate, btnDelete, btnAddImage, textImageCount;   // 작성, 취소, 이미지 추가 버튼
+    RecyclerView recyclerView;
+    EditText postTitle, postContent;
+    TextView btnCreate, btnDelete, btnAddImage, textImageCount;
 
-    // 이미지는 어떻게 해야 할지 모르게씅ㅁ (가려야 하나)
+    // 값
+    static final String tag = "CommunityEdit";
+    ImageAdapter adapter;
+    ArrayList<Uri> uriArrayList = new ArrayList<>();    // 이미지의 uri 담음
+    ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.community_edit);
-
-        listView = findViewById(R.id.listview_image);
+        recyclerView = findViewById(R.id.recyclerView);
         btnBack = findViewById(R.id.btn_back);
         postTitle = findViewById(R.id.editTextTitle);
         postContent = findViewById(R.id.editTextContent);
@@ -48,102 +58,97 @@ public class CommunityEdit extends AppCompatActivity {
         btnAddImage = findViewById(R.id.btn_addImage);
         textImageCount = findViewById(R.id.image_count);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(CommunityEdit.this);
-        AlertDialog.Builder builder2 = new AlertDialog.Builder(CommunityEdit.this);
-        AlertDialog alertDialog;
+        btnAddImage.setOnClickListener(v -> attachAlbum());     // 이미지 첨부하기 버튼
+        btnBack.setOnClickListener(v -> cancelEdit());          // 뒤로 가기 버튼
+        btnDelete.setOnClickListener(v -> cancelEdit());       // 취소 버튼
+        btnCreate.setOnClickListener(v -> finishEdit());        // 작성 버튼
+        init();
+    }
 
-
-
-        btnAddImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        // listview의 클릭 이벤트 정의: lsitview 안 버튼인 x 버튼을 클릭하면 선택된 사진을 지움
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
-
-        /*
-        // 작성 버튼을 클릭하면 입력한 내용이 db에 저장되면서 커뮤니티 게시글에 추가되어야 함
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                builder.setMessage("게시글을 추가하시겠습니까?");
-                builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // call해서 작성한 게시글 추가하고 커뮤니티 메인화면으로 넘어가기
-
-
-
-
-                        finish();
+    // 사용자가 addimage 버튼을 클릭하면 갤러리에서 이미지 선택해 이미지의 URI를 얻음
+    private void init(){
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                Intent intent = result.getData();
+                if (uriArrayList.size() < 5) {
+                    Log.i(tag + " uri 이미지 개수", "5개 이하면 실행됨");
+                    if(intent.getData() != null){   // 이미지 1개만 선택
+                        Log.e(tag + " 이미지 1개 선택", String.valueOf(intent.getData()));
+                        Uri uri = intent.getData();     // 이미지 URI 얻음
+                        if (!uriArrayList.contains(uri)){   // 중복된 uri가 있으면 추가X
+                            uriArrayList.add(uri);
+                        }
+                        updateRecyclerView();
                     }
-                });
-
-                builder.setNeutralButton("아니오", (dialog, which) -> dialog.dismiss());
-                alertDialog = builder.create();
-                alertDialog.show();
+                    else {  // 여러 개 선택
+                        ClipData clipData = intent.getClipData();
+                        Log.e(tag, "이미지 다중 선택");
+                        for (int i=0; i<clipData.getItemCount(); i++){
+                            Uri uri = clipData.getItemAt(i).getUri();   // 선택한 이미지들의 uri 가져옴
+                            Log.e("clipdata 이미지 여러 개 선택", String.valueOf(clipData.getItemAt(i).getUri()));
+                            if(!uriArrayList.contains(uri) && uriArrayList.size() < 5){
+                                uriArrayList.add(uri);
+                            }
+                        }
+                        updateRecyclerView();
+                    }
+                } else {Log.e(tag + " uri 이미지 개수", "5개 초과하면 추가안됨");}
             }
         });
-
-        // 취소 버튼 클릭하면 작성을 취소하겠습니까라는 메시지를 띄우고 확인 버튼을 클릭하면 작성 취소 후 뒤로가기
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMessage();
-            }
-        });
-
-
-         */
     }
 
-    // 제목창에 제목 입력하기
-    private void editPostTitle(){
-
+    // 리사이클뷰 초기화 + 업데이트
+    private void updateRecyclerView(){
+        if(adapter == null){
+            adapter = new ImageAdapter(uriArrayList, getApplicationContext(), this::updateRecyclerView);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(CommunityEdit.this, LinearLayoutManager.HORIZONTAL, true));
+        }
+        adapter.notifyDataSetChanged();
+        textImageCount.setText("(" + uriArrayList.size() + "/5)");
     }
 
-    // 내용 입력창에 내용 입력하기, 글자 제한수 일단 1000자
-    private void editPostContent(){
-
+    // 앨범에서 이미지 가져오기
+    private void attachAlbum(){
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);     // 사용자가 데이터(여기선 이미지) 1개 선택
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);     // 이미지 여러 개 가져옴
+        activityResultLauncher.launch(intent);
     }
 
-    // 갤러리에서 사진 가져오기
-    private void getImageToAlbum(){
-
-    }
-
-    /*
-
-    // 뒤로가기/취소 버튼을 누르면 게시글 작성을 취소하겠냐는 메시지 띄우기
-    private void showMessage(){
-        builder2.setMessage("작성을 취소하시겠습니까?");
-        builder2.setPositiveButton("네", new DialogInterface.OnClickListener() {
+    // 작성 버튼을 누르면 글쓰기가 완료되고 입력한 내용이 db에 저장됨 + 게시판에 내가 쓴 글이 올라감
+    private void finishEdit(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(CommunityEdit.this);
+        AlertDialog alertDialog;
+        builder.setMessage("게시글을 추가하시겠습니까?");
+        builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // call해서 작성한 게시글 추가하고 커뮤니티 메인화면으로 넘어가기 +  넘어가면 내가 작성한 게시글이 맨 위에 올라와야 있어야 함
+
                 finish();
             }
         });
-
-        builder2.setNeutralButton("아니오", (dialog, which) -> dialog.dismiss());
-        alertDialog = builder2.create();
+        builder.setNeutralButton("아니오", (dialog, which) -> dialog.dismiss());
+        alertDialog = builder.create();
         alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
+        alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.black));
     }
 
-     */
+    // 뒤로가기/취소 버튼을 누르면 게시글 작성을 취소하겠냐는 메시지 띄우기
+    private void cancelEdit(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(CommunityEdit.this);
+        AlertDialog alertDialog;
+        builder.setMessage("작성을 취소하시겠습니까?");
+        builder.setPositiveButton("네", (dialog, which) -> finish());
+        builder.setNeutralButton("아니오", (dialog, which) -> dialog.dismiss());
+        alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
+        alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.black));
+    }
+
+
 
 }
