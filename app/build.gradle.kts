@@ -30,6 +30,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+
 }
 
 dependencies {
@@ -42,6 +44,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    // 지도
     implementation("com.android.support:appcompat-v7:28.0.0")
     implementation("com.android.support:support-media-compat:28.0.0")
     implementation("com.android.support:support-v4:28.0.0")
@@ -62,5 +65,11 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     // 카메라
-    implementation ("io.github.ParkSangGwon:tedpermission-normal:3.3.0")
+    implementation("io.github.ParkSangGwon:tedpermission-normal:3.3.0")
+
+    implementation ("org.tensorflow:tensorflow-lite:2.12.0")
+    implementation ("org.tensorflow:tensorflow-lite-gpu:2.12.0")
+    implementation ("org.tensorflow:tensorflow-lite-support:0.4.4")
+    implementation ("org.tensorflow:tensorflow-lite-select-tf-ops:2.12.0") // 최신 버전으로 업데이트
+
 }

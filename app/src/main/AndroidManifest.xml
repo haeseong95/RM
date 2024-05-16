@@ -7,8 +7,13 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>      <!--이미지 다중 선택-->
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
@@ -53,10 +58,10 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCrIrcE2mGVIhgmg7yasM4rAVmyMWeccSU" />
+            android:value="AIzaSyA3XpOvDyqPHhFZ38CoyXl2wlCU9BeSF3I" />
+
 
         <activity android:name="com.example.rm.LoginUser"/>
         <activity android:name="com.example.rm.SignUp"/>

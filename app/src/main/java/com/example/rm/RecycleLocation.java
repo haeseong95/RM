@@ -56,7 +56,7 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
     boolean needRequest = false;
 
     // 앱을 실행하기 위해 필요한 퍼미션 정의
-    String[] REQUIRED_PERMISSION = {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION };
+    String[] REQUIRED_PERMISSION = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
     Location mCurrentLocation;
     LatLng currentPosition;
@@ -105,12 +105,12 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
 
-        if(hasFineLocationPermission == PackageManager.PERMISSION_GRANTED && hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED){
+        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED && hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
             // 2. 이미 퍼미션을 가지고 있다면
             startLocationUpdates(); // 3. 위치 업데이트 실행
-        }else{
+        } else {
             // 2. 퍼미션 요청을 허용한 적 없다면 퍼미션 요청하기
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSION[0])){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSION[0])) {
                 // 요청 진행하기 전에 퍼미션이 왜필요한지 설명
                 Snackbar.make(mLayout, "이 앱을 실행하려면 위치 접근 권한이 필요합니다.", Snackbar.LENGTH_INDEFINITE).setAction("확인", new View.OnClickListener() {
                     @Override
@@ -120,7 +120,7 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
                         ActivityCompat.requestPermissions(RecycleLocation.this, REQUIRED_PERMISSION, PERMISSION_REQUEST_CODE);
                     }
                 }).show();
-            }else{
+            } else {
                 // 사용자가 퍼미션 거부를 한적이 없는 경우 퍼미션 요청을 바로 함.
                 // 요청 결과는 onRequestPermissionResult에서 수신된다.
                 ActivityCompat.requestPermissions(this, REQUIRED_PERMISSION, PERMISSION_REQUEST_CODE);
@@ -143,8 +143,8 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
 
             List<Location> locationList = locationResult.getLocations();
 
-            if(locationList.size() > 0){
-                location = locationList.get(locationList.size() -1);
+            if (locationList.size() > 0) {
+                location = locationList.get(locationList.size() - 1);
 
                 currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -168,25 +168,25 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
 
         List<Address> addresses;
 
-        try{
+        try {
             addresses = geocoder.getFromLocation(
                     currentPosition.latitude,
                     currentPosition.longitude,
                     1
             );
-        }catch (IOException ioException){
+        } catch (IOException ioException) {
             // 네트워크 문제
             Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
-            return  "지오코더 서비스 사용 불가";
-        }catch (IllegalArgumentException illegalArgumentException){
-            Toast.makeText(this,"잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
+            return "지오코더 서비스 사용 불가";
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
             return "잘못된 GPS 좌표";
         }
 
-        if(addresses == null || addresses.size() == 0){
-            Toast.makeText(this,"주소 미발견", Toast.LENGTH_LONG).show();
+        if (addresses == null || addresses.size() == 0) {
+            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
             return "주소 미발견";
-        }else{
+        } else {
             Address address = addresses.get(0);
             return address.getAddressLine(0).toString();
         }
@@ -194,12 +194,11 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
 
     private void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
 
-        if(currentMarker != null)
-        {
+        if (currentMarker != null) {
             currentMarker.remove();
         }
 
-        LatLng currentLatLng =  new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(currentLatLng);
@@ -214,23 +213,22 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
     }
 
 
-
     private void startLocationUpdates() {
-        if(!checkLocationServicesStatus()){
+        if (!checkLocationServicesStatus()) {
             showDiologForLocationServiceSetting();
 
-        }else{
+        } else {
             int hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
             int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
 
-            if(hasFineLocationPermission != PackageManager.PERMISSION_GRANTED|| hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED ){
+            if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED || hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
 
                 Log.d(TAG, "startLocationUpdates: 퍼미션 없음");
                 return;
             }
 
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-            if(checkPermission()){
+            if (checkPermission()) {
                 mMap.setMyLocationEnabled(true);
             }
         }
@@ -243,10 +241,10 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
 
         Log.d(TAG, "onStart: ");
 
-        if(checkPermission()){
+        if (checkPermission()) {
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
 
-            if(mMap!=null){
+            if (mMap != null) {
                 mMap.setMyLocationEnabled(true);
             }
         }
@@ -256,22 +254,22 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
     protected void onStop() {
         super.onStop();
 
-        if(mFusedLocationClient != null){
+        if (mFusedLocationClient != null) {
             mFusedLocationClient.removeLocationUpdates(locationCallback);
         }
     }
 
-    private boolean checkPermission(){
+    private boolean checkPermission() {
 
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
 
-        if(hasFineLocationPermission != PackageManager.PERMISSION_GRANTED|| hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED ){
+        if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED || hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
 
             Log.d(TAG, "startLocationUpdates: 퍼미션 없음");
             return false;
 
-        }else{
+        } else {
             return true;
         }
 
@@ -312,7 +310,7 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
         String markerTitle = "위치 정보 가져올 수 없음";
         String markerSnippet = "위치 퍼미션과 GPS 활성 여부를 확인하세요";
 
-        if(currentMarker != null){
+        if (currentMarker != null) {
             currentMarker.remove();
         }
 

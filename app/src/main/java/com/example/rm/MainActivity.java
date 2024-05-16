@@ -2,7 +2,11 @@ package com.example.rm;
 
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,10 +15,14 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import com.example.rm.category.CategoryInfo;
 import com.example.rm.category.SearchTrash;
 import com.example.rm.community.CommunityEdit;
 import com.example.rm.community.Notice;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -27,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getHashKey();
 
         btnSearch = (LinearLayout)findViewById(R.id.li_search);
         btnCamera = (LinearLayout)findViewById(R.id.li_camera);     // 카메라
@@ -63,6 +72,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainNotice.setOnClickListener(this);
         PreferenceHelper.init(this);
     }
+
+    private void getHashKey() {
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (packageInfo == null)
+            Log.e("KeyHash", "KeyHash:null");
+
+        for (Signature signature : packageInfo.signatures) {
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            } catch (NoSuchAlgorithmException e) {
+                Log.e("KeyHash", "Unable to get MessageDigest. signature=" + signature, e);
+            }
+        }
+    }
+
 
     @Override
     protected void onResume() {
