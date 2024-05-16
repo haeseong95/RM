@@ -33,10 +33,12 @@
         android:text="사진 가져오기"
         android:textColor="@color/black"/>
 
-    <ListView
-        android:id="@+id/list_test"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="start"/>
 
     <RelativeLayout
         android:id="@+id/all_image_test"

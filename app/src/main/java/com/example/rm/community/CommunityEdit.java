@@ -52,8 +52,6 @@ public class CommunityEdit extends AppCompatActivity {
         AlertDialog.Builder builder2 = new AlertDialog.Builder(CommunityEdit.this);
         AlertDialog alertDialog;
 
-        communityImageAdapter = new CommunityImageAdapter(CommunityEdit.this, R.layout.community_listview_image, imageData);
-        listView.setAdapter(communityImageAdapter);
 
 
         btnAddImage.setOnClickListener(new View.OnClickListener() {

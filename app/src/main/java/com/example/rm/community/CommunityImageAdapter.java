@@ -3,16 +3,14 @@ package com.example.rm.community;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.rm.R;
@@ -27,11 +25,10 @@ public class CommunityImageAdapter extends BaseAdapter {
     private int count;  // 레이아웃 리소스 id를 담는 필드
     private ArrayList<ImageData> imageData = new ArrayList<>();     // 모델
 
-    public CommunityImageAdapter(Context context, int count, ArrayList<ImageData> imageData){
+    public CommunityImageAdapter(Context context, int count, ArrayList<Uri> uriArrayList){
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);   // xml 레이아웃 파일을 실제 뷰 객체로 만돌어줌
         this.context = context;
         this.count = count;
-        this.imageData = imageData;
 
     }
 
@@ -63,7 +60,7 @@ public class CommunityImageAdapter extends BaseAdapter {
         ImageView imageView = convertView.findViewById(R.id.images);
         Button deleteImage = convertView.findViewById(R.id.btn_image_delete);
         deleteImage.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#d5dee8")));  //이미지 x버튼을 회색으로 만듬
-        Glide.with(context).load(imageUrl).into(imageView);
+        Glide.with(context).load(imageUrl).into(imageView);     // 이미지 출력해줌
 
         deleteImage.setOnClickListener(new View.OnClickListener() {     // x버튼 클릭 시 이미지 지우기
             @Override
