@@ -77,7 +77,7 @@
         <activity android:name="com.example.rm.DeleteAccount"/>
         <activity android:name="com.example.rm.community.CommunityEdit"/>
         <activity android:name="com.example.rm.community.CommunityContent"/>
-        <activity android:name="com.example.rm.community.Notice"/>
+        <activity android:name="com.example.rm.Notice"/>
 
 
     </application>

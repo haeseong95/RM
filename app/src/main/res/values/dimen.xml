@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="community_large_text">20dp</dimen>
+    <dimen name="community_regular_text">15dp</dimen>
+    <dimen name="community_small_text">13dp</dimen>
+
+</resources>
