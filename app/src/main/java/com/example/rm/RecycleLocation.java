@@ -41,6 +41,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class RecycleLocation extends AppCompatActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private GoogleMap mMap;
@@ -67,6 +70,8 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
 
     private View mLayout; // snackbar 사용하기 위함.
 
+    // private ApiService apiService; Class 선언 필요
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +93,50 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // Retrofit 객체 초기화
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://your-api-url.com/") // 서버의 URL로 설정
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // ApiService 인터페이스 구현체 생성
+        // apiService = retrofit.create(ApiService.class); // 맵 이용을 위한 API 서비스 설정 해야 함
+
+        // Map 초기화 코드...
+
     }
+
+    /* private void getRecycleLocationsFromServer() {
+        Call<List<RecycleLocationModel>> call = apiService.getRecycleLocations();
+
+        call.enqueue(new Callback<List<RecycleLocationModel>>() {
+            @Override
+            public void onResponse(Call<List<RecycleLocationModel>> call, Response<List<RecycleLocationModel>> response) {
+                if (response.isSuccessful()) {
+                    List<RecycleLocationModel> recycleLocations = response.body();
+                    addRecycleLocationsToMap(recycleLocations);
+                } else {
+                    // 서버에서 오류 응답을 받은 경우 처리
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RecycleLocationModel>> call, Throwable t) {
+                // 통신 실패 처리
+            }
+        });
+    }
+
+    private void addRecycleLocationsToMap(List<RecycleLocationModel> recycleLocations) {
+        for (RecycleLocationModel location : recycleLocations) {
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(location.getName())
+                    .snippet(location.getDescription());
+            mMap.addMarker(markerOptions);
+        }
+    } */  // 서버 연결을 위한 코드
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -99,6 +147,8 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
 
         // 지도의 초기위치 이동
         setDefaultLocation();
+        // 주변의 분리수거 장소
+        // addRecycleLocations();
 
         // 런타임 퍼미션 처리
         // 1. 위치 퍼미션을 가지고 있는지 확인합니다.
@@ -259,6 +309,8 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
+
+
     private boolean checkPermission() {
 
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -324,4 +376,22 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
         mMap.moveCamera(cameraUpdate);
     }
+
+    /* private void addRecycleLocations() {
+        // 분리수거 장소들의 위치 정보를 리스트에 추가합니다. 여기서는 하드코딩된 예시를 사용하겠습니다.
+        List<LatLng> recycleLocations = new ArrayList<>();
+        recycleLocations.add(new LatLng(37.5665, 126.9780)); // 서울시청
+        recycleLocations.add(new LatLng(37.5664, 126.9779)); // 광화문
+        recycleLocations.add(new LatLng(37.5657, 126.9780)); // 덕수궁
+
+        // 각 분리수거 장소에 대해 마커를 지도에 추가합니다.
+        for (LatLng location : recycleLocations) {
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(location);
+            markerOptions.title("분리수거 장소");
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)); // 마커 아이콘을 녹색으로 설정합니다.
+            mMap.addMarker(markerOptions);
+        }
+    } */ // 위치 마커 하드 코딩 (서버에서 API 연결 되는 코딩 필요)
+
 }

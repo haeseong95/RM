@@ -15,13 +15,13 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import com.example.rm.category.CategoryInfo;
 import com.example.rm.category.SearchTrash;
 import com.example.rm.community.CommunityEdit;
 import com.example.rm.community.Notice;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
