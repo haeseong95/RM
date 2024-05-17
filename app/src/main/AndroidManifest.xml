@@ -60,7 +60,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA3XpOvDyqPHhFZ38CoyXl2wlCU9BeSF3I" />
+            android:value="AIzaSyDDhI4u20D3KoqSBYHU14vQ7UYxmY82Y8w" />
 
 
         <activity android:name="com.example.rm.LoginUser"/>
