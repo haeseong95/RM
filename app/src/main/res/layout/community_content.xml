@@ -33,17 +33,27 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <FrameLayout
+                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="250dp">
 
                 <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/viewPager"
+                    android:id="@+id/viewpager"
+                    android:clipToPadding="false"
+                    android:clipChildren="false"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/category_gray"/>
+                    android:scaleType="fitXY"
+                    android:layout_marginBottom="10dp"/>
 
-            </LinearLayout>
+                <me.relex.circleindicator.CircleIndicator3
+                    android:id="@+id/indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="bottom"/>
+            </FrameLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
