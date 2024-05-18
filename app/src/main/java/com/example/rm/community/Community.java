@@ -41,10 +41,11 @@ public class Community extends AppCompatActivity {
             }
         });
 
-        test.setOnClickListener(new View.OnClickListener() {    // 연필 아이콘 클릭 -> 글쓰기 화면
+        test.setOnClickListener(new View.OnClickListener() {    // 연필 아이콘 클릭 -> 상세 화면
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Community.this, CommunityContent.class);
+                intent.putExtra("postId", "post1");
                 startActivity(intent);
             }
         });

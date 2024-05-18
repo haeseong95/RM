@@ -51,7 +51,7 @@ public class CommunityEdit extends AppCompatActivity {
     // 값
     static final String tag = "CommunityEdit";
     ImageAdapter adapter;
-    ArrayList<Uri> uriArrayList = new ArrayList<>();    // 이미지의 uri 담음
+    ArrayList<Uri> uriArrayList = new ArrayList<>();    // 이미지 uri 담음
     ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
@@ -71,10 +71,10 @@ public class CommunityEdit extends AppCompatActivity {
         btnBack.setOnClickListener(v -> cancelEdit());          // 뒤로 가기 버튼
         btnDelete.setOnClickListener(v -> cancelEdit());       // 취소 버튼
         btnCreate.setOnClickListener(v -> finishEdit());        // 작성 버튼
-        init();
+        init();     // 이미지 URI 얻기
     }
 
-    // 사용자가 addimage 버튼을 클릭하면 갤러리에서 이미지 선택해 이미지의 URI를 얻음
+    // 사용자가 이미지 첨부하기 버튼을 클릭하면 갤러리에서 이미지 선택해 이미지의 URI를 얻음
     private void init(){
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
@@ -142,6 +142,8 @@ public class CommunityEdit extends AppCompatActivity {
                         encodedImages.add(encode);
                     }
 
+
+                    // 이건 base64가 이미지가 잘 뜨는지 테스트를 위해 써본 거
                     Intent intent = new Intent(CommunityEdit.this, CommunityContent.class);
                     intent.putStringArrayListExtra("encodedImages", encodedImages);
                     startActivity(intent);
@@ -178,7 +180,6 @@ public class CommunityEdit extends AppCompatActivity {
         Bitmap bitmap = null;
         ByteArrayOutputStream outputStream = null;
         String result = null;
-
 
         try {
             // 1번째 디코딩
@@ -268,7 +269,6 @@ public class CommunityEdit extends AppCompatActivity {
 
         return Bitmap.createScaledBitmap(bitmap, width, height, true);
     }
-
 
     // 디바이스의 DPI 계산 (dp -> 픽셀 변환)
     public int dpToPx(Context context, int dp){
