@@ -49,8 +49,6 @@ public class CommunityEdit extends AppCompatActivity {
     TextView btnCreate, btnDelete, btnAddImage, textImageCount;
 
     // 값
-    private static final int MAX_WIDTH = 1280;  // 이미지 가로 최대 길이
-    private static final int MAX_HEIGHT = 960;  // 이미지 세로
     static final String tag = "CommunityEdit";
     ImageAdapter adapter;
     ArrayList<Uri> uriArrayList = new ArrayList<>();    // 이미지의 uri 담음
@@ -135,18 +133,18 @@ public class CommunityEdit extends AppCompatActivity {
         builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // call해서 작성한 게시글 추가하고 커뮤니티 메인화면으로 넘어가기 +  넘어가면 내가 작성한 게시글이 맨 위에 올라와야 있어야 함
-
                 try {
-                    String title = postTitle.getText().toString();      // 작성한 게시글 제목, 내용, 이미지 저장
-                    String content = postContent.getText().toString();  // 근데 이런 텍스트도 인코딩 해야 하나?
-                    ArrayList<String> encodeImage = new ArrayList<>();
+                    String title = postTitle.getText().toString();      // 제목, 내용은 인코딩X 걍 문자열 상태로 json으로 보낼 거임
+                    String content = postContent.getText().toString();
+                    ArrayList<String> encodedImages = new ArrayList<>();
                     for (Uri uri : uriArrayList){       // uri -> bitmap -> base64 인코딩
                         String encode = encodeBase64(uri);
-                        encodeImage.add(encode);
+                        encodedImages.add(encode);
                     }
 
-
+                    Intent intent = new Intent(CommunityEdit.this, CommunityContent.class);
+                    intent.putStringArrayListExtra("encodedImages", encodedImages);
+                    startActivity(intent);
 
                     finish();
                 } catch (IOException e) {
@@ -176,45 +174,69 @@ public class CommunityEdit extends AppCompatActivity {
 
     // uriArrayList에 저장된 이미지들의 uri -> 비트맵으로 변환 (디코딩)
     private String encodeBase64(Uri uri) throws IOException {
-        // 1번째 디코딩
-        InputStream inputStream = new BufferedInputStream(this.getContentResolver().openInputStream(uri));  // 이미지 데이터를 읽음
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;          // 메모리 할당을 막아 이미지 파일의 메타데이터만 읽어옴 (true는 decodeStream()으로 이미지 파일을 읽을 때 실제 메모리에 로드X -> 객체 생성X, null 비트맵 반환)
-        BitmapFactory.decodeStream(inputStream, null, options);     // 이미지 디코딩, decodestream 호출해 이미지 파일로부터 메타데이터 읽어옴 (이미지의 가로/세로 크기 등 기본 정보를 얻어 이미지 처리 계획을 세워 메모리 절약)
-        inputStream.close();    // 이미지 파일을 다시 읽기 위해 이전에 읽은 stream을 닫았다가 new 다시 생성
-        options.inSampleSize = calculateInSampleSize(options);      // 샘플 사이즈 계산
-        options.inJustDecodeBounds = false;     // 실제 데이터를 메모리에 로드
+        InputStream inputStream = null;
+        Bitmap bitmap = null;
+        ByteArrayOutputStream outputStream = null;
+        String result = null;
 
-        // 2번째 디코딩
-        inputStream = new BufferedInputStream(this.getContentResolver().openInputStream(uri));
-        Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
-        inputStream.close();
 
-        // resizing
-        Bitmap resize = Bitmap.createScaledBitmap(bitmap, 256, 256, true);
-        bitmap.recycle();   // 메모리 회수
+        try {
+            // 1번째 디코딩
+            inputStream = new BufferedInputStream(this.getContentResolver().openInputStream(uri));  // 이미지 데이터를 읽음
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;          // 메모리 할당을 막아 이미지 파일의 메타데이터만 읽어옴 (true는 decodeStream()으로 이미지 파일을 읽을 때 실제 메모리에 로드X -> 객체 생성X, null 비트맵 반환)
+            BitmapFactory.decodeStream(inputStream, null, options);     // 이미지 디코딩, decodestream 호출해 이미지 파일로부터 메타데이터 읽어옴 (이미지의 가로/세로 크기 등 기본 정보를 얻어 이미지 처리 계획을 세워 메모리 절약)
+            inputStream.close();    // 이미지 파일을 다시 읽기 위해 이전에 읽은 stream을 닫았다가 new 다시 생성
+            options.inSampleSize = calculateInSampleSize(options);      // 샘플 사이즈 계산
+            options.inJustDecodeBounds = false;     // 실제 데이터를 메모리에 로드
 
-        // Bitmap -> Base64 인코딩
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        resize.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-        resize.recycle();
-        byte[] byteArray = outputStream.toByteArray();
-        outputStream.close();
-        String result = Base64.encodeToString(byteArray, Base64.NO_WRAP);
-        if (bitmap != null) {
+            // 2번째 디코딩 (실제 이미지를 메모리에 로드)
+            inputStream = new BufferedInputStream(this.getContentResolver().openInputStream(uri));
+            bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+            inputStream.close();
+
+            // resize
+            Bitmap resize = resizeBitmap(bitmap, 500, 500);
+
+            // Bitmap -> Base64 인코딩
+            outputStream = new ByteArrayOutputStream();
+            resize.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            resize.recycle();
+            byte[] byteArray = outputStream.toByteArray();
+            outputStream.close();
+            result = Base64.encodeToString(byteArray, Base64.NO_WRAP);
             Log.d(tag + " 인코딩", "uri 이미지 : " + uri.toString() + ", Base64 변환 성공 : " + result);
-        } else {
+        } catch (Exception e){
             Log.e(tag + " 인코딩", "uri 이미지 : " + uri.toString() + ", Base64 변환 실패: " + result);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    Log.e(tag, "InputStream 닫기 실패", e);
+                }
+            }
+            if (bitmap != null) {
+                bitmap.recycle();
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    Log.e(tag, "OutputStream 닫기 실패", e);
+                }
+            }
         }
         return result;
     }
 
     // 이미지 사이즈 계산
     private int calculateInSampleSize(BitmapFactory.Options options){
+        int MAX_WIDTH = dpToPx(getApplicationContext(), 150);  // 이미지를 표시할 imageview의 가로 크기
+        int MAX_HEIGHT = dpToPx(getApplicationContext(), 150);  // 이미지 세로
         int height = options.outHeight;    // 이미지 세로, 가로, MIME 타입("image/jpeg" 등) 얻음 -> 이미지 원본 크기를 얻어 inSampleSize를 설정해 이미지 비율 축소O
         int width = options.outWidth;
-        int sampleSize = 1;
-
+        int sampleSize = 2;
         if (height > MAX_HEIGHT || width > MAX_WIDTH) {
             int halfHeight = height / 2;
             int halfWidth = width / 2;
@@ -222,8 +244,38 @@ public class CommunityEdit extends AppCompatActivity {
                 sampleSize *= 2;
             }
         }
+        Log.i(tag + " dp -> 픽셀", "가로 : " + MAX_WIDTH + ", 세로 : " + MAX_HEIGHT);
         return sampleSize;
     }
+
+    // 이미지 resize
+    private Bitmap resizeBitmap(Bitmap bitmap, int maxWidth, int maxHeight) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        if (width <= maxWidth && height <= maxHeight) {
+            return bitmap; // 이미지가 최대 크기보다 작거나 같으면 리사이징 없이 반환
+        }
+
+        float bitmapRatio = (float)width / (float)height;
+        if (bitmapRatio > 1) {
+            width = maxWidth;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxHeight;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, width, height, true);
+    }
+
+
+    // 디바이스의 DPI 계산 (dp -> 픽셀 변환)
+    public int dpToPx(Context context, int dp){
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+
 
 
 }

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 // 게시글 상세 페이지에서 상단에 보여줄 사진
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.PagerHolder> {
-    final String tag = "ViewPagerAdapter";
+    final String tag = "ViewPager 어댑터";
     private ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();
     private Context context;
     public ViewPagerAdapter(Context context, ArrayList<Bitmap> bitmapArrayList){
@@ -56,10 +56,10 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.Page
     @Override
     public int getItemCount() {
         if(bitmapArrayList == null){
-            Log.i(tag + " bitmap 이미지 개수", "아이템 비어있음");
+            Log.i(tag, "bitmap 이미지 개수 : 0");
             return 0;
         } else {
-            Log.i(tag + " bitmap 이미지 개수", "아이템 개수 : " + bitmapArrayList.size());
+            Log.i(tag, "bitmap 이미지 개수 : " + bitmapArrayList.size());
             return bitmapArrayList.size();
         }
     }
