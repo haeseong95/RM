@@ -75,7 +75,7 @@
         <activity android:name="com.example.rm.RecycleLocation"/>
         <activity android:name="com.example.rm.community.Community"/>
         <activity android:name="com.example.rm.DeleteAccount"/>
-        <activity android:name="com.example.rm.community.CommunityEdit"/>
+        <activity android:name="com.example.rm.community.CommunityEdit" android:windowSoftInputMode="adjustNothing"/>
         <activity android:name="com.example.rm.community.CommunityContent"/>
         <activity android:name="com.example.rm.Notice"/>
 

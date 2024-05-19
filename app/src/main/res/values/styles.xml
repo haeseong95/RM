@@ -147,4 +147,13 @@
         <item name="android:textColor">#000000</item>
         <item name="fontFamily">@font/nanum_regular</item>>
     </style>
+
+    <!--커뮤니티 텍스트 일반 굵기 + 젤 작은 사이즈인 등급,날짜에 회색 색깔-->
+    <style name="community_text_normal_gray">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#585858</item>
+        <item name="fontFamily">@font/nanum_regular</item>>
+    </style>
+
 </resources>

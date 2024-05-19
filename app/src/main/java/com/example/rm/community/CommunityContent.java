@@ -34,7 +34,7 @@ public class CommunityContent extends AppCompatActivity {
     ViewPagerAdapter adapter;
     CircleIndicator3 indicator3;
     ImageView btnBack;
-    ImageView likeImage;  // 상단 사진, 추천 따봉 이미지
+    ImageView likeImage, sendComment;  // 좋아요 아이콘, 댓글 작성 아이콘
     TextView cNickname, cLevel, cDate, cTitle, cContent, cCount;    // 닉네임, 등급, 생성날짜, 게시글 제목, 게시글 내용, 추천 개수
     ListView listView;  // 댓글
     EditText editText;  // 댓글 입력창
@@ -59,6 +59,7 @@ public class CommunityContent extends AppCompatActivity {
         viewPager2 = findViewById(R.id.viewpager);
         indicator3 = findViewById(R.id.indicator);
         likeImage = findViewById(R.id.heart);
+        sendComment = findViewById(R.id.send_comment);
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
 

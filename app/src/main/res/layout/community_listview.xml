@@ -10,44 +10,44 @@
         android:layout_margin="20dp"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
-
-            <TextView
-                android:id="@+id/c_nickname"
-                style="@style/community_text_bold"
-                android:text="닉네임"
-                android:layout_alignParentStart="true"
-                android:textSize="@dimen/community_regular_text"
-                android:layout_marginRight="15dp"/>
-
-            <TextView
-                android:id="@+id/c_level"
-                style="@style/community_text_normal"
-                android:textSize="@dimen/community_small_text"
-                android:text="등급"
-                android:layout_toEndOf="@id/c_nickname"
-                android:layout_alignBottom="@id/c_nickname"
-                android:layout_marginStart="10dp"/>
-
-            <TextView
-                android:id="@+id/c_date"
-                style="@style/community_text_normal"
-                android:text="생성날짜"
-                android:textSize="@dimen/community_small_text"
-                android:layout_alignBottom="@id/c_nickname"
-                android:layout_alignParentEnd="true"/>
-        </RelativeLayout>
-
         <TextView
             android:id="@+id/c_title"
             style="@style/community_text_bold"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="게시글 제목"
-            android:textSize="@dimen/community_large_text"/>
+            android:textSize="@dimen/community_regular_text"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/c_nickname"
+                style="@style/community_text_normal_gray"
+                android:text="닉네임"
+                android:layout_alignParentStart="true"
+                android:textSize="@dimen/community_small_text"/>
+
+            <TextView
+                android:id="@+id/c_level"
+                style="@style/community_text_normal_gray"
+                android:text="등급"
+                android:textSize="@dimen/community_small_text"
+                android:layout_toEndOf="@id/c_nickname"
+                android:layout_alignBottom="@id/c_nickname"
+                android:layout_marginStart="10dp"/>
+
+            <TextView
+                android:id="@+id/c_date"
+                style="@style/community_text_normal_gray"
+                android:textSize="@dimen/community_small_text"
+                android:text="생성날짜"
+                android:layout_marginStart="10dp"
+                android:layout_alignBottom="@id/c_nickname"
+                android:layout_toEndOf="@id/c_level"/>
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

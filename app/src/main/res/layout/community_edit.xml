@@ -86,45 +86,51 @@
             android:orientation="horizontal"
             android:layout_gravity="start"/>
 
-        <!-- 글쓰기 확인/취소 버튼 -->
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:gravity="right"
-            android:orientation="horizontal">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/btn_postdelete"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/border_trash_tag"
-                android:backgroundTint="#FF0000"
-                android:paddingLeft="20dp"
-                android:paddingTop="8dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="8dp"
-                android:text="취소"
-                android:textColor="#FFFFFF"
-                android:textSize="13sp" />
+                android:layout_marginBottom="10dp"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true">
 
-            <TextView
-                android:id="@+id/btn_postcreate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/border_trash_tag"
-                android:backgroundTint="#0038FF"
-                android:paddingLeft="20dp"
-                android:paddingTop="8dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="8dp"
-                android:text="작성"
-                android:textColor="#FFFFFF"
-                android:textSize="13sp" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/btn_postdelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/border_trash_tag"
+                    android:backgroundTint="#FF0000"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="8dp"
+                    android:text="취소"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/btn_postcreate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/border_trash_tag"
+                    android:backgroundTint="#0038FF"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="8dp"
+                    android:text="작성"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
