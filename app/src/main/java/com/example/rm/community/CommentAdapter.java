@@ -68,7 +68,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     public class CommentViewHolder extends RecyclerView.ViewHolder {
         TextView commentNickname, commentPlace, commentDate, commentComment, commentId;
-        Button btnMenu;
+        Button btnMenu;     // 댓글 수정, 삭제, 신고 버튼
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);

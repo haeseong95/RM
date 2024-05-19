@@ -65,7 +65,7 @@
         <TextView
             android:id="@+id/ccc_userId"
             style="@style/community_text_normal_gray"
-            android:text="등급"
+            android:text="사용자 아이디로 본인 댓글인지 확인함"
             android:layout_toEndOf="@id/ccc_nickname"
             android:textSize="@dimen/community_small_text"
             android:layout_centerVertical="true"

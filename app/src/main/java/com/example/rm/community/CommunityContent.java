@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -31,17 +32,19 @@ import me.relex.circleindicator.CircleIndicator3;
 public class CommunityContent extends AppCompatActivity {
     // 레이아웃
     ViewPager2 viewPager2;
-    ViewPagerAdapter adapter;
+    ViewPagerAdapter viewPagerAdapter;
     CircleIndicator3 indicator3;
     ImageView btnBack;
-    ImageView likeImage, sendComment;  // 좋아요 아이콘, 댓글 작성 아이콘
+    ImageView likeImage, sendComment;  // 좋아요 아이콘, 댓글 작성 완료 비행기 아이콘
     TextView cNickname, cLevel, cDate, cTitle, cContent, cCount;    // 닉네임, 등급, 생성날짜, 게시글 제목, 게시글 내용, 추천 개수
-    ListView listView;  // 댓글
+    RecyclerView recyclerView;  // 댓글
     EditText editText;  // 댓글 입력창
 
     // 값
     private static final String tag = "CommunityContent";
-    private ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();    // viewpager의 이미지를 담을 bitmap 리스트
+    ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();    // viewpager의 이미지를 담을 bitmap 리스트
+    ArrayList<CommentData> commentDataArrayList = new ArrayList<>();    // 댓글 데이터 담음
+    CommentAdapter commentAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,30 +57,35 @@ public class CommunityContent extends AppCompatActivity {
         cTitle = findViewById(R.id.cc_title);
         cContent = findViewById(R.id.cc_content);
         cCount = findViewById(R.id.cc_count);
-        listView = findViewById(R.id.cc_comment);
         editText = findViewById(R.id.cc_edit_comment);
         viewPager2 = findViewById(R.id.viewpager);
         indicator3 = findViewById(R.id.indicator);
+        recyclerView = findViewById(R.id.comment_recyclerview);
         likeImage = findViewById(R.id.heart);
         sendComment = findViewById(R.id.send_comment);
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
+
+        // ViewPager
+        showViewPager();
+        setViewPager();
+
 
         // 좋아요 버튼
         String postId = "post1";    // 게시글 고유 ID 값
         setLike(postId);
         likeImage.setOnClickListener(v -> currentLike(postId));
 
-        // ViewPager
-        showViewPager();
-        setViewPager();
+        // 댓글
+
+
     }
 
 
     // bitmap을 이용해 뷰페이저에서 보여줄 이미지 얻음
     private void setViewPager(){
-        adapter = new ViewPagerAdapter(getApplicationContext(), bitmapArrayList);   // 어댑터 초기화 문제였나 arraylist에 데이터를 넣기 전에 초기화를 하는 게 맞나
-        viewPager2.setAdapter(adapter);     // viepager2에 어댑터 연결
+        viewPagerAdapter = new ViewPagerAdapter(getApplicationContext(), bitmapArrayList);   // 어댑터 초기화 문제였나 arraylist에 데이터를 넣기 전에 초기화를 하는 게 맞나
+        viewPager2.setAdapter(viewPagerAdapter);     // viepager2에 어댑터 연결
         viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);   // 가로 슬라이드
         indicator3.setViewPager(viewPager2);    // 인디케이터 설정
     }
@@ -93,8 +101,8 @@ public class CommunityContent extends AppCompatActivity {
             options.inJustDecodeBounds = false;
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodeBytes, 0, decodeBytes.length);      // byte[] -> bitmap 변환
             bitmapArrayList.add(bitmap);
-            if (adapter != null){
-                adapter.notifyDataSetChanged();
+            if (viewPagerAdapter != null){
+                viewPagerAdapter.notifyDataSetChanged();
             }
             Log.d(tag, "base64 -> bitamp 디코딩 성공");
         } catch (Exception e){
@@ -181,6 +189,11 @@ public class CommunityContent extends AppCompatActivity {
         } else {
             likeImage.setImageResource(R.drawable.community_empty_heart);
         }
+    }
+
+    // 댓글창 초기화
+    private void updateRecyclerView(){
+
     }
 
 
