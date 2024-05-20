@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
 
@@ -18,80 +19,107 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 // 커뮤니티 메인화면의 listview 어댑터
-public class CommunityAdapter extends ArrayAdapter<ComListData> {
+public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommuntiyViewHolder> {
+    static final String tag = "커뮤니티 메인 어댑터";
+    private ArrayList<CommunityData> communityDataArrayList = new ArrayList<>();
+    private Context context;
 
-    private ArrayList<ComListData> arrayList;
-    public CommunityAdapter(@NonNull Context context, ArrayList<ComListData> arrayList) {
-        super(context, 0, arrayList);
-        this.arrayList = arrayList;
-        Log.i("ComList어댑터 (메인)", "어댑터 연결 성공" + arrayList.size());
+    public CommunityAdapter(Context context, ArrayList<CommunityData> arrayList){
+        this.context = context;
+        this.communityDataArrayList = arrayList;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public CommuntiyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.community_listview, parent, false);
+        CommuntiyViewHolder viewHolder = new CommuntiyViewHolder(view);
+        return viewHolder;
+    }
 
-        if (convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.community_listview, parent, false);
+    @Override
+    public void onBindViewHolder(@NonNull CommuntiyViewHolder holder, int position) {
+        CommunityData communityData = communityDataArrayList.get(position);
+        holder.mainNickname.setText(communityDataArrayList.get(position).getMain_nickname());
+        holder.mainPlace.setText(communityDataArrayList.get(position).getMain_place());
+        holder.mainDate.setText(communityDataArrayList.get(position).getMain_date());
+        holder.mainTitle.setText(communityDataArrayList.get(position).getMain_title());
+    }
+
+    @Override
+    public int getItemCount() {
+        if(communityDataArrayList == null){
+            Log.i(tag + " 게시글 개수", "아이템 비어있음");
+            return 0;
+        } else {
+            Log.i(tag + " 게시글 개수", "아이템 개수 : " + communityDataArrayList.size());
+            return communityDataArrayList.size();
         }
+    }
 
-        TextView cNickname = convertView.findViewById(R.id.c_nickname);
-        TextView cPlace = convertView.findViewById(R.id.c_level);
-        TextView cDate = convertView.findViewById(R.id.c_date);
-        TextView cTitle = convertView.findViewById(R.id.c_title);
 
-        ComListData comListData = getItem(position);
-        cNickname.setText(comListData.getComNickname());
-        cPlace.setText(comListData.getComPlace());
-        cDate.setText(comListData.getComDate());
-        cTitle.setText(comListData.getComTitle());
+    public class CommuntiyViewHolder extends RecyclerView.ViewHolder{
+        TextView mainNickname, mainPlace, mainDate, mainTitle;
+        public CommuntiyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mainNickname = itemView.findViewById(R.id.c_nickname);
+            mainPlace = itemView.findViewById(R.id.c_level);
+            mainDate = itemView.findViewById(R.id.c_date);
+            mainTitle = itemView.findViewById(R.id.c_title);
 
-        return convertView;
+            itemView.setOnClickListener(new View.OnClickListener() {    // 아이템 클릭 이벤트 처리 (ViewHolder 내 itemView에서 클릭 이벤트 처리)
+                @Override
+                public void onClick(View v) {
+                    int position = getAbsoluteAdapterPosition();    // item의 position 반환
+
+                }
+            });
+        }
     }
 }
 
-class ComListData {
-    public String comNickname = ""; // 닉네임
-    public String comPlace = "";    // 등급
-    public String comDate = "";   // 생성날짜
-    public String comTitle = "";    // 게시글 제목
+class CommunityData {
+    public String main_nickname = ""; // 닉네임
+    public String main_place = "";    // 등급
+    public String main_date = "";   // 생성날짜
+    public String main_title = "";    // 게시글 제목
 
-    public String getComNickname() {
-        return comNickname;
+    public CommunityData(String main_nickname, String main_place, String main_date, String main_title) {
+        this.main_nickname = main_nickname;
+        this.main_place = main_place;
+        this.main_date = main_date;
+        this.main_title = main_title;
     }
 
-    public void setComNickname(String comNickname) {
-        this.comNickname = comNickname;
+    public String getMain_nickname() {
+        return main_nickname;
     }
 
-    public String getComPlace() {
-        return comPlace;
+    public void setMain_nickname(String main_nickname) {
+        this.main_nickname = main_nickname;
     }
 
-    public void setComPlace(String comPlace) {
-        this.comPlace = comPlace;
+    public String getMain_place() {
+        return main_place;
     }
 
-    public String getComDate() {
-        return comDate;
+    public void setMain_place(String main_place) {
+        this.main_place = main_place;
     }
 
-    public void setComDate(String comDate) {
-        this.comDate = comDate;
+    public String getMain_date() {
+        return main_date;
     }
 
-    public String getComTitle() {
-        return comTitle;
+    public void setMain_date(String main_date) {
+        this.main_date = main_date;
     }
 
-    public void setComTitle(String comTitle) {
-        this.comTitle = comTitle;
+    public String getMain_title() {
+        return main_title;
     }
 
-    public ComListData(String comNickname, String comPlace, String comDate, String comTitle) {
-        this.comNickname = comNickname;
-        this.comPlace = comPlace;
-        this.comDate = comDate;
-        this.comTitle = comTitle;
+    public void setMain_title(String main_title) {
+        this.main_title = main_title;
     }
 }

@@ -25,12 +25,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     static final String tag = "댓글 어댑터";
     private ArrayList<CommentData> arrayList = new ArrayList<>();
     private Context context;
-    private String currentUserId;
+    private String currentUserId;   // 사용자 현재 ID로 댓글이 본인이 쓴 게 맞는지 검사하려고 생성자에 넣었는데 일단 빼고 필요하면 나중에 추가하기
 
-    public CommentAdapter(Context context, ArrayList<CommentData> arrayList, String currentUserId){
+    public CommentAdapter(Context context, ArrayList<CommentData> arrayList){
         this.arrayList = arrayList;
         this.context = context;
-        this.currentUserId = currentUserId;
+        //this.currentUserId = currentUserId;
     }
 
     @NonNull
@@ -86,13 +86,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
         popupMenu.inflate(R.menu.comment_menu);
 
-        // 본인 댓글인지 확인
+
+        /* 본인 댓글인지 확인
         if (!comment.getComment_id().equals(currentUserId)) {
-            popupMenu.getMenu().findItem(R.id.action_edit).setVisible(false);
-            popupMenu.getMenu().findItem(R.id.action_delete).setVisible(false);
-        } else {
-            popupMenu.getMenu().findItem(R.id.action_report).setVisible(false);
+            popupMenu.getMenu().findItem(R.id.action_edit).setVisible(false);       // 댓글 수정
+            popupMenu.getMenu().findItem(R.id.action_delete).setVisible(false);     // 댓글 삭제
         }
+
+
+         */
 
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -103,10 +105,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 case R.id.action_delete:
                     // 삭제 기능 처리
                     deleteComment(comment);
-                    return true;
-                case R.id.action_report:
-                    // 신고 기능 처리
-                    reportComment(comment);
                     return true;
                 default:
                     return false;
@@ -122,10 +120,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     private void deleteComment(CommentData comment) {
         // 댓글 삭제 기능 구현
-    }
-
-    private void reportComment(CommentData comment) {
-        // 댓글 신고 기능 구현
     }
 }
 

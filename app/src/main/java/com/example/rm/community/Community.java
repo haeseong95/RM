@@ -10,28 +10,41 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
+
+import java.util.ArrayList;
 
 public class Community extends AppCompatActivity {
     // 레이아웃
     ImageView btnBack;
     EditText searchBar;     // 검색창
     LinearLayout btnWrite;  // 글쓰기 아이콘
-    ListView listView;
+    RecyclerView recyclerView;  // 게시글 목록
     Button btnMorePost, test;     // 더보기 버튼
+
+    //
+    private static final String tag = "Community 게시판 메인";
+    ArrayList<CommunityData> arrayList = new ArrayList<>();     // 게시글 목록 데이터 저장
+    CommunityAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.community);
-
+        recyclerView = findViewById(R.id.main_recyclerview);
         test = findViewById(R.id.content_test);
         btnBack = findViewById(R.id.btn_back);
         btnWrite = findViewById(R.id.c_write);
         searchBar = findViewById(R.id.c_search);
         btnMorePost = findViewById(R.id.btn_morepost);
         btnBack.setOnClickListener(v -> finish());
+
+
+        getPostList();
+        setRecyclerView();
 
         btnWrite.setOnClickListener(new View.OnClickListener() {    // 연필 아이콘 클릭 -> 글쓰기 화면
             @Override
@@ -50,25 +63,23 @@ public class Community extends AppCompatActivity {
             }
         });
 
-        // edittext로 설정한 검색창에 입력값이랑 같은 게시글 제목을 입력하면 listview에 뜨게 함 (제목만 할거임)
-        searchBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
 
-            }
-        });
-
-        // 더보기 버튼을 클릭하면 listview 목록이 10개씩 추가되게 하기
-        btnMorePost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
+    // arrayList에서 게시글 목록 데이터 저장 (일단 더미 데이터로 recyclerview가 출력되는지 테스트)
+    private void getPostList(){
+        for (int i = 0; i < 10; i++) {
+            arrayList.add(new CommunityData("닉네임 " + (i + 1), "등급 " + (i + 1), "2024-05-19", "제목 " + (i + 1)));
+        }
     }
 
 
+    // recyclerview 초기화
+    private void setRecyclerView(){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(Community.this);
+        recyclerView.setLayoutManager(linearLayoutManager); // layoutManager 설정
+        adapter = new CommunityAdapter(Community.this, arrayList);
+        recyclerView.setAdapter(adapter);
+    }
 
 
 

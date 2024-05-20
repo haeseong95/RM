@@ -6,7 +6,4 @@
     <item
         android:id="@+id/action_delete"
         android:title="삭제" />
-    <item
-        android:id="@+id/action_report"
-        android:title="신고" />
 </menu>

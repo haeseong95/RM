@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -68,8 +69,6 @@ public class CommunityContent extends AppCompatActivity {
 
         // ViewPager
         showViewPager();
-        setViewPager();
-
 
         // 좋아요 버튼
         String postId = "post1";    // 게시글 고유 ID 값
@@ -77,7 +76,8 @@ public class CommunityContent extends AppCompatActivity {
         likeImage.setOnClickListener(v -> currentLike(postId));
 
         // 댓글
-
+        // setRecylerview가 실행되기 전에 댓글 데이터를 가져와서 저장시켜야 함
+        setRecyclerView();
 
     }
 
@@ -101,9 +101,6 @@ public class CommunityContent extends AppCompatActivity {
             options.inJustDecodeBounds = false;
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodeBytes, 0, decodeBytes.length);      // byte[] -> bitmap 변환
             bitmapArrayList.add(bitmap);
-            if (viewPagerAdapter != null){
-                viewPagerAdapter.notifyDataSetChanged();
-            }
             Log.d(tag, "base64 -> bitamp 디코딩 성공");
         } catch (Exception e){
             Log.e(tag, "base64 -> bitamp 디코딩 실패", e);
@@ -115,7 +112,7 @@ public class CommunityContent extends AppCompatActivity {
         Intent intent = getIntent();
         ArrayList<String> encodedImages = intent.getStringArrayListExtra("encodedImages");
         if (encodedImages != null) {
-            bitmapArrayList.clear();
+            bitmapArrayList.clear();    // 기존 데이터 초기화
             for (String base64 : encodedImages) {
                 try {
                     decodeBase64toBitmap(base64);  // Base64 문자열을 Bitmap으로 변환 후 RecyclerView에 추가
@@ -123,6 +120,11 @@ public class CommunityContent extends AppCompatActivity {
                 } catch (IOException e) {
                     Log.e(tag, "base64 -> bitmap 변환 오류", e);
                 }
+            }
+            if (viewPagerAdapter == null){  // 어댑터가 초기화X 실행 -> 이미 초기화가 된 경우에는 데이터 변경 업데이트
+                setViewPager();
+            } else {
+                viewPagerAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -167,7 +169,6 @@ public class CommunityContent extends AppCompatActivity {
         if(likeState) { //likestate가 true, 즉 눌린 상태에서 또 누른거니까 취소
             PreferenceHelper.likeState(postId, false);
             updateLikeImage(false);
-
             likeCount -= 1;
             PreferenceHelper.likeCount(postId, likeCount);
             cCount.setText(String.valueOf(likeCount));
@@ -191,10 +192,14 @@ public class CommunityContent extends AppCompatActivity {
         }
     }
 
-    // 댓글창 초기화
-    private void updateRecyclerView(){
-
+    // 댓글창 recyclerview 초기화
+    private void setRecyclerView(){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CommunityContent.this);
+        recyclerView.setLayoutManager(linearLayoutManager); // layoutManager 설정
+        commentAdapter = new CommentAdapter(CommunityContent.this, commentDataArrayList);
+        recyclerView.setAdapter(commentAdapter);
     }
 
+    // 서버에서 해당 게시글의 댓글 데이터를 가져와야 함
 
 }
