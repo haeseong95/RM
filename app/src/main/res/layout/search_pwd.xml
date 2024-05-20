@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SearchPwd">
+    tools:context=".SearchId">
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
@@ -18,75 +18,18 @@
             android:id="@+id/btn_back"
             android:src="@drawable/btn_left" style="@style/back_icon"/>
 
-        <TextView android:text="비밀번호 찾기" style="@style/toolbar_text" />
+        <TextView android:text="아이디 찾기" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
     <EditText
-        android:id="@+id/se_id"
+        android:id="@+id/edit_email_pwd"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:inputType="text"
-        android:hint="아이디를 입력하세요" style="@style/editText_style"/>
+        android:inputType="textEmailAddress"
+        android:hint="이메일을 입력하세요" style="@style/editText_style"/>
 
     <Button
         android:id="@+id/btn_search_pwd"
         android:text="비밀번호 찾기" style="@style/button_style"/>
 
-    <LinearLayout
-        android:id="@+id/li_i"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="#E2E2E2"
-        android:orientation="vertical"
-        android:layout_marginTop="60dp"
-        android:visibility="invisible">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="회원님의 임시 비밀번호입니다"
-            android:padding="20dp"
-            android:textSize="20dp"
-            android:layout_gravity="center"
-            android:fontFamily="@font/nanum_regular"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="40dp"/>
-
-        <TextView
-            android:id="@+id/temp_pw"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="50dp"
-            android:gravity="center"
-            android:text="비밀번호"
-            android:fontFamily="@font/nanum_regular"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/li_login"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_gravity="bottom"
-            android:background="@color/main_color_green">
-
-            <Button
-                android:id="@+id/go_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:backgroundTint="@android:color/transparent"
-                android:text="로그인 페이지로 가기"
-                android:textColor="#FFFFFF"
-                android:fontFamily="@font/nanum_regular"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </LinearLayout>
 </LinearLayout>

@@ -36,6 +36,7 @@
             android:id="@+id/login_id"
             style="@style/editText_style"
             android:hint="아이디"
+            android:layout_gravity="center"
             android:inputType="text" />
 
         <TextView
@@ -46,6 +47,7 @@
             android:id="@+id/login_pwd"
             style="@style/editText_style"
             android:hint="비밀번호"
+            android:layout_gravity="center"
             android:inputType="textPassword" />
     </LinearLayout>
 

@@ -1,97 +1,116 @@
 package com.example.rm;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class SearchId extends AppCompatActivity{
+import org.json.JSONObject;
 
-    String inputUserEmail = null;
+import java.io.IOException;
 
-    ImageView btnBack;     // 뒤로가기
-    EditText editEmail;    // 이메일 입력
-    Button btnSearchId, btnLogin, btnBtnSearchPw;   // 아이디 찾기 버튼
-    SqliteHelper sqliteHelper;
-    LinearLayout layout1, layout2;
-    TextView findId;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
+public class SearchId extends AppCompatActivity implements View.OnClickListener {
+
+    ImageView btnBack;
+    EditText editEmail;
+    Button btnSearchId;
+
+    private static final String TAG = "SearchId";
+    private static final String SEARCH_ID_URL = "http://ipark4.duckdns.org:58395/api/create/search/sendid";  // SendID.py의 엔드포인트로 변경하세요
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_id);
 
-        btnBack = (ImageView) findViewById(R.id.btn_back);
-        editEmail = (EditText)findViewById(R.id.edit_email);
-        btnSearchId = (Button)findViewById(R.id.btn_search_id);
-        layout1 = findViewById(R.id.li_io);
-        layout2 = findViewById(R.id.btn_to);
-        findId = findViewById(R.id.find_id);
-        btnLogin = findViewById(R.id.start_login);
-        btnBtnSearchPw = findViewById(R.id.search_pw);
-        sqliteHelper = new SqliteHelper(SearchId.this);
-        btnBack.setOnClickListener(v -> finish());
+        btnBack = findViewById(R.id.btn_back);
+        editEmail = findViewById(R.id.edit_email);
+        btnSearchId = findViewById(R.id.btn_search_id);
 
-        // 아이디 찾기 버튼 클릭 시
-        btnSearchId.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SearchId.this);
-                inputUserEmail = editEmail.getText().toString();
-
-                // 이메일 형식 틀리면
-                if(!Patterns.EMAIL_ADDRESS.matcher(inputUserEmail).matches()) {
-                    builder.setMessage("이메일 형식이 올바르지 않습니다.");
-                    builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
-                // 이메일 형식 맞으면 아이디 제공
-                else {
-                    String id = sqliteHelper.checkEmail(inputUserEmail);
-                    Log.i("SearchId", "이메일 입력 후 가져온 ID : " + id);
-
-                    if(id == null){
-                        builder.setMessage("해당하는 이메일을 찾을 수 없습니다.");
-                        builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                    } else {
-                        editEmail.setVisibility(View.INVISIBLE);
-                        btnSearchId.setVisibility(View.INVISIBLE);
-                        layout1.setVisibility(View.VISIBLE);
-                        layout2.setVisibility(View.VISIBLE);
-                        findId.setText(id);
-                    }
-                }
-            }
-        });
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        btnBtnSearchPw.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SearchId.this, SearchPwd.class);
-                startActivity(intent);
-            }
-        });
+        btnBack.setOnClickListener(this);
+        btnSearchId.setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btn_back) {
+            finish();
+        } else if (v.getId() == R.id.btn_search_id) {
+            String email = editEmail.getText().toString().trim();
+            if (email.isEmpty()) {
+                Toast.makeText(this, "이메일을 입력하세요", Toast.LENGTH_SHORT).show();
+            } else {
+                searchIdByEmail(email);
+            }
+        }
+    }
+
+    private void searchIdByEmail(final String email) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("email", email);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                RequestBody body = RequestBody.create(JSON, json.toString());
+                Request request = new Request.Builder()
+                        .url(SEARCH_ID_URL)
+                        .post(body)
+                        .addHeader("Content-Type", "application/json")
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
+                    if (response.isSuccessful()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(SearchId.this, "아이디가 이메일로 전송되었습니다.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SearchId.this, LoginUser.class);  // 메인 액티비티로 이동
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e("아이디 찾기 실패", responseBody);
+                                Toast.makeText(SearchId.this, "아이디 찾기 실패: " + responseBody, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(SearchId.this, "네트워크 오류", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
 }

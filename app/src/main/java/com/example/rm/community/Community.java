@@ -42,9 +42,10 @@ public class Community extends AppCompatActivity {
         btnMorePost = findViewById(R.id.btn_morepost);
         btnBack.setOnClickListener(v -> finish());
 
-
+        // 게시글 목록
         getPostList();
         setRecyclerView();
+
 
         btnWrite.setOnClickListener(new View.OnClickListener() {    // 연필 아이콘 클릭 -> 글쓰기 화면
             @Override
@@ -54,7 +55,7 @@ public class Community extends AppCompatActivity {
             }
         });
 
-        test.setOnClickListener(new View.OnClickListener() {    // 연필 아이콘 클릭 -> 상세 화면
+        test.setOnClickListener(new View.OnClickListener() {    // 게시글 상세 페이지
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Community.this, CommunityContent.class);
@@ -67,9 +68,18 @@ public class Community extends AppCompatActivity {
 
     // arrayList에서 게시글 목록 데이터 저장 (일단 더미 데이터로 recyclerview가 출력되는지 테스트)
     private void getPostList(){
-        for (int i = 0; i < 10; i++) {
-            arrayList.add(new CommunityData("닉네임 " + (i + 1), "등급 " + (i + 1), "2024-05-19", "제목 " + (i + 1)));
-        }
+        arrayList.add(new CommunityData("닉네임1 ", "등급 ", "2024-05-19", "제목 "));
+        arrayList.add(new CommunityData("닉네임2 ", "등급 ", "2024-05-19", "제목 "));
+        arrayList.add(new CommunityData("닉네임3 ", "등급 ", "2024-05-19", "제목 "));
+        arrayList.add(new CommunityData("닉네임4 ", "등급 ", "2024-05-19", "제목 "));
+        arrayList.add(new CommunityData("닉네임5 ", "등급 ", "2024-05-19", "제목 "));
+        arrayList.add(new CommunityData("닉네임6 ", "등급 ", "2024-05-19", "제목 "));
+        arrayList.add(new CommunityData("닉네임7 ", "등급 ", "2024-05-19", "제목 "));
+        arrayList.add(new CommunityData("닉네임8 ", "등급 ", "2024-05-19", "제목 "));
+        arrayList.add(new CommunityData("닉네임9 ", "등급 ", "2024-05-19", "제목 "));
+        arrayList.add(new CommunityData("닉네임10 ", "등급 ", "2024-05-19", "제목 "));
+
+
     }
 
 

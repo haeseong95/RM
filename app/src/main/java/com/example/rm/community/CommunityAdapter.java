@@ -57,7 +57,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         }
     }
 
-
     public class CommuntiyViewHolder extends RecyclerView.ViewHolder{
         TextView mainNickname, mainPlace, mainDate, mainTitle;
         public CommuntiyViewHolder(@NonNull View itemView) {
@@ -76,6 +75,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             });
         }
     }
+
+
 }
 
 class CommunityData {
