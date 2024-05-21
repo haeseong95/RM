@@ -24,26 +24,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginTop="30dp"
         android:paddingLeft="20dp">
 
         <TextView
-            android:id="@+id/user_nickname"
+            android:id="@+id/user_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="닉네임"
+            android:text="아이디"
             android:fontFamily="@font/nanum_regular"
             android:textStyle="bold"
             android:textSize="25dp"/>
 
         <TextView
+            android:id="@+id/user_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="님"
+            android:text="이메일"
             android:fontFamily="@font/nanum_regular"
             android:textStyle="bold"
-            android:textSize="25dp"/>
+            android:textSize="20dp"/>
     </LinearLayout>
 
     <View
@@ -53,7 +54,6 @@
         android:background="@color/category_gray"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"/>
-
 
     <LinearLayout
         android:id="@+id/li_user"

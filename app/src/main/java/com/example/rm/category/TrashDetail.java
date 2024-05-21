@@ -11,10 +11,8 @@ import com.bumptech.glide.Glide;
 import com.example.rm.R;
 
 public class TrashDetail extends AppCompatActivity {
-
     ImageView btnBack, trashImage;
     TextView trashName, trashInfo;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,7 +26,6 @@ public class TrashDetail extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         getTrashData();     // 리스트뷰에서 정보 가져온 거 화면에 보여줌
-
     }
 
     public void getTrashData(){

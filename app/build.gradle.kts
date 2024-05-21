@@ -37,10 +37,16 @@ android {
 dependencies {
     //ViewPager2
     implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("me.relex:circleindicator:2.1.6")
 
     // Glide
     implementation ("com.github.bumptech.glide:glide:4.11.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
+
+    // okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:4.4.1")
+
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

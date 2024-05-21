@@ -26,7 +26,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp">
 
         <!--아이디-->
         <TextView android:text="아이디" style="@style/textView_check_style"/>
@@ -111,30 +112,34 @@
 
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/verifyCodeTextInput"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:hint="인증코드를 입력하세요"/>
+            android:layout_marginTop="10dp">
 
-        <Chronometer
-            android:id="@+id/stopWatchChronometer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"/>
+            <EditText
+                android:id="@+id/verifyCodeTextInput"
+                android:hint="인증코드 입력" style="@style/editText_check_style"
+                android:inputType="textEmailAddress"/>
 
-        <Button
-            android:id="@+id/verifyCodeCheckButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="인증코드 확인" />
+            <Button
+                android:id="@+id/verifyCodeCheckButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#BFBFBF"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/nanum_regular"
+                android:text="인증코드 확인"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/verifyResultText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
     </LinearLayout>
 
     <!--회원가입 버튼-->

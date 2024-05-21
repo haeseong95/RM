@@ -23,7 +23,7 @@ public class CommunityContentAdapter extends ArrayAdapter<ComContentListData> {
     public CommunityContentAdapter(@NonNull Context context, ArrayList<ComContentListData> arrayList) {
         super(context, 0, arrayList);
         this.arrayList = arrayList;
-        Log.i("Com댓글 어댑터", "어댑터 연결 성공" + arrayList.size());
+        Log.i("댓글 어댑터", "어댑터 연결 성공" + arrayList.size());
     }
 
     @NonNull

@@ -20,34 +20,56 @@
                 android:id="@+id/ccc_nickname"
                 style="@style/community_text_bold"
                 android:text="닉네임"
+                android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:textSize="@dimen/community_large_text"
-                android:layout_marginRight="10dp"/>
-
+                android:textSize="@dimen/community_small_text"/>
 
             <TextView
                 android:id="@+id/ccc_level"
-                style="@style/community_text_normal"
-                android:textSize="@dimen/community_small_text"
+                style="@style/community_text_normal_gray"
                 android:text="등급"
                 android:layout_toEndOf="@id/ccc_nickname"
-                android:layout_alignBottom="@id/ccc_nickname"
+                android:textSize="@dimen/community_small_text"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"/>
 
             <TextView
                 android:id="@+id/ccc_date"
-                style="@style/community_text_normal"
+                style="@style/community_text_normal_gray"
                 android:text="생성날짜"
+                android:layout_marginStart="10dp"
+                android:layout_centerVertical="true"
                 android:textSize="@dimen/community_small_text"
-                android:layout_alignBottom="@id/ccc_nickname"
-                android:layout_alignParentEnd="true"/>
+                android:layout_toEndOf="@id/ccc_level"/>
+
+            <Button
+                android:id="@+id/popMenu"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/community_menu"
+                android:backgroundTint="@null"
+                android:layout_alignParentEnd="true"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+
         </RelativeLayout>
 
         <TextView
             android:id="@+id/ccc_commen"
             style="@style/community_text_normal"
             android:text="댓글"
-            android:textSize="@dimen/community_large_text"
-            android:layout_marginRight="10dp"/>
+            android:textSize="@dimen/community_regular_text"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/ccc_userId"
+            style="@style/community_text_normal_gray"
+            android:text="사용자 아이디로 본인 댓글인지 확인함"
+            android:layout_toEndOf="@id/ccc_nickname"
+            android:textSize="@dimen/community_small_text"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:visibility="gone"/>
     </LinearLayout>
 </LinearLayout>

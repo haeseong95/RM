@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/category_gray"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

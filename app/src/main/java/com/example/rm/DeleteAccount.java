@@ -38,36 +38,8 @@ public class DeleteAccount extends AppCompatActivity {
             AlertDialog alertDialog;
             @Override
             public void onClick(View v) {
-                userPw = editPw.getText().toString().trim();
-                String id = PreferenceHelper.getLoginId(DeleteAccount.this);
-                String hashPw = SignUp.getSHA(userPw);  // 입력한 비번을 해시로 바꾸기
-                Log.i("DeleteAccount 계정 조회", "아이디: " + id + ", 비번: " + userPw + ", 해시값 : " + hashPw);
 
-                if (sqliteHelper.checkIdPassword(id, hashPw)){
-                    builder.setTitle("탈퇴하기");
-                    builder.setMessage("정말 탈퇴하시겠습니까?");
-                    builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // 비번 일치하면 계정 삭제
-                            PreferenceHelper.logout();
-                            sqliteHelper.delAccount(id);
-                            finishDelete();
-                        }
-                    });
 
-                    builder.setNeutralButton("아니오", (dialog, which) -> dialog.dismiss());
-                    alertDialog = builder.create();
-                    alertDialog.show();
-                }
-                else {  // 비번 잘못 입력함
-                    Log.e("DeleteAccount 비번 불일치", "아이디: " + id + ", 비번: " + userPw + ", 해시값 : " + hashPw);
-                    builder2.setTitle("비밀번호 오류");
-                    builder2.setMessage("입력하신 비밀번호가 정확하지 않습니다. 다시 시도해 주세요.");
-                    builder2.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
-                    alertDialog = builder2.create();
-                    alertDialog.show();
-                }
             }
         });
     }
