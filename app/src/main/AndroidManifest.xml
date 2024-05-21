@@ -65,19 +65,19 @@
             android:value="AIzaSyDDhI4u20D3KoqSBYHU14vQ7UYxmY82Y8w" />
 
 
-        <activity android:name="com.example.rm.LoginUser" android:theme="@style/AlertDialogCustom"/>
-        <activity android:name="com.example.rm.SignUp" android:theme="@style/AlertDialogCustom"/>
-        <activity android:name="com.example.rm.SearchId" android:theme="@style/AlertDialogCustom"/>
-        <activity android:name="com.example.rm.SearchPwd" android:theme="@style/AlertDialogCustom"/>
+        <activity android:name="com.example.rm.LoginUser"/>
+        <activity android:name="com.example.rm.SignUp"/>
+        <activity android:name="com.example.rm.SearchId"/>
+        <activity android:name="com.example.rm.SearchPwd"/>
         <activity android:name="com.example.rm.category.SearchTrash"/>
-        <activity android:name="com.example.rm.category.CategoryInfo" android:theme="@style/AlertDialogCustom"/>
+        <activity android:name="com.example.rm.category.CategoryInfo"/>
         <activity android:name="com.example.rm.category.TrashDetail"/>
-        <activity android:name="com.example.rm.Mypage" android:theme="@style/AlertDialogCustom"/>
-        <activity android:name="com.example.rm.Camera" android:theme="@style/AlertDialogCustom"/>
+        <activity android:name="com.example.rm.Mypage"/>
+        <activity android:name="com.example.rm.Camera"/>
         <activity android:name="com.example.rm.RecycleLocation"/>
         <activity android:name="com.example.rm.community.Community"/>
         <activity android:name="com.example.rm.DeleteAccount"/>
-        <activity android:name="com.example.rm.community.CommunityEdit" android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name="com.example.rm.community.CommunityEdit"/>
         <activity android:name="com.example.rm.community.CommunityContent"/>
         <activity android:name="com.example.rm.Notice"/>
 

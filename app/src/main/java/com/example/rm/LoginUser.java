@@ -14,6 +14,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.rm.token.TokenManager;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -23,6 +26,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.json.JSONObject;
+
 
 // 사용자 로그인 화면
 public class LoginUser extends AppCompatActivity implements View.OnClickListener {
@@ -35,7 +40,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
     private static final String tag = "LoginUser";
     private static final String LOGIN_URL = "http://ipark4.duckdns.org:58395/api/create/login";  // Flask 서버의 로그인 URL로 변경하세요
-
+    private TokenManager tokenManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +60,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         searchPwd.setOnClickListener(this);
         signUp.setOnClickListener(this);
         sqliteHelper = new SqliteHelper(this);
+        tokenManager = new TokenManager(this);
     }
 
     @Override
@@ -117,7 +123,10 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                     Response response = client.newCall(request).execute();
                     String responseBody = response.body().string();
                     if (response.isSuccessful()) {
+                        JSONObject responseJson = new JSONObject(responseBody);
+                        String token = responseJson.getString("message");
 
+                        tokenManager.saveToken(token);
                         // 로그인 성공 시 메인 페이지로 이동
                         runOnUiThread(new Runnable() {
                             @Override
@@ -145,6 +154,8 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                             Log.e(tag, "네트워크 오류", e);
                         }
                     });
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }).start();
