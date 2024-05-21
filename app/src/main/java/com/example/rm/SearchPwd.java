@@ -27,8 +27,8 @@ public class SearchPwd extends AppCompatActivity implements View.OnClickListener
     EditText editEmail;
     Button btnSearchPwd;
 
-    private static final String TAG = "SearchPwd";
-    private static final String SEARCH_PWD_URL = "http://ipark4.duckdns.org:58395/api/create/search/sendpassword";  // SendNewPassword.py의 엔드포인트로 변경하세요
+    private static final String tag = "SearchPwd";
+    private static final String SEARCH_PWD_URL = "http://ipark4.duckdns.org:58395/api/create/search/sendpassword";  // SendNewPassword.py의 엔드포인트
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,17 +85,15 @@ public class SearchPwd extends AppCompatActivity implements View.OnClickListener
                             @Override
                             public void run() {
                                 Toast.makeText(SearchPwd.this, "비밀번호가 이메일로 전송되었습니다.", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(SearchPwd.this, LoginUser.class);  // 로그인 화면으로 이동
-                                startActivity(intent);
-                                finish();
+                                finish();   // 로그인 화면으로 이동
                             }
                         });
                     } else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.e("비번 찾기 실패", responseBody);
-                                Toast.makeText(SearchPwd.this, "비번 찾기 실패: " + responseBody, Toast.LENGTH_SHORT).show();
+                                Log.e(tag, "비번 찾기 실패" + responseBody);
+                                Toast.makeText(SearchPwd.this, "비밀번호 찾기를 실패하였습니다.", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -104,7 +102,7 @@ public class SearchPwd extends AppCompatActivity implements View.OnClickListener
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(SearchPwd.this, "네트워크 오류", Toast.LENGTH_SHORT).show();
+                            Log.e(tag, "네트워크 오류", e);
                         }
                     });
                 }

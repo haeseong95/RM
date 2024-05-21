@@ -156,4 +156,19 @@
         <item name="fontFamily">@font/nanum_regular</item>>
     </style>
 
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="buttonBarPositiveButtonStyle">@style/AlertDialogButtonPositive</item>
+        <item name="buttonBarNeutralButtonStyle">@style/AlertDialogButtonNeutral</item>
+    </style>
+
+    <!-- Style for Positive Button -->
+    <style name="AlertDialogButtonPositive">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- Style for Neutral Button -->
+    <style name="AlertDialogButtonNeutral">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>

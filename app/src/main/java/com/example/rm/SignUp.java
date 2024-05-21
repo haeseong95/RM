@@ -34,13 +34,13 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     Button idCheckButton, nicknameCheckButton, sendVerifyCodeButton, verifyCodeCheckButton, btnSignUp;
     TextView verifyResultText;
 
-    private static final String TAG = "SignUp";
+    private static final String tag = "회원가입";
     private static final String host = "http://ipark4.duckdns.org:58395";
-    private static final String CHECK_USER_ID_URL = host + "/api/create/register/check/userID";  // CheckUserID.py의 엔드포인트로 변경하세요
-    private static final String CHECK_USER_NICKNAME_URL = host + "/api/create/register/check/nickname";  // CheckUserNickname.py의 엔드포인트로 변경하세요
-    private static final String SEND_VERIFY_CODE_URL = host + "/api/create/register/check/email/send";  // SendVerifyCode.py의 엔드포인트로 변경하세요
-    private static final String CHECK_VERIFY_CODE_URL = host + "/api/create/register/check/email/verify";  // CheckVerifyCode.py의 엔드포인트로 변경하세요
-    private static final String REGISTER_URL = host + "/api/create/register";  // Register.py의 엔드포인트로 변경하세요
+    private static final String CHECK_USER_ID_URL = host + "/api/create/register/check/userID";  // CheckUserID.py의 엔드포인트
+    private static final String CHECK_USER_NICKNAME_URL = host + "/api/create/register/check/nickname";  // CheckUserNickname.py의 엔드포인트
+    private static final String SEND_VERIFY_CODE_URL = host + "/api/create/register/check/email/send";  // SendVerifyCode.py의 엔드포인트
+    private static final String CHECK_VERIFY_CODE_URL = host + "/api/create/register/check/email/verify";  // CheckVerifyCode.py의 엔드포인트
+    private static final String REGISTER_URL = host + "/api/create/register";  // Register.py의 엔드포인트
 
     private boolean isIdChecked = false;
     private boolean isNicknameChecked = false;
@@ -75,6 +75,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         btnSignUp.setEnabled(false);
 
+        // 비밀번호 재입력 시 입력한 비번과 일치한 지 검사
         signPwdDoubleCheck.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -110,15 +111,15 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         if (v.getId() == R.id.btn_back) {
             finish();
         } else if (v.getId() == R.id.idCheckButton) {
-            checkUserId(signId.getText().toString().trim());
+            checkUserId(signId.getText().toString().trim());    // 아이디 중복 확인
         } else if (v.getId() == R.id.nicknameCheckButton) {
-            checkUserNickname(signName.getText().toString().trim());
+            checkUserNickname(signName.getText().toString().trim());    // 닉네임 중복 확인
         } else if (v.getId() == R.id.sendVerifyCodeButton) {
-            sendVerifyCode(signEmail.getText().toString().trim());
+            sendVerifyCode(signEmail.getText().toString().trim());  // 이메일 인증 코드 전송
         } else if (v.getId() == R.id.verifyCodeCheckButton) {
-            checkVerifyCode(signEmail.getText().toString().trim(), verifyCodeTextInput.getText().toString().trim());
+            checkVerifyCode(signEmail.getText().toString().trim(), verifyCodeTextInput.getText().toString().trim());    // 인증 코드 확인
         } else if (v.getId() == R.id.btn_sign_up) {
-            registerUser();
+            registerUser(); // 회원가입 버튼
         }
     }
 
@@ -126,6 +127,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         btnSignUp.setEnabled(isIdChecked && isNicknameChecked && isPasswordMatching && isEmailVerified);
     }
 
+    // 아이디 중복 확인
     private void checkUserId(final String userId) {
         new Thread(new Runnable() {
             @Override
@@ -149,7 +151,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 try {
                     Response response = client.newCall(request).execute();
                     String responseBody = response.body().string();
-                    Log.i("아이디 찾기", responseBody);
+                    Log.i(tag + " 아이디 중복 확인", responseBody);
                     if (response.isSuccessful()) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -174,7 +176,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(SignUp.this, "네트워크 오류", Toast.LENGTH_SHORT).show();
+                            Log.e(tag, "네트워크 오류", e);
                         }
                     });
                 }
@@ -182,13 +184,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         }).start();
     }
 
+    // 닉네임 중복 확인
     private void checkUserNickname(final String nickname) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 OkHttpClient client = new OkHttpClient();
-
-                // 동적으로 URL을 생성하여 요청을 보냅니다.
                 String url = CHECK_USER_NICKNAME_URL + "/" + nickname;
 
                 Request request = new Request.Builder()
@@ -227,7 +228,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(SignUp.this, "네트워크 오류", Toast.LENGTH_SHORT).show();
+                            Log.e(tag, "네트워크 오류", e);
                         }
                     });
                 }
@@ -235,7 +236,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         }).start();
     }
 
-
+    // 이메일 인증 번호 전송
     private void sendVerifyCode(final String email) {
         new Thread(new Runnable() {
             @Override
@@ -259,7 +260,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 try {
                     Response response = client.newCall(request).execute();
                     String responseBody = response.body().string();
-                    Log.i("인증코드 전송", responseBody);
+                    Log.i(tag, "인증번호 전송" + responseBody);
                     if (response.isSuccessful()) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -280,7 +281,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(SignUp.this, "네트워크 오류", Toast.LENGTH_SHORT).show();
+                            Log.e(tag, "네트워크 오류", e);
                         }
                     });
                 }
@@ -288,6 +289,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         }).start();
     }
 
+    // 인증번호 확인
     private void checkVerifyCode(final String email, final String code) {
         new Thread(new Runnable() {
             @Override
@@ -335,7 +337,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(SignUp.this, "네트워크 오류", Toast.LENGTH_SHORT).show();
+                            Log.e(tag, "네트워크 오류", e);
                         }
                     });
                 }
@@ -343,6 +345,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         }).start();
     }
 
+    // 회원가입 버튼
     private void registerUser() {
         new Thread(new Runnable() {
             @Override
@@ -376,15 +379,14 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                             @Override
                             public void run() {
                                 Toast.makeText(SignUp.this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(SignUp.this, MainActivity.class );
-                                startActivity(intent);
+                                finish();   // 로그인 화면으로 이동
                             }
                         });
                     } else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(SignUp.this, "회원가입 실패: " + responseBody, Toast.LENGTH_SHORT).show();
+                                Log.e(tag, "회원가입 실패" + responseBody);
                             }
                         });
                     }
@@ -393,7 +395,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(SignUp.this, "네트워크 오류", Toast.LENGTH_SHORT).show();
+                            Log.e(tag, "네트워크 오류", e);
                         }
                     });
                 }

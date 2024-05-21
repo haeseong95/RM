@@ -33,7 +33,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
     EditText loginId, loginPwd;  // 아이디, 비밀번호 입력창
     Button btnLogin, searchId, searchPwd, signUp;  // 로그인, 아이디 찾기, 비밀번호 찾기, 회원가입 버튼
 
-    private static final String TAG = "LoginUser";
+    private static final String tag = "LoginUser";
     private static final String LOGIN_URL = "http://ipark4.duckdns.org:58395/api/create/login";  // Flask 서버의 로그인 URL로 변경하세요
 
     @Override
@@ -117,21 +117,23 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                     Response response = client.newCall(request).execute();
                     String responseBody = response.body().string();
                     if (response.isSuccessful()) {
-                        // 로그인 성공 시 성공 페이지로 이동
+
+                        // 로그인 성공 시 메인 페이지로 이동
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Intent intent = new Intent(LoginUser.this, MainActivity.class);  // 성공 페이지로 이동
+                                PreferenceHelper.setLoginState(LoginUser.this, true, userId);   // 로그인 성공 시 true 값 저장 + 로그인 시 입력한 아이디 저장
+                                Intent intent = new Intent(LoginUser.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
-                                finish();
                             }
                         });
                     } else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.e("로그인 실패", responseBody);
-                                Toast.makeText(LoginUser.this, "로그인 실패: " + responseBody, Toast.LENGTH_SHORT).show();
+                                Log.e(tag, "로그인 실패" + responseBody);
+                                Toast.makeText(LoginUser.this, "로그인 실패", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -140,7 +142,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(LoginUser.this, "네트워크 오류", Toast.LENGTH_SHORT).show();
+                            Log.e(tag, "네트워크 오류", e);
                         }
                     });
                 }

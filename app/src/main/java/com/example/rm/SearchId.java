@@ -28,8 +28,8 @@ public class SearchId extends AppCompatActivity implements View.OnClickListener 
     EditText editEmail;
     Button btnSearchId;
 
-    private static final String TAG = "SearchId";
-    private static final String SEARCH_ID_URL = "http://ipark4.duckdns.org:58395/api/create/search/sendid";  // SendID.py의 엔드포인트로 변경하세요
+    private static final String tag = "아이디 찾기";
+    private static final String SEARCH_ID_URL = "http://ipark4.duckdns.org:58395/api/create/search/sendid";  // SendID.py의 엔드포인트
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +87,7 @@ public class SearchId extends AppCompatActivity implements View.OnClickListener 
                             @Override
                             public void run() {
                                 Toast.makeText(SearchId.this, "아이디가 이메일로 전송되었습니다.", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(SearchId.this, LoginUser.class);  // 메인 액티비티로 이동
-                                startActivity(intent);
-                                finish();
+                                finish();   // 로그인 화면으로 이동
                             }
                         });
                     } else {
@@ -97,7 +95,7 @@ public class SearchId extends AppCompatActivity implements View.OnClickListener 
                             @Override
                             public void run() {
                                 Log.e("아이디 찾기 실패", responseBody);
-                                Toast.makeText(SearchId.this, "아이디 찾기 실패: " + responseBody, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SearchId.this, "아이디 찾기 실패", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -106,7 +104,7 @@ public class SearchId extends AppCompatActivity implements View.OnClickListener 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(SearchId.this, "네트워크 오류", Toast.LENGTH_SHORT).show();
+                            Log.e(tag, "아이디 찾기 실패", e);
                         }
                     });
                 }
