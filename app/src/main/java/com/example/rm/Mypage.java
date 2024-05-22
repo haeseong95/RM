@@ -28,10 +28,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class Mypage extends AppCompatActivity implements View.OnClickListener {
-
+    // 레이아웃
     LinearLayout btnLogout, btnDelete;
     ImageView btnBack;
     TextView userId, userEmail;
+
+    //
+    private static final String tag = "마이페이지";
     TokenManager tokenManager;
     private static final String USER_INFO_URL = "http://ipark4.duckdns.org:58395/api/read/users/";  // Flask 서버의 유저 정보 URL
 
@@ -39,7 +42,6 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mypage);
-
         userId = findViewById(R.id.user_id);
         userEmail = findViewById(R.id.user_email);
         btnBack = findViewById(R.id.btn_back);
@@ -51,7 +53,6 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
         btnDelete.setOnClickListener(this);
         tokenManager = new TokenManager(this);
 
-        // 로그인 정보 가져와서 마이페이지 화면에 표시하기
         fetchUserInfo();
     }
 
@@ -101,7 +102,6 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
                     Intent intent = new Intent(Mypage.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    finish();
                 });
             }
         }).start();
@@ -111,7 +111,7 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
+        AlertDialog alertDialog;
         switch (v.getId()) {
             case R.id.btn_back:
                 finish();
@@ -120,14 +120,18 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
                 builder.setTitle("로그아웃");
                 builder.setMessage("로그아웃 하시겠습니까?");
                 builder.setPositiveButton("확인", (dialog, which) -> {
+                    PreferenceHelper.logout();
                     tokenManager.clearToken();
                     Intent intent = new Intent(Mypage.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     Toast.makeText(Mypage.this, "로그아웃 하였습니다. 메인페이지로 이동합니다.", Toast.LENGTH_LONG).show();
                 });
-                builder.setNegativeButton("취소", (dialog, which) -> dialog.dismiss());
-                builder.create().show();
+                builder.setNeutralButton("취소", (dialog, which) -> dialog.dismiss());
+                alertDialog = builder.create();
+                alertDialog.show();
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
+                alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.black));
                 break;
             case R.id.li_delete:    // 탈퇴하기 페이지
                 Intent intent = new Intent(Mypage.this, DeleteAccount.class);

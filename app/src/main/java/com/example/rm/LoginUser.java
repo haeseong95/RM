@@ -69,7 +69,10 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         Intent intent;
 
         if (v.getId() == R.id.btn_back) {
-            finish();
+            intent = new Intent(LoginUser.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            overridePendingTransition(0, 0);    // 전환 애니메이션 비활성화 
         } else if (v.getId() == R.id.btn_login) {
             userId = loginId.getText().toString();  // 사용자가 입력한 아이디, 비번 텍스트값 받기
             userPw = loginPwd.getText().toString();
@@ -131,7 +134,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                PreferenceHelper.setLoginState(LoginUser.this, true, userId);   // 로그인 성공 시 true 값 저장 + 로그인 시 입력한 아이디 저장
+                                PreferenceHelper.setLoginState(LoginUser.this, true);   // 로그인 성공 시 true 값 저장 + 로그인 시 입력한 아이디 저장
                                 Intent intent = new Intent(LoginUser.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
