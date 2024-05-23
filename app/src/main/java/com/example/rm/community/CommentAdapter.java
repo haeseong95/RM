@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 // 댓글 어댑터
@@ -77,7 +75,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             commentDate = itemView.findViewById(R.id.ccc_date);
             commentComment = itemView.findViewById(R.id.ccc_commen);
             commentId = itemView.findViewById(R.id.ccc_userId);
-            btnMenu = itemView.findViewById(R.id.popMenu);
+            btnMenu = itemView.findViewById(R.id.modify_delete);
             btnMenu.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#000000")));
         }
     }
