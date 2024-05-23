@@ -2,7 +2,6 @@ package com.example.rm;
 
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,54 +10,56 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class MypageModify extends AppCompatActivity {
-
-    RecyclerView recyclerView;  // 게시글 목록
-    Button btnMorePost;    // 더보기 버튼
-
-    private static final String tag = "Mypage 내 게시글/댓글 수정";
-
-    ArrayList<MypageModifyData> arrayList = new ArrayList<>();     // 게시글 목록 데이터 저장
-    MypageModifyAdapter adapter;
+    private RecyclerView recyclerView;
+    private PostAdapter postAdapter;
+    private CommentAdapter commentAdapter;
+    private ArrayList<MypageModifyData> postsData = new ArrayList<>();
+    private ArrayList<MypageModifyData> commentsData = new ArrayList<>();
+    private Button btnPosts, btnComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mypage_community_modify);
+
         recyclerView = findViewById(R.id.modify_recyclerview);
-        ImageView btnBack = findViewById(R.id.btn_back);
-        btnMorePost = findViewById(R.id.btn_morepost);
-        btnBack.setOnClickListener(v -> finish());
+        btnPosts = findViewById(R.id.btn_posts);
+        btnComments = findViewById(R.id.btn_comments);
 
-        // 게시글 목록
-        getPostList();
-        setRecyclerView();
+        // 초기 데이터 설정 (예시 데이터 추가)
+        initializeData();
 
+        // 초기에는 게시글 목록을 표시
+        postAdapter = new PostAdapter(this, postsData);
+        commentAdapter = new CommentAdapter(this, commentsData);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(postAdapter);
 
+        btnPosts.setOnClickListener(v -> showPosts());
+        btnComments.setOnClickListener(v -> showComments());
     }
 
-    // arrayList에서 게시글 목록 데이터 저장 (일단 더미 데이터로 recyclerview가 출력되는지 테스트)
-    private void getPostList(){
-        arrayList.add(new MypageModifyData("닉네임1 ", "등급 ", "2024-05-19", "제목 "));
-        arrayList.add(new MypageModifyData("닉네임2 ", "등급 ", "2024-05-19", "제목 "));
-        arrayList.add(new MypageModifyData("닉네임3 ", "등급 ", "2024-05-19", "제목 "));
-        arrayList.add(new MypageModifyData("닉네임4 ", "등급 ", "2024-05-19", "제목 "));
-        arrayList.add(new MypageModifyData("닉네임5 ", "등급 ", "2024-05-19", "제목 "));
-        arrayList.add(new MypageModifyData("닉네임6 ", "등급 ", "2024-05-19", "제목 "));
-        arrayList.add(new MypageModifyData("닉네임7 ", "등급 ", "2024-05-19", "제목 "));
-        arrayList.add(new MypageModifyData("닉네임8 ", "등급 ", "2024-05-19", "제목 "));
-        arrayList.add(new MypageModifyData("닉네임9 ", "등급 ", "2024-05-19", "제목 "));
-        arrayList.add(new MypageModifyData("닉네임10 ", "등급 ", "2024-05-19", "제목 "));
-
-
+    private void initializeData() {
+        // 예시 데이터 추가 (실제 데이터로 대체)
+        postsData.add(new MypageModifyData("2023-05-23", "첫 번째 게시글 제목"));
+        commentsData.add(new MypageModifyData("2023-05-23", "첫 번째 댓글 내용"));
     }
 
-
-    // recyclerview 초기화
-    private void setRecyclerView(){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MypageModify.this);
-        recyclerView.setLayoutManager(linearLayoutManager); // layoutManager 설정
-        adapter = new MypageModifyAdapter(MypageModify.this, arrayList);
-        recyclerView.setAdapter(adapter);
+    private void showPosts() {
+        btnPosts.setBackgroundTintList(getResources().getColorStateList(R.color.selected_button_color));
+        btnComments.setBackgroundTintList(getResources().getColorStateList(R.color.unselected_button_color));
+        btnPosts.setTextColor(getResources().getColor(R.color.black));
+        btnComments.setTextColor(getResources().getColor(R.color.gray));
+        recyclerView.setAdapter(postAdapter);
     }
 
+    private void showComments() {
+        btnPosts.setBackgroundTintList(getResources().getColorStateList(R.color.unselected_button_color));
+        btnComments.setBackgroundTintList(getResources().getColorStateList(R.color.selected_button_color));
+        btnPosts.setTextColor(getResources().getColor(R.color.gray));
+        btnComments.setTextColor(getResources().getColor(R.color.black));
+        recyclerView.setAdapter(commentAdapter);
+    }
 }
+
+

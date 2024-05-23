@@ -17,13 +17,13 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/c_title"
+                android:id="@+id/c_comment"
                 style="@style/community_text_bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
-                android:text="게시글 제목"
+                android:text="댓글"
                 android:textSize="@dimen/community_regular_text"
                 app:layout_constraintEnd_toStartOf="@+id/modify_delete"
                 app:layout_constraintStart_toStartOf="parent"
@@ -45,13 +45,11 @@
                 style="@style/community_text_normal_gray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="생성날짜"
+                android:text="게시글 제목"
                 android:textSize="@dimen/community_regular_text"
-                app:layout_constraintTop_toBottomOf="@id/c_title"
+                app:layout_constraintTop_toBottomOf="@id/c_comment"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="8dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </LinearLayout>
-
-

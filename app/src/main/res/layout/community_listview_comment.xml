@@ -43,15 +43,15 @@
                 android:layout_toEndOf="@id/ccc_level"/>
 
             <Button
-                android:id="@+id/popMenu"
+                android:id="@+id/modify_delete"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentTop="true"
-                android:background="@drawable/community_menu"
-                android:backgroundTint="@null"
                 android:layout_alignParentEnd="true"
+                android:background="@drawable/mypage_modify_delete"
+                android:backgroundTint="@null"
                 android:focusable="false"
-                android:focusableInTouchMode="false"/>
+                android:focusableInTouchMode="false" />
 
         </RelativeLayout>
 
