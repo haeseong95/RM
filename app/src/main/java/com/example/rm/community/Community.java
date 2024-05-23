@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,7 +33,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class Community extends AppCompatActivity {
+public class Community extends AppCompatActivity implements CommunityAdapter.OnItemClickEventListener {
     // 레이아웃
     ImageView btnBack;
     EditText searchBar;     // 검색창
@@ -151,25 +152,40 @@ public class Community extends AppCompatActivity {
     private void setRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(Community.this);
         recyclerView.setLayoutManager(linearLayoutManager); // layoutManager 설정
-        adapter = new CommunityAdapter(Community.this, arrayList);
+        adapter = new CommunityAdapter(Community.this, arrayList, Community.this);
         recyclerView.setAdapter(adapter);
     }
 
     // 아이템 클릭하면 게시글 상세 페이지로 넘어감
     private void clickRecyclerViewItem(){
-        adapter.setOnItemClickListener(new CommunityAdapter.OnItemClickEventListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(Community.this, CommunityContent.class);
-                intent.putExtra("contentTitle", arrayList.get(position).getMain_title());   // 서버 연결 때는 게시글의 해시값을 보내야 함
-                startActivity(intent);
-
-
-                CommunityData item = arrayList.get(position);
-                Log.i(tag, "현재 아이템 정보 " + arrayList.get(position));
-            }
-        });
+//        adapter.setOnItemClickListener(new CommunityAdapter.OnItemClickEventListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                Intent intent = new Intent(Community.this, CommunityContent.class);
+//                intent.putExtra("contentTitle", arrayList.get(position).getMain_title());   // 서버 연결 때는 게시글의 해시값을 보내야 함
+//                intent.putExtra("contentNickname", arrayList.get(position).getMain_nickname());
+//                intent.putExtra("contentPlace", arrayList.get(position).getMain_place());
+//                intent.putExtra("contentDate", arrayList.get(position).getMain_date());
+//                startActivity(intent);
+//
+//                CommunityData item = arrayList.get(position);
+//                Log.i(tag, "현재 아이템 정보 " + arrayList.get(position));
+//            }
+//        });
     }
+
+    // 인터페이스
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(Community.this, CommunityContent.class);
+        intent.putExtra("contentTitle", arrayList.get(position).getMain_title());   // 서버 연결 때는 게시글의 해시값을 보내야 함
+        intent.putExtra("contentNickname", arrayList.get(position).getMain_nickname());
+        intent.putExtra("contentPlace", arrayList.get(position).getMain_place());
+        intent.putExtra("contentDate", arrayList.get(position).getMain_date());
+        startActivity(intent);
+        Log.i(tag, "현재 게시글 position 값 : " + position);
+    }
+
 
     // 게시글 제목을 입력하면 recyclerview가 업데이트 됨
     private void searchPost(){

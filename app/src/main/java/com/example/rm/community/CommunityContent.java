@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.rm.Mypage;
 import com.example.rm.PreferenceHelper;
 import com.example.rm.R;
 
@@ -42,8 +44,9 @@ public class CommunityContent extends AppCompatActivity {
     RecyclerView recyclerView;  // 댓글
     EditText editText;  // 댓글 입력창
 
-    // 값
+    //
     private static final String tag = "CommunityContent";
+    private static int currentItemCount = -1;
     ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();    // viewpager의 이미지를 담을 bitmap 리스트
     ArrayList<CommentData> commentDataArrayList = new ArrayList<>();    // 댓글 데이터 담음
     CommentAdapter commentAdapter;
@@ -80,8 +83,9 @@ public class CommunityContent extends AppCompatActivity {
         likeImage.setOnClickListener(v -> currentLike(postId));
 
         // 댓글
-        getCommentData();
-        setRecyclerView();
+        getCommentData();   // 서버에서 댓글 데이터 가져옴
+        setRecyclerView();  // 어댑터 설정
+        sendComment.setOnClickListener(v -> addComment());  // 댓글 추가
 
 
 
@@ -202,11 +206,15 @@ public class CommunityContent extends AppCompatActivity {
     private void getCommentData(){
 
         List<CommentData> newItem = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
 
+
+        for (int i = 0; i < 2; i++) {
+            commentDataArrayList.add(new CommentData("닉네임 " + (i + 1), "등급 " + (i + 1), "2024-05-19", "댓글 " + (i + 1)));
+            currentItemCount += 1;
         }
         commentDataArrayList.addAll(newItem);
-        Log.i(tag, "현재 item 위치 : " + commentDataArrayList);
+        Log.i(tag, "현재 item 위치 : " + commentDataArrayList + ", 마지막 item 위치 : " + currentItemCount);
+
     }
 
 
@@ -221,6 +229,21 @@ public class CommunityContent extends AppCompatActivity {
     // 서버에서 해당 게시글의 댓글 데이터를 가져와야 함
     private void getPostData(){
         cTitle.setText(getIntent().getStringExtra("contentTitle"));
+    }
+
+    // editText에 댓글 입력한 걸 recyclerview 댓글창에 추가하기
+    private void addComment(){
+
+        String comment = editText.getText().toString();     // 댓글 입력한 문자열 얻음
+        String nickname = getIntent().getStringExtra("contentNickname"); // 서버에 연결해서 데이터 받고 원래는 사용자 본인 닉네임이 떠야 함
+        String level = getIntent().getStringExtra("contentPlace");
+        String date = getIntent().getStringExtra("contentPlace");
+
+        commentDataArrayList.add(new CommentData(nickname, level, date, comment));
+        commentAdapter.notifyItemInserted(commentDataArrayList.size());
+        editText.setText(null);
+        final InputMethodManager methodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        methodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 

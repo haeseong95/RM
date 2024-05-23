@@ -1,6 +1,8 @@
 package com.example.rm;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,12 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class MypageModify extends AppCompatActivity {
+    // 레이아웃
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
     private CommentAdapter commentAdapter;
+    private Button btnPosts, btnComments;
+    View indicatorPosts, indicatorComments;
+    //
     private ArrayList<MypageModifyData> postsData = new ArrayList<>();
     private ArrayList<MypageModifyData> commentsData = new ArrayList<>();
-    private Button btnPosts, btnComments;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +31,12 @@ public class MypageModify extends AppCompatActivity {
         recyclerView = findViewById(R.id.modify_recyclerview);
         btnPosts = findViewById(R.id.btn_posts);
         btnComments = findViewById(R.id.btn_comments);
+        indicatorPosts = findViewById(R.id.indicator_posts);
+        indicatorComments = findViewById(R.id.indicator_comments);
 
         // 초기 데이터 설정 (예시 데이터 추가)
         initializeData();
+
 
         // 초기에는 게시글 목록을 표시
         postAdapter = new PostAdapter(this, postsData);
@@ -46,20 +55,22 @@ public class MypageModify extends AppCompatActivity {
     }
 
     private void showPosts() {
-        btnPosts.setBackgroundTintList(getResources().getColorStateList(R.color.selected_button_color));
-        btnComments.setBackgroundTintList(getResources().getColorStateList(R.color.unselected_button_color));
+        indicatorPosts.setVisibility(View.VISIBLE);
+        indicatorComments.setVisibility(View.INVISIBLE);
         btnPosts.setTextColor(getResources().getColor(R.color.black));
         btnComments.setTextColor(getResources().getColor(R.color.gray));
         recyclerView.setAdapter(postAdapter);
     }
 
     private void showComments() {
-        btnPosts.setBackgroundTintList(getResources().getColorStateList(R.color.unselected_button_color));
-        btnComments.setBackgroundTintList(getResources().getColorStateList(R.color.selected_button_color));
+        indicatorComments.setVisibility(View.VISIBLE);
+        indicatorPosts.setVisibility(View.INVISIBLE);
         btnPosts.setTextColor(getResources().getColor(R.color.gray));
         btnComments.setTextColor(getResources().getColor(R.color.black));
         recyclerView.setAdapter(commentAdapter);
     }
+
+
 }
 
 

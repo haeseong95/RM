@@ -46,7 +46,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         Glide.with(context).load(uri).into(holder.imageView);
 
         holder.delete.setOnClickListener(v -> {
-            int adapterPosition = holder.getAdapterPosition();  // 현재 아이템 위치 가져옴
+            int adapterPosition = holder.getAbsoluteAdapterPosition();  // 현재 아이템 위치 가져옴
             if (adapterPosition != RecyclerView.NO_POSITION){
                 uriArrayList.remove(adapterPosition);  // 리스트 위치의 데이터 삭제
                 notifyItemRemoved(adapterPosition);    // 리사이클뷰의 ui 항목 제거 알림

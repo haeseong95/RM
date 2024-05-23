@@ -46,7 +46,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         holder.commentPlace.setText(arrayList.get(position).getComment_place());
         holder.commentDate.setText(arrayList.get(position).getComment_date());
         holder.commentComment.setText(arrayList.get(position).getComment_comment());
-        holder.commentId.setText(arrayList.get(position).getComment_id());
 
         holder.btnMenu.setOnClickListener(v -> {
             showPopupMenu(v, commentData);
@@ -65,7 +64,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     }
 
     public class CommentViewHolder extends RecyclerView.ViewHolder {
-        TextView commentNickname, commentPlace, commentDate, commentComment, commentId;
+        TextView commentNickname, commentPlace, commentDate, commentComment;
         Button btnMenu;     // 댓글 수정, 삭제, 신고 버튼
 
         public CommentViewHolder(@NonNull View itemView) {
@@ -74,7 +73,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             commentPlace = itemView.findViewById(R.id.ccc_level);
             commentDate = itemView.findViewById(R.id.ccc_date);
             commentComment = itemView.findViewById(R.id.ccc_commen);
-            commentId = itemView.findViewById(R.id.ccc_userId);
             btnMenu = itemView.findViewById(R.id.modify_delete);
             btnMenu.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#000000")));
         }
@@ -101,7 +99,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     editComment(comment);
                     return true;
                 case R.id.action_delete:
-                    // 삭제 기능 처리
+
+
+
                     deleteComment(comment);
                     return true;
                 default:
@@ -122,19 +122,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 }
 
 class CommentData {
-    private String comment_id = "";     // 아이디
     private String comment_nickname = "";  // 닉네임
     private String comment_place = "";    // 등급
     private String comment_date = "";   // 생성날짜
     private String comment_comment = "";    // 게시글 댓글
-
-    public String getComment_id() {
-        return comment_id;
-    }
-
-    public void setComment_id(String comment_id) {
-        this.comment_id = comment_id;
-    }
 
     public String getComment_nickname() {
         return comment_nickname;
@@ -168,8 +159,7 @@ class CommentData {
         this.comment_comment = comment_comment;
     }
 
-    public CommentData(String comment_id, String comment_nickname, String comment_place, String comment_date, String comment_comment) {
-        this.comment_id = comment_id;
+    public CommentData(String comment_nickname, String comment_place, String comment_date, String comment_comment) {
         this.comment_nickname = comment_nickname;
         this.comment_place = comment_place;
         this.comment_date = comment_date;

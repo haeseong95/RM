@@ -23,35 +23,28 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
     // recyclerVew의 클릭 이벤트 처리
     private int currentItemPosition = -1;
-    private  OnItemClickEventListener onItemClickListener;   // 리스너 객체 참조를 저장하는 변수
+    private  OnItemClickEventListener listener;   // 리스너 객체 참조를 저장하는 변수
 
     public interface OnItemClickEventListener {  //  리사이클러뷰의 클릭 이벤트 처리 -> 인터페이스 정의
         public void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(OnItemClickEventListener listener){   // 리스너 객체 참조를 어댑터에 전달함
-        this.onItemClickListener = listener;
+        this.listener = listener;
     }
 
-    private OnItemClickEventListener itemClickEventListener = new OnItemClickEventListener() {
-        @Override
-        public void onItemClick(View v, int position) {
-            notifyItemChanged(currentItemPosition, null);
-            currentItemPosition = position;
-            notifyItemChanged(position, null);
-        }
-    };
 
-    public CommunityAdapter(Context context, ArrayList<CommunityData> arrayList){
+    public CommunityAdapter(Context context, ArrayList<CommunityData> arrayList, OnItemClickEventListener listener){
         this.context = context;
         this.communityDataArrayList = arrayList;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public CommuntiyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.community_listview, parent, false);
-        CommuntiyViewHolder viewHolder = new CommuntiyViewHolder(view, onItemClickListener);
+        CommuntiyViewHolder viewHolder = new CommuntiyViewHolder(view);
         return viewHolder;
     }
 
@@ -77,7 +70,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
     public class CommuntiyViewHolder extends RecyclerView.ViewHolder{
         TextView mainNickname, mainPlace, mainDate, mainTitle;
-        public CommuntiyViewHolder(@NonNull View itemView, final OnItemClickEventListener onItemClickEventListener) {
+        public CommuntiyViewHolder(@NonNull View itemView) {
             super(itemView);
             mainNickname = itemView.findViewById(R.id.c_nickname);
             mainPlace = itemView.findViewById(R.id.c_level);
@@ -89,10 +82,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
                 public void onClick(View v) {
                     int position = getAbsoluteAdapterPosition();    // item의 position 반환
                     if (position != RecyclerView.NO_POSITION){      // item 클릭 시 커스텀 이벤트 메서드 호출
-                        CommunityData item = communityDataArrayList.get(position);
-                        Log.i(tag, "현재 아이템 position " + item.toString());
-                        onItemClickListener.onItemClick(v, position);
-
+                        //CommunityData item = communityDataArrayList.get(position);
+                        Log.i(tag, "현재 아이템 position : " + position);
+                        listener.onItemClick(v, getAbsoluteAdapterPosition());
                     }
                 }
             });
