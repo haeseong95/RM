@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -90,7 +89,6 @@ public class Community extends AppCompatActivity {
         adapter = new CommunityAdapter(Community.this, arrayList);
         recyclerView.setAdapter(adapter);
     }
-
 
 
 }

@@ -1,10 +1,8 @@
 package com.example.rm;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,9 +12,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.rm.token.TokenManager;
 import com.example.rm.token.ApiClient;
 import com.example.rm.token.JWTUtils;
+import com.example.rm.token.TokenManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +27,7 @@ import okhttp3.Response;
 
 public class Mypage extends AppCompatActivity implements View.OnClickListener {
 
-    LinearLayout btnLogout, btnDelete;
+    LinearLayout btnLogout, btnDelete, btnCommunity;
     ImageView btnBack;
     TextView userId, userEmail;
     TokenManager tokenManager;
@@ -45,10 +43,12 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
         btnBack = findViewById(R.id.btn_back);
         btnLogout = findViewById(R.id.btn_logout);
         btnDelete = findViewById(R.id.li_delete);
+        btnCommunity = findViewById(R.id.li_community);
 
         btnBack.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
+        btnCommunity.setOnClickListener(this);
         tokenManager = new TokenManager(this);
 
         // 로그인 정보 가져와서 마이페이지 화면에 표시하기
@@ -133,8 +133,14 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
                 Intent intent = new Intent(Mypage.this, DeleteAccount.class);
                 startActivity(intent);
                 break;
+            case R.id.li_community: // 내 게시글/댓글 수정
+                intent = new Intent(Mypage.this, MypageModify.class);
+                startActivity(intent);
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
         }
     }
+
+
 }
