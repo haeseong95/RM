@@ -31,14 +31,15 @@ import org.json.JSONObject;
 
 // 사용자 로그인 화면
 public class LoginUser extends AppCompatActivity implements View.OnClickListener {
-
-    SqliteHelper sqliteHelper;
+    // 레이아웃
     ImageView btnBack;  // 뒤로 가기 버튼
     String userId, userPw = null;
     EditText loginId, loginPwd;  // 아이디, 비밀번호 입력창
     Button btnLogin, searchId, searchPwd, signUp;  // 로그인, 아이디 찾기, 비밀번호 찾기, 회원가입 버튼
 
+    //
     private static final String tag = "LoginUser";
+    SqliteHelper sqliteHelper;
     private static final String LOGIN_URL = "http://ipark4.duckdns.org:58395/api/create/login";  // Flask 서버의 로그인 URL로 변경하세요
     private TokenManager tokenManager;
     @Override
@@ -63,16 +64,14 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         tokenManager = new TokenManager(this);
     }
 
+    // 버튼 클릭 시 화면 이동
     @Override
     public void onClick(View v) {
-
         Intent intent;
-
         if (v.getId() == R.id.btn_back) {
             intent = new Intent(LoginUser.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            overridePendingTransition(0, 0);    // 전환 애니메이션 비활성화 
         } else if (v.getId() == R.id.btn_login) {
             userId = loginId.getText().toString();  // 사용자가 입력한 아이디, 비번 텍스트값 받기
             userPw = loginPwd.getText().toString();
@@ -83,8 +82,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             } else if (userPw.isEmpty()) {
                 Toast.makeText(this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
             } else {
-                // 아이디, 비번 검사
-                loginUser(userId, userPw);
+                loginUser(userId, userPw);  // 아이디, 비번 검사 -> 회원이 맞으면 메인화면으로 이동
             }
         } else if (v.getId() == R.id.search_id) {
             intent = new Intent(LoginUser.this, SearchId.class);
@@ -99,48 +97,52 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
     }
 
     private void loginUser(final String userId, final String userPw) {
+        // 백그라운드 스레드 시작
         new Thread(new Runnable() {
+            // 백그라운드 스레드에서 실행할 코드 정의
             @Override
             public void run() {
+                // json 데이터를 포함해서 요청을 보내는 코드
                 String deviceModel = Build.MODEL;  // 장치 모델 이름 가져오기
-                OkHttpClient client = new OkHttpClient();
+                OkHttpClient client = new OkHttpClient();   // http 클라이언트 생성, 요청을 보내고 응답함
 
-                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("id", userId);
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");    // json 미디어타입 설정, parse()는 문자열을 특정 형식으로 변환함 (-> 문자열을 mediatype 객체인 json으로 설정)
+                JSONObject json = new JSONObject();     // json 객체 생성
+                try {   // json객체에 데이터 추가 + 예외 처리
+                    json.put("id", userId); // json 객체에 key-value 쌍 추가, 서버에 요청할 데이터를 json 형식으로 준비하기 위함 (id 키에 userId값 저장)
                     json.put("passwd", userPw);
                     json.put("device_info", deviceModel);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                RequestBody body = RequestBody.create(JSON, json.toString());
-                Request request = new Request.Builder()
-                        .url(LOGIN_URL)
-                        .post(body)
-                        .addHeader("Device-Info", deviceModel)  // 장치 모델 이름 헤더 추가
-                        .build();
+                RequestBody body = RequestBody.create(JSON, json.toString());   // json데이터를 요청 body로 생성, 요청 body에는 서버에 보낼 데이터 작성
+                Request request = new Request.Builder() // http 요청 생성, 작성한 요청 body와 데이터를 보낼 url을 request에 붙임
+                        .url(LOGIN_URL)     // 서버에서 데이터를 가져올 api url
+                        .post(body)     // POST 메소드 요청, 본문에 body 설정
+                        .addHeader("Device-Info", deviceModel)  // 요청 헤더(장치 모델 이름) 추가
+                        .build();   // request 객체 생성
 
+                // 응답을 처리하는 코드
                 try {
-                    Response response = client.newCall(request).execute();
-                    String responseBody = response.body().string();
+                    Response response = client.newCall(request).execute();  // 요청을 실행하고 응답 받기
+                    String responseBody = response.body().string(); //응답 본문을 문자열로 변환, request.body를 쓰면 반환형이 toString()으로는 받을 수 없는 값이라 string() 써야함
                     if (response.isSuccessful()) {
-                        JSONObject responseJson = new JSONObject(responseBody);
-                        String token = responseJson.getString("message");
-
-                        tokenManager.saveToken(token);
-                        // 로그인 성공 시 메인 페이지로 이동
+                        JSONObject responseJson = new JSONObject(responseBody); // 응답 body를 json객체로 변환함
+                        String token = responseJson.getString("message");   // 응답 json객체에서 message 필드를 추출하여 토큰으로 저장
+                        tokenManager.saveToken(token);  // 토큰 저장
+                        // 메인 ui 스레드에서 실행될 코드
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                PreferenceHelper.setLoginState(LoginUser.this, true);   // 로그인 성공 시 true 값 저장 + 로그인 시 입력한 아이디 저장
+                                PreferenceHelper.setLoginState(LoginUser.this, true);   // 로그인 성공 시 true 값 저장
                                 Intent intent = new Intent(LoginUser.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                             }
                         });
                     } else {
+                        // 메인 ui 스레드에서 실행될 코드
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -150,17 +152,11 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                         });
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.e(tag, "네트워크 오류", e);
-                        }
-                    });
+                    Log.e(tag, "네트워크 오류", e);
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e);  // 런타임 예외 발생
                 }
             }
-        }).start();
+        }).start(); // 새로운 스레드 시작
     }
 }
