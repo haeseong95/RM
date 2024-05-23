@@ -27,6 +27,7 @@ import com.example.rm.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator3;
 
@@ -67,6 +68,9 @@ public class CommunityContent extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
 
+        // 서버에서 받은 댓글 데이터를 게시글 상세 화면에 출력
+        getPostData();
+
         // ViewPager
         showViewPager();
 
@@ -76,8 +80,10 @@ public class CommunityContent extends AppCompatActivity {
         likeImage.setOnClickListener(v -> currentLike(postId));
 
         // 댓글
-        // setRecylerview가 실행되기 전에 댓글 데이터를 가져와서 저장시켜야 함
+        getCommentData();
         setRecyclerView();
+
+
 
     }
 
@@ -192,6 +198,18 @@ public class CommunityContent extends AppCompatActivity {
         }
     }
 
+    // 서버에서 댓글 데이터를 보내줘야 함, 이때
+    private void getCommentData(){
+
+        List<CommentData> newItem = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+
+        }
+        commentDataArrayList.addAll(newItem);
+        Log.i(tag, "현재 item 위치 : " + commentDataArrayList);
+    }
+
+
     // 댓글창 recyclerview 초기화
     private void setRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CommunityContent.this);
@@ -201,5 +219,9 @@ public class CommunityContent extends AppCompatActivity {
     }
 
     // 서버에서 해당 게시글의 댓글 데이터를 가져와야 함
+    private void getPostData(){
+        cTitle.setText(getIntent().getStringExtra("contentTitle"));
+    }
+
 
 }

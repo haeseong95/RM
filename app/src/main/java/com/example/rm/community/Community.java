@@ -2,6 +2,8 @@ package com.example.rm.community;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -78,6 +80,9 @@ public class Community extends AppCompatActivity {
         getPostList();
         setRecyclerView();
         clickRecyclerViewItem();
+
+        // 검색
+        searchPost();
     }
 
     // 게시글 목록 가져오는 okhttp (초기 게시글 10개 가져옴)
@@ -118,15 +123,14 @@ public class Community extends AppCompatActivity {
         }).start();
     }
 
-
     // 초기 게시글 10개 데이터 목록, getPosts에서 얻은 arrayList값 중에서 다 출력하지 말고 10개만 출력
     private void getPostList(){
-        List<CommunityData> initialItems = new ArrayList<>();
+        List<CommunityData> newItem = new ArrayList<>();
         for (int i = 0; i < item_count; i++) {
-            initialItems.add(new CommunityData("닉네임 " + (i + 1), "등급 " + (i + 1), "2024-05-19", "제목 " + (i + 1)));
+            newItem.add(new CommunityData("닉네임 " + (i + 1), "등급 " + (i + 1), "2024-05-19", "제목 " + (i + 1)));
         }
-        arrayList.addAll(initialItems);
-        currentItemCount += item_count;
+        arrayList.addAll(newItem);
+        currentItemCount = item_count;
         Log.i(tag, "현재 item 위치 : " + currentItemCount);
     }
 
@@ -137,11 +141,12 @@ public class Community extends AppCompatActivity {
         for(int i=0; i<item_count; i++){
             newItem.add(new CommunityData("닉네임 " + (currentItemCount + i + 1), "등급 " + (currentItemCount + i + 1), "2024-05-19", "제목 " + (currentItemCount + i + 1)));
         }
-        adapter.notifyItemRangeInserted(currentItemCount, item_count);
-        currentItemCount += item_count;
-        Log.i(tag, "현재 item 위치 : " + currentItemCount);
-    }
+        arrayList.addAll(newItem);
+        adapter.notifyItemRangeInserted(currentItemCount, newItem.size());
+        currentItemCount += newItem.size();
+        Log.i(tag, "더보기 눌렀을 때 item 위치 : " + currentItemCount);
 
+    }
 
     // recyclerview 초기화
     private void setRecyclerView(){
@@ -151,17 +156,53 @@ public class Community extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    // 아이템 클릭하면 게시글 상세 페이지로 넘어감
     private void clickRecyclerViewItem(){
-        adapter.setOnItemClickListener(new CommunityAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new CommunityAdapter.OnItemClickEventListener() {
             @Override
-            public void onItemClick(View v, int position) {
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(Community.this, CommunityContent.class);
+                intent.putExtra("contentTitle", arrayList.get(position).getMain_title());   // 서버 연결 때는 게시글의 해시값을 보내야 함
+                startActivity(intent);
+
+
                 CommunityData item = arrayList.get(position);
-                Log.i(tag, "현재 아이템 정보 " + arrayList.get(position).getMain_nickname());
+                Log.i(tag, "현재 아이템 정보 " + arrayList.get(position));
             }
         });
-
     }
 
+    // 게시글 제목을 입력하면 recyclerview가 업데이트 됨
+    private void searchPost(){
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // 입력하기 전에 호출됨
+            }
 
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {   // editText에 변화가 있을 때
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {   // 입력이 끝났을 때
+                ArrayList<CommunityData> search_list = new ArrayList<>(); // 검색 결과를 담을 리스트
+                String searchText = searchBar.getText().toString(); // 검색창에 입력한 검색어
+                search_list.clear();
+
+                if(searchText.equals("")){
+                    adapter.updateRecyclerViewItem(arrayList);
+                }
+                else {
+                    for(int a=0; a<arrayList.size(); a++){
+                        if(arrayList.get(a).getMain_title().toLowerCase().contains(searchText.toLowerCase())){
+                            search_list.add(arrayList.get(a));
+                        }
+                    }
+                    adapter.updateRecyclerViewItem(search_list);
+                }
+            }
+        });
+    }
 
 }
