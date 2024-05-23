@@ -17,17 +17,39 @@ import com.example.rm.R;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // 커뮤니티 메인화면의 listview 어댑터
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommuntiyViewHolder> {
     static final String tag = "커뮤니티 메인 어댑터";
-    private ArrayList<CommunityData> communityDataArrayList = new ArrayList<>();
+    private List<CommunityData> communityDataArrayList;
     private Context context;
+    private int currentItemPosition = -1;
+
+
 
     public CommunityAdapter(Context context, ArrayList<CommunityData> arrayList){
         this.context = context;
         this.communityDataArrayList = arrayList;
     }
+
+    public interface OnItemClickListener {  //  리사이클러뷰의 클릭 이벤트 처리 : 인터페이스 정의
+        void onItemClick(View v, int position);
+    }
+
+    private  OnItemClickListener onItemClickListener;   // 리스너 객체 참조를 저장하는 변수
+    public void setOnItemClickListener(OnItemClickListener listener){   // 리스너 객체 참조를 어댑터에 전달함
+        this.onItemClickListener = listener;
+    }
+
+    private OnItemClickListener getOnItemClickListener = new OnItemClickListener() {
+        @Override
+        public void onItemClick(View v, int position) {
+            notifyItemChanged(currentItemPosition, null);
+            currentItemPosition = position;
+            notifyItemChanged(position, null);
+        }
+    };
 
     @NonNull
     @Override
@@ -70,12 +92,31 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
                 @Override
                 public void onClick(View v) {
                     int position = getAbsoluteAdapterPosition();    // item의 position 반환
+                    if (position != RecyclerView.NO_POSITION){      // item 클릭 시 커스텀 이벤트 메서드 호출
+                        onItemClickListener.onItemClick(itemView, position);
+                    }
+
 
                 }
             });
         }
     }
 
+    //
+    public CommunityData getSelected(){
+        if(currentItemPosition > -1) {
+            return communityDataArrayList.get(currentItemPosition);
+        }
+        return null;
+    }
+
+    public int getCheckPosition(){
+        return currentItemPosition;
+    }
+
+    public void clearSelected(){
+        currentItemPosition = -1;
+    }
 
 }
 

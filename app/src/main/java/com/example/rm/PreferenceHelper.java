@@ -19,12 +19,11 @@ public class PreferenceHelper {
     }
 
     // 로그인O true / 로그인X false : 로그인 성공했으므로 true 값 저장
-    public static void setLoginState(Context context, boolean login, String id) {
+    public static void setLoginState(Context context, boolean login) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(LOGIN_IN, login);
-        editor.putString("id", id);     // 로그인 시 입력한 아이디 값 저장
         editor.apply();
-        Log.d(tag, "LOGIN_IN 상태 (" + sharedPreferences.getBoolean(LOGIN_IN, false) + ") : 로그인O(true) / 로그인X(false)" + "       로그인 아이디 저장 : " + id);
+        Log.d(tag + " 로그인 상태", "로그인O(true) / 로그인X(false) : " + sharedPreferences.getBoolean(LOGIN_IN, false));
     }
 
     // 메인페이지에서 로그인/마이페이지 텍스트 변경을 위한 메소드
