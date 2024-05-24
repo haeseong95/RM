@@ -5,7 +5,10 @@
     <string name="comma">, </string>
     <string name="openParenthesis">(</string>
     <string name="closeParenthesis">)</string>
-
+    <string name="insert">Insert</string>
+    <string name="delete">Delete</string>
+    <string name="modify">Modify</string>
+    <string name="info">Info</string>
     <string name="app_name_KO">Real2</string>
     <string name="nickname_KO">닉네임</string>
     <string name="login_KO">로그인</string>

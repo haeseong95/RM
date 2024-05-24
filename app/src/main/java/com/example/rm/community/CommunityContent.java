@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
@@ -15,7 +16,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -47,6 +50,7 @@ public class CommunityContent extends AppCompatActivity {
     //
     private static final String tag = "CommunityContent";
     private static int currentItemCount = -1;
+    private int itemPosition = RecyclerView.NO_POSITION;    // item 초기값
     ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();    // viewpager의 이미지를 담을 bitmap 리스트
     ArrayList<CommentData> commentDataArrayList = new ArrayList<>();    // 댓글 데이터 담음
     CommentAdapter commentAdapter;
@@ -245,6 +249,31 @@ public class CommunityContent extends AppCompatActivity {
         final InputMethodManager methodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         methodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
+
+    // 댓글의 수정, 삭제 버튼
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int position = itemPosition;
+        try{
+            position = ((CommentAdapter.CommentViewHolder) recyclerView.findViewHolderForAdapterPosition(item.getGroupId())).getAbsoluteAdapterPosition();  // 현재 어댑터의 위치 반환
+        } catch (Exception e){
+            Log.d(tag, "Position이 없음", e);
+            return super.onContextItemSelected(item);
+        }
+
+        CommentData commentData = commentDataArrayList.get(position);
+        switch (item.getItemId()){
+            case R.id.action_edit:  // 수정
+                Toast.makeText(this, commentData.getComment_date() + " " + getString(R.string.insert), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_delete:    // 삭제
+                Toast.makeText(this, commentData.getComment_nickname() + " " + getString(R.string.delete), Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return true;
+    }
+
+
 
 
 }

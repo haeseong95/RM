@@ -1,9 +1,11 @@
 package com.example.rm.community;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,7 @@ import com.example.rm.R;
 import java.util.ArrayList;
 
 // 댓글 어댑터
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
+public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder>{
     static final String tag = "댓글 어댑터";
     private ArrayList<CommentData> arrayList = new ArrayList<>();
     private Context context;
@@ -47,9 +49,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         holder.commentDate.setText(arrayList.get(position).getComment_date());
         holder.commentComment.setText(arrayList.get(position).getComment_comment());
 
-        holder.btnMenu.setOnClickListener(v -> {
-            showPopupMenu(v, commentData);
-        });
+//        holder.btnMenu.setOnClickListener(v -> {
+//            //showPopupMenu(v, commentData);
+//
+//        });
     }
 
     @Override
@@ -63,12 +66,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
     }
 
-    public class CommentViewHolder extends RecyclerView.ViewHolder {
+    public class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         TextView commentNickname, commentPlace, commentDate, commentComment;
         Button btnMenu;     // 댓글 수정, 삭제, 신고 버튼
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
+            itemView.setOnCreateContextMenuListener(this);
             commentNickname = itemView.findViewById(R.id.ccc_nickname);
             commentPlace = itemView.findViewById(R.id.ccc_level);
             commentDate = itemView.findViewById(R.id.ccc_date);
@@ -76,7 +80,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             btnMenu = itemView.findViewById(R.id.modify_delete);
             btnMenu.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#000000")));
         }
+
+        // 팝업메뉴를 recyclerview item view에 등록함
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            ((Activity) view.getContext()).getMenuInflater().inflate(R.menu.comment_menu, contextMenu);
+        }
     }
+
+
+
 
     private void showPopupMenu(View view, CommentData comment) {
         PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
