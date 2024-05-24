@@ -76,7 +76,7 @@ dependencies {
     // 카메라
     implementation("io.github.ParkSangGwon:tedpermission-normal:3.3.0")
 
-    implementation ("org.tensorflow:tensorflow-lite:2.12.0")
+    implementation ("org.tensorflow:tensorflow-lite:2.13.0")
     implementation ("org.tensorflow:tensorflow-lite-gpu:2.12.0")
     implementation ("org.tensorflow:tensorflow-lite-support:0.4.4")
     implementation ("org.tensorflow:tensorflow-lite-select-tf-ops:2.12.0") // 최신 버전으로 업데이트
