@@ -256,7 +256,7 @@ public class Camera extends AppCompatActivity {
             Log.d(TAG, "Capture button clicked");
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(cameraIntent, RESULT_CODE);
+                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             } else {
                 Log.e(TAG, "No camera app available");
             }
@@ -266,7 +266,7 @@ public class Camera extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_CODE && resultCode == RESULT_OK && data != null) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
             Log.d(TAG, "Image capture successful");
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             if (photo != null) {
@@ -280,7 +280,7 @@ public class Camera extends AppCompatActivity {
     }
 
     private ByteBuffer loadModelFile() throws IOException {
-        AssetFileDescriptor fileDescriptor = getAssets().openFd("yolov8n.tflite");
+        AssetFileDescriptor fileDescriptor = getAssets().openFd("yolov8n_float32.tflite");
         FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
         FileChannel fileChannel = inputStream.getChannel();
         long startOffset = fileDescriptor.getStartOffset();
