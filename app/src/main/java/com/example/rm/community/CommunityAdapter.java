@@ -33,7 +33,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         this.listener = listener;
     }
 
-
     public CommunityAdapter(Context context, ArrayList<CommunityData> arrayList, OnItemClickEventListener listener){
         this.context = context;
         this.communityDataArrayList = arrayList;

@@ -174,7 +174,7 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
 //        });
     }
 
-    // 인터페이스
+    // item 클릭 이벤트 처리
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(Community.this, CommunityContent.class);
@@ -192,15 +192,17 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // 입력하기 전에 호출됨
+                // 텍스트 변경/입력 전에 바로 호출됨 (편집 전 텍스트의 상태 저장)
             }
             
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {   // editText에 변화가 있을 때
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // 텍스트가 변경될 때 호출 (사용자가 입력하는 동안 실시간으로 UI 업데이트 수행, 입력 값 검증 작업 수행)
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {   // 입력이 끝났을 때
+            public void afterTextChanged(Editable editable) {
+                // 텍스트가 변경된 후에 호출 (입력 완료 후 최종적으로 데이터 처리/특정 조건에 따라 추가적인 UI 업데이트 수행)
                 ArrayList<CommunityData> search_list = new ArrayList<>(); // 검색 결과를 담을 리스트
                 String searchText = searchBar.getText().toString(); // 검색창에 입력한 검색어
                 search_list.clear();

@@ -59,15 +59,15 @@
                         android:id="@+id/c_search"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:fontFamily="@font/nanum_regular"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="135dp"
-                        android:hint="검색어를 입력하세요"
-                        android:textColor="#000000"
                         android:background="@null"
+                        android:fontFamily="@font/nanum_regular"
+                        android:hint="검색어를 입력하세요"
+                        android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:maxLines="1"
-                        android:imeOptions="actionSearch"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="135dp"
+                        android:textColor="#000000"
                         android:textSize="13dp" />
 
                     <ImageView

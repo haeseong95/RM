@@ -36,7 +36,7 @@ import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator3;
 
-public class CommunityContent extends AppCompatActivity {
+public class CommunityContent extends AppCompatActivity{
     // 레이아웃
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
@@ -206,7 +206,7 @@ public class CommunityContent extends AppCompatActivity {
         }
     }
 
-    // 서버에서 댓글 데이터를 보내줘야 함, 이때
+    // 서버에서 댓글 데이터를 보내줘야 함
     private void getCommentData(){
 
         List<CommentData> newItem = new ArrayList<>();
@@ -221,23 +221,25 @@ public class CommunityContent extends AppCompatActivity {
 
     }
 
-
-    // 댓글창 recyclerview 초기화
-    private void setRecyclerView(){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CommunityContent.this);
-        recyclerView.setLayoutManager(linearLayoutManager); // layoutManager 설정
-        commentAdapter = new CommentAdapter(CommunityContent.this, commentDataArrayList);
-        recyclerView.setAdapter(commentAdapter);
-    }
-
     // 서버에서 해당 게시글의 댓글 데이터를 가져와야 함
     private void getPostData(){
         cTitle.setText(getIntent().getStringExtra("contentTitle"));
     }
 
-    // editText에 댓글 입력한 걸 recyclerview 댓글창에 추가하기
-    private void addComment(){
 
+    // 댓글창 recyclerview 어댑터 초기화
+    private void setRecyclerView(){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CommunityContent.this);
+        recyclerView.setLayoutManager(linearLayoutManager); // layoutManager 설정
+        commentAdapter = new CommentAdapter(CommunityContent.this, commentDataArrayList);
+        recyclerView.setAdapter(commentAdapter);
+        recyclerView.setItemAnimator(null); // 애니메이션 효과 제거
+    }
+
+
+
+    // 댓글 입력창에 댓글 입력한 걸 recyclerview 댓글창에 추가하기
+    private void addComment(){
         String comment = editText.getText().toString();     // 댓글 입력한 문자열 얻음
         String nickname = getIntent().getStringExtra("contentNickname"); // 서버에 연결해서 데이터 받고 원래는 사용자 본인 닉네임이 떠야 함
         String level = getIntent().getStringExtra("contentPlace");
@@ -250,30 +252,32 @@ public class CommunityContent extends AppCompatActivity {
         methodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    // 댓글의 수정, 삭제 버튼
+    // 댓글의 수정, 삭제 버튼 (이게 아니라 일단 어댑터에서 설정한 popUpMenu 사용할 거임)
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        int position = itemPosition;
-        try{
-            position = ((CommentAdapter.CommentViewHolder) recyclerView.findViewHolderForAdapterPosition(item.getGroupId())).getAbsoluteAdapterPosition();  // 현재 어댑터의 위치 반환
-        } catch (Exception e){
-            Log.d(tag, "Position이 없음", e);
-            return super.onContextItemSelected(item);
-        }
 
-        CommentData commentData = commentDataArrayList.get(position);
-        switch (item.getItemId()){
-            case R.id.action_edit:  // 수정
-                Toast.makeText(this, commentData.getComment_date() + " " + getString(R.string.insert), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.action_delete:    // 삭제
-                Toast.makeText(this, commentData.getComment_nickname() + " " + getString(R.string.delete), Toast.LENGTH_SHORT).show();
-                break;
-        }
+//        int position = itemPosition;
+//        try{
+//            position = ((CommentAdapter.CommentViewHolder) recyclerView.findViewHolderForAdapterPosition(item.getGroupId())).getAbsoluteAdapterPosition();  // 현재 어댑터의 position 값 정수로 제대로 받아옴
+//        } catch (Exception e){
+//            Log.d(tag, "Position이 없음", e);
+//            return super.onContextItemSelected(item);
+//        }
+//        CommentData commentData = commentDataArrayList.get(position);
+//
+//        switch (item.getItemId()){
+//            case R.id.action_edit:  // 수정
+//                Log.i(tag, "현재 댓글 position 값 : " + position);
+//
+//                break;
+//            case R.id.action_delete:    // 삭제
+//                Log.i(tag, "현재 댓글 position 값 : " + position);
+//                commentDataArrayList.remove(position);
+//                commentAdapter.notifyItemRemoved(position);
+//                commentAdapter.notifyItemRangeChanged(position, commentDataArrayList.size() - position);
+//                break;
+//        }
         return true;
     }
-
-
-
 
 }

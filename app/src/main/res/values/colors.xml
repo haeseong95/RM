@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
+    <color name="blue">#0038FF</color>
     <color name="search_layover_view">#50000000</color>
     <color name="main_color_green">#5DB075</color>
     <color name="category_gray">#C7C7C7</color>
@@ -10,8 +11,5 @@
     <color name="gray">#888888</color>
     <color name="selected_button_color">#FF0000</color> <!-- 빨간색 -->
     <color name="unselected_button_color">#CCCCCC</color> <!-- 회색 -->
-
-    <!--테스트-->
-    <color name="green">#44ea48</color>
-
+    <color name="comment_unModify_gray">#696969</color>
 </resources>

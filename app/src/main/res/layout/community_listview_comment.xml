@@ -55,12 +55,25 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/ccc_commen"
-            style="@style/community_text_normal"
-            android:text="댓글"
-            android:textSize="@dimen/community_regular_text"
-            android:layout_marginBottom="5dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:id="@+id/ccc_commen"
+                style="@style/community_text_normal"
+                android:text="댓글"
+                android:textSize="@dimen/community_regular_text"/>
+
+            <EditText
+                android:id="@+id/ccc_edit"
+                style="@style/community_text_normal"
+                android:text="댓글 수정할 때 입력창"
+                android:visibility="gone"
+                android:textSize="@dimen/community_regular_text"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/ccc_userId"
@@ -71,5 +84,39 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:id="@+id/btn_commentNo"
+                android:layout_width="75dp"
+                android:layout_height="45dp"
+                android:backgroundTint="@color/category_gray"
+                android:fontFamily="@font/nanum_regular"
+                android:text="취소"
+                android:textSize="13dp"
+                android:textColor="#000000"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/btn_commentYes"
+                android:layout_width="75dp"
+                android:layout_height="45dp"
+                android:backgroundTint="@color/category_gray"
+                android:layout_gravity="right"
+                android:fontFamily="@font/nanum_regular"
+                android:text="확인"
+                android:textSize="13dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/comment_unModify_gray"
+                android:visibility="gone"/>
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>
