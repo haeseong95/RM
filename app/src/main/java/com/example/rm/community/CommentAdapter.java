@@ -2,6 +2,7 @@ package com.example.rm.community;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.text.Editable;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -79,7 +81,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                             holder.btnUnModify.setVisibility(View.VISIBLE);
                             holder.btnModify.setVisibility(View.VISIBLE);
                             holder.btnModify.setEnabled(false);
-                            holder.commentEdit.requestFocus();
+
+                            holder.commentEdit.setText(holder.commentComment.getText().toString());
+//                            holder.commentEdit.post(() -> {     // 키보드 올라옴
+//                                holder.commentEdit.requestFocus();
+//                                holder.commentEdit.setSelection(holder.commentEdit.getText().length());
+//                                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                                imm.showSoftInput(holder.commentEdit, InputMethodManager.SHOW_IMPLICIT);
+//                            });
+                            holder.commentEdit.postDelayed(() -> {
+                                holder.commentEdit.requestFocus();
+                                holder.commentEdit.setSelection(holder.commentEdit.getText().length());
+                                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.showSoftInput(holder.commentEdit, InputMethodManager.SHOW_FORCED);
+                            }, 100);
 
                             return true;
                         case R.id.action_delete:    // 삭제
@@ -87,17 +102,31 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                             AlertDialog dialog = new AlertDialog.Builder(context)
                                     .setTitle("댓글 삭제")
                                     .setMessage("댓글을 완전히 삭제할까요?")
-                                    .setPositiveButton("확인", (dialogInterface, which) -> {
-                                        // 확인 버튼 클릭 시 삭제 처리
+                                    .setPositiveButton("확인", null) // 리스너는 나중에 설정
+                                    .setNegativeButton("취소", null) // 리스너는 나중에 설정
+                                    .create();
+
+                            dialog.setOnShowListener(dialogInterface -> {
+                                Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                                Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+                                // 버튼이 null이 아닌지 확인 후 색상 설정
+                                if (positiveButton != null) {
+                                    positiveButton.setTextColor(context.getResources().getColor(android.R.color.black));
+                                    positiveButton.setOnClickListener(v1 -> {
+                                        // 삭제 로직 처리
                                         arrayList.remove(currentPosition);
                                         notifyItemRemoved(currentPosition);
                                         notifyItemRangeChanged(currentPosition, arrayList.size() - currentPosition);
                                         Toast.makeText(context, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                                    })
-                                    .setNegativeButton("취소", (dialogInterface, which) -> dialogInterface.dismiss())
-                                    .create();
-                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(android.R.color.black));
-                            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(android.R.color.black));
+                                        dialog.dismiss();
+                                    });
+                                }
+                                if (negativeButton != null) {
+                                    negativeButton.setTextColor(context.getResources().getColor(android.R.color.black));
+                                    negativeButton.setOnClickListener(v1 -> dialog.dismiss());
+                                }
+                            });
                             dialog.show();
                             return true;
                         default:
@@ -128,7 +157,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 } else {
                     holder.btnModify.setEnabled(false);
                     holder.btnModify.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.category_gray));
-                    holder.btnModify.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.comment_unModify_gray));
+                    holder.btnModify.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.black));
                 }
             }
 

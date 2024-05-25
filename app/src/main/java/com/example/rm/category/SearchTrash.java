@@ -59,9 +59,9 @@ public class SearchTrash extends AppCompatActivity {
         searchView.setIconifiedByDefault(false);    // 항상 확장된 상태O
         searchView.requestFocus();  // searchview에 포커스 요청+키보드 자동O
 
-        searchView.post(() ->{
+        searchView.post(() ->{  // 키보드가 올라옴
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);  //show_inplicit 하던가 아님 아예 0으로 처리
+            imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {        // 검색창에 일어나는 이벤트 구현
