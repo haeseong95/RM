@@ -75,6 +75,7 @@
         <activity android:name="com.example.rm.community.CommunityContent"/>
         <activity android:name="com.example.rm.Notice"/>
         <activity android:name="com.example.rm.MypageModify"/>
+        <activity android:name="com.example.rm.MypageUserInfo"/>
 
 
     </application>

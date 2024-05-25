@@ -179,6 +179,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 holder.commentEdit.setVisibility(View.GONE);
                 holder.btnModify.setVisibility(View.GONE);
                 holder.btnUnModify.setVisibility(View.GONE);
+
+                InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             });
         } else {
             Log.e(tag, "댓글 수정 확인 버튼 오류");
@@ -191,6 +194,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 holder.commentEdit.setVisibility(View.GONE);
                 holder.btnModify.setVisibility(View.GONE);
                 holder.btnUnModify.setVisibility(View.GONE);
+
+                InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             });
         } else {
             Log.e(tag, "댓글 수정 취소 버튼 오류");

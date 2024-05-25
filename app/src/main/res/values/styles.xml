@@ -59,6 +59,7 @@
         <item name="android:layout_height">50dp</item>
         <item name="android:textSize">13dp</item>
         <item name="android:paddingLeft">10sp</item>
+        <item name="android:paddingRight">10dp</item>
         <item name="fontFamily">@font/nanum_regular</item>
         <item name="android:background">@drawable/border_category</item>
     </style>
@@ -156,19 +157,49 @@
         <item name="fontFamily">@font/nanum_regular</item>>
     </style>
 
-    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="buttonBarPositiveButtonStyle">@style/AlertDialogButtonPositive</item>
-        <item name="buttonBarNeutralButtonStyle">@style/AlertDialogButtonNeutral</item>
+    <!--마이페이지 텍스트 정보-->
+    <style name="textView_mypage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/nanum_regular</item>
     </style>
 
-    <!-- Style for Positive Button -->
-    <style name="AlertDialogButtonPositive">
-        <item name="android:textColor">@color/black</item>
+    <!--마이페이지 editText 부분-->
+    <style name="textView_mypageinfo">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">17dp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="fontFamily">@font/nanum_regular</item>
+        <item name="android:layout_marginBottom">5dp</item>
     </style>
 
-    <!-- Style for Neutral Button -->
-    <style name="AlertDialogButtonNeutral">
-        <item name="android:textColor">@color/black</item>
+    <!--마이페이지 아이디 부분-->
+    <style name="mypage_id">
+        <item name="android:layout_width">325dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:textSize">13dp</item>
+        <item name="android:paddingLeft">10sp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">30dp</item>
+        <item name="fontFamily">@font/nanum_regular</item>
+        <item name="android:background">@drawable/border_category</item>
     </style>
+
+    <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
+    </style>
+
+    <style name="RoundCornerModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/border_modify_fragment</item>
+        <item name="behavior_fitToContents">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
 
 </resources>

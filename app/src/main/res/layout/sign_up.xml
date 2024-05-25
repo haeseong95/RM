@@ -80,7 +80,7 @@
             android:id="@+id/sign_pwd"
             style="@style/editText_style"
             android:hint="비밀번호"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"/>
 
         <EditText
             android:id="@+id/sign_pwdDoubleCheck"
