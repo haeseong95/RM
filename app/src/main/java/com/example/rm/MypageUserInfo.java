@@ -1,14 +1,15 @@
 package com.example.rm;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -63,53 +64,44 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btn_modify_password:  // 비밀번호 수정
                 PasswordBottomSheet passwordBottomSheet = new PasswordBottomSheet();
-                passwordBottomSheet.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme);
                 passwordBottomSheet.show(getSupportFragmentManager(), "비밀번호 변경");
                 break;
             case R.id.btn_modify_nickname:  // 닉네임 수정
-                showChangeNickname();
+                NickNameBottomSheet nickNameBottomSheet = new NickNameBottomSheet();
+                nickNameBottomSheet.show(getSupportFragmentManager(), "닉네임 변경");
                 break;
             case R.id.text_modify_email:    // 이메일 수정
+                EmailBottomSheet emailBottomSheet = new EmailBottomSheet();
+                emailBottomSheet.show(getSupportFragmentManager(), "이메일 변경");
                 break;
             default:
                 throw new IllegalStateException("버튼 이동 오류남: " + v.getId());
         }
     }
 
-    // 닉네임 수정 dialog 출력
-    private void showChangeNickname() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.mypage_modify_nickname, null);
-        builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        EditText editNickname = dialogView.findViewById(R.id.edit_nickname);
-        Button btnCancel = dialogView.findViewById(R.id.dialog_btn_cancel);
-        Button btnConfirm = dialogView.findViewById(R.id.dialog_btn_confirm);
-        Button btnCheckName = dialogView.findViewById(R.id.btn_checkNickName);
-
-        btnCheckName.setOnClickListener(v -> checkNickName());   // 닉네임 중복 확인 버튼
-        btnCancel.setOnClickListener(v -> dialog.dismiss());    // 취소 버튼
-        btnConfirm.setOnClickListener(v -> updateNickname(editNickname.getText().toString()));  // 확인 버튼
-        dialog.show();
-    }
-
-    // 닉네임 사용가능한지 검사
-    private void checkNickName(){
-
-    }
-
-
-    // 변경된 닉네임 db에도 적용하기
-    private void updateNickname(String newNickname) {
-        textViewNickname.setText(newNickname);
-    }
-
-
-    // 비밀번호 변경 창
+    // 비밀번호 변경 클래스
     public static class PasswordBottomSheet extends BottomSheetDialogFragment{
+        // bottom dialog 높이 설정
+        @Override
+        public void onStart() {
+            super.onStart();
+            BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
+            if (dialog != null) {
+                FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+                WindowManager wm = getActivity().getWindowManager();
+                Display display = wm.getDefaultDisplay();
+                Point size = new Point();
+                display.getRealSize(size);
+                int screenHeight = size.y;
+
+                bottomSheet.getLayoutParams().height = screenHeight;    // Bottom Sheet의 높이를 화면 높이가 꽉 차게 함 + 드래그 안됨
+                bottomSheet.setLayoutParams(bottomSheet.getLayoutParams());
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                bottomSheetBehavior.setDraggable(false);
+            }
+        }
+
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -119,14 +111,16 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            EditText currentPwd = view.findViewById(R.id.edit_pwd_current);
-            EditText newPwd = view.findViewById(R.id.edit_pwd_new);
-            EditText checkPwd = view.findViewById(R.id.edit_pwd_check);
-            Button btnChangePwd = view.findViewById(R.id.finishBtn);
+            Button btnClosePwd = view.findViewById(R.id.btn_close_password);
+            EditText currentPwd = view.findViewById(R.id.edit_pwd_current); // 현 비번이 맞는지 체크
+            EditText newPwd = view.findViewById(R.id.edit_pwd_new); // 새 비번 입력
+            EditText checkPwd = view.findViewById(R.id.edit_pwd_check); // 새 비번이랑 맞는지 체크
+            Button btnChangePwd = view.findViewById(R.id.changePwd);
             setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme);
+            btnClosePwd.setOnClickListener(v -> dismiss());
             btnChangePwd.setOnClickListener(v -> {
                 if (validatePasswords(currentPwd.getText().toString(), newPwd.getText().toString(), checkPwd.getText().toString())) {
-                    // 비밀번호 변경 로직 실행, 성공적이면 프래그먼트 닫기
+                    // 비밀번호 변경 실행, 성공적이면 프래그먼트 닫기
                     dismiss();
                 } else {
                     // 사용자에게 오류 메시지 표시
@@ -135,32 +129,107 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
             });
         }
 
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            BottomSheetDialog dialog = new BottomSheetDialog(requireContext(), getTheme());
-            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialogInterface) {
-                    BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
-                    FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-                    BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
-                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                    setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme);
-                    behavior.setDraggable(false);
-                }
-            });
-            return dialog;
-        }
-
-
         private boolean validatePasswords(String current, String newPass, String confirm) {
-            // 로그는 디버깅을 위해 유지할 수 있지만, 여기서는 실제 비밀번호 검증 필요 + 새 비번이랑 재입력한 게 같은지도 검사
+            // 실제 비밀번호 검증 필요 + 새 비번이랑 재입력한 게 같은지도 검사
             Log.i(tag, "비밀번호 변경 시도");
             return newPass.equals(confirm) && !newPass.isEmpty();
         }
     }
 
+    // 닉네임 변경 클래스
+    public static class NickNameBottomSheet extends BottomSheetDialogFragment{
+        @Override
+        public void onStart() {
+            super.onStart();
+            BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
+            if (dialog != null) {
+                FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+                WindowManager wm = getActivity().getWindowManager();
+                Display display = wm.getDefaultDisplay();
+                Point size = new Point();
+                display.getRealSize(size);
+                int screenHeight = size.y;
+                bottomSheet.getLayoutParams().height = screenHeight;
+                bottomSheet.setLayoutParams(bottomSheet.getLayoutParams());
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                bottomSheetBehavior.setDraggable(false);
+            }
+        }
 
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.mypage_modify_pwd, container, false);
+        }
 
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            Button btnCloseNickName = view.findViewById(R.id.btn_close_nickname);
+            EditText newNickName = view.findViewById(R.id.edit_name_new);   // 새 닉네임 입력
+            Button btnCheckNickName = view.findViewById(R.id.btnNicknameCheck);
+            Button btnChangeNickName = view.findViewById(R.id.changeNickname);
+            setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme);
+            btnCloseNickName.setOnClickListener(v -> dismiss());
+            btnCheckNickName.setOnClickListener(v -> {
+                // 새 닉네임이 중복되는 닉네임 중복 확인
+            });
+            btnChangeNickName.setOnClickListener(v -> {
+                // 서버에 변경된 닉네임 이름 넣고, 메인 화면에 textview 바꾸기
+            });
+        }
+    }
 
+    // 이메일 변경 클래스
+    public static class EmailBottomSheet extends BottomSheetDialogFragment{
+        @Override
+        public void onStart() {
+            super.onStart();
+            BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
+            if (dialog != null) {
+                FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+                WindowManager wm = getActivity().getWindowManager();
+                Display display = wm.getDefaultDisplay();
+                Point size = new Point();
+                display.getRealSize(size);
+                int screenHeight = size.y;
+                bottomSheet.getLayoutParams().height = screenHeight;
+                bottomSheet.setLayoutParams(bottomSheet.getLayoutParams());
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                bottomSheetBehavior.setDraggable(false);
+            }
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.mypage_modify_pwd, container, false);
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            Button btnCloseEmail = view.findViewById(R.id.btn_close_email);
+            EditText newEmail = view.findViewById(R.id.edit_email_new); // 새 이메일 입력
+            Button btnCheckEmail = view.findViewById(R.id.emailCheckButton);    // 새 이메일로 인증번호 보냄
+            EditText checkEmailVerify = view.findViewById(R.id.edit_email_verify);  // 이메일로 보낸 인증번호 입력
+            Button btnCheckEmailVerify = view.findViewById(R.id.btn_email_verify);  // 인증번호 확인
+            Button btnChangeEmail = view.findViewById(R.id.btn_change_email);   //이메일 변경 버튼
+            setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme);
+            btnCloseEmail.setOnClickListener(v -> dismiss());
+            btnCheckEmail.setOnClickListener(v -> {
+                // 이메일로 인증번호 보냄
+            });
+
+            btnCheckEmailVerify.setOnClickListener(v -> {
+                // 인증번호 확인 버튼
+            });
+
+            btnChangeEmail.setOnClickListener(v -> {
+                // 이메일 변경 성공
+            });
+        }
+    }
 }

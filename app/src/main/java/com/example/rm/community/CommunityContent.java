@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,6 +43,7 @@ public class CommunityContent extends AppCompatActivity{
     ViewPagerAdapter viewPagerAdapter;
     CircleIndicator3 indicator3;
     ImageView btnBack;
+    Button btnMenu;
     ImageView likeImage, sendComment;  // 좋아요 아이콘, 댓글 작성 완료 비행기 아이콘
     TextView cNickname, cLevel, cDate, cTitle, cContent, cCount;    // 닉네임, 등급, 생성날짜, 게시글 제목, 게시글 내용, 추천 개수
     RecyclerView recyclerView;  // 댓글
@@ -72,6 +74,7 @@ public class CommunityContent extends AppCompatActivity{
         recyclerView = findViewById(R.id.comment_recyclerview);
         likeImage = findViewById(R.id.heart);
         sendComment = findViewById(R.id.send_comment);
+        btnMenu = findViewById(R.id.btn_menu);
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
 
@@ -91,7 +94,13 @@ public class CommunityContent extends AppCompatActivity{
         setRecyclerView();  // 어댑터 설정
         sendComment.setOnClickListener(v -> addComment());  // 댓글 추가
 
+        // 상단 메뉴 버튼은 사용자 본인이 올린 게시글이면  버튼 눌려서 수정/삭제 가능, 삭제는 그 자리에서 바로 삭제 , 수정은 수정 페이지하나 만들던가 하기)
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
 
     }
 

@@ -69,7 +69,7 @@
                 android:textColor="@color/main_color_green"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:fontFamily="@font/nanum_bold"
+                android:fontFamily="@font/nanum_regular"
                 android:textSize="15dp" />
         </RelativeLayout>
 
@@ -97,7 +97,7 @@
                 android:textColor="@color/main_color_green"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:fontFamily="@font/nanum_bold"
+                android:fontFamily="@font/nanum_regular"
                 android:textSize="15dp" />
         </RelativeLayout>
 
@@ -124,7 +124,7 @@
                 android:textColor="@color/main_color_green"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:fontFamily="@font/nanum_bold"
+                android:fontFamily="@font/nanum_regular"
                 android:textSize="15dp" />
         </RelativeLayout>
     </LinearLayout>

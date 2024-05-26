@@ -19,6 +19,17 @@
             android:src="@drawable/btn_left" style="@style/back_icon"/>
 
         <TextView android:id="@+id/category_title" android:text="게시판" style="@style/toolbar_text" />
+
+        <Button
+            android:id="@+id/btn_menu"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/community_menu_post"
+            android:backgroundTint="@null"
+            android:focusable="false"
+            android:layout_gravity="right"
+            android:layout_marginRight="20dp"
+            android:focusableInTouchMode="false"/>
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.core.widget.NestedScrollView

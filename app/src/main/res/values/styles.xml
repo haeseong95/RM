@@ -190,6 +190,7 @@
         <item name="android:background">@drawable/border_category</item>
     </style>
 
+    <!--정보 수정 dialog-->
     <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
     </style>
@@ -200,6 +201,8 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+
 
 
 </resources>
