@@ -1,5 +1,8 @@
 package com.example.rm.community;
 
+import static com.gun0912.tedpermission.provider.TedPermissionProvider.context;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -215,7 +219,7 @@ public class CommunityContent extends AppCompatActivity{
         }
     }
 
-    // 서버에서 댓글 데이터를 보내줘야 함
+    // 서버에서 전송한 댓글 데이터 받음
     private void getCommentData() {
 
         List<CommentData> newItem = new ArrayList<>();
@@ -245,8 +249,6 @@ public class CommunityContent extends AppCompatActivity{
         recyclerView.setItemAnimator(null); // 애니메이션 효과 제거
     }
 
-
-
     // 댓글 입력창에 댓글 입력한 걸 recyclerview 댓글창에 추가하기
     private void addComment(){
         String comment = editText.getText().toString();     // 댓글 입력한 문자열 얻음
@@ -261,7 +263,6 @@ public class CommunityContent extends AppCompatActivity{
         methodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-
     // context menu 설정
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -270,29 +271,33 @@ public class CommunityContent extends AppCompatActivity{
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
-    // 댓글의 수정, 삭제 버튼 (이게 아니라 일단 어댑터에서 설정한 popUpMenu 사용할 거임)
+    // 댓글의 수정, 삭제 버튼 (이게 아니라 일단 어댑터에서 설정한 popUpMenu 사용할 거임), 일단 해당 게시글의 해시값만 있으면 될 듯?
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-
-        int position = itemPosition;
-        try{
-            position = ((CommentAdapter.CommentViewHolder) recyclerView.findViewHolderForAdapterPosition(item.getGroupId())).getAbsoluteAdapterPosition();  // 현재 어댑터의 position 값 정수로 제대로 받아옴
-        } catch (Exception e){
-            Log.d(tag, "Position이 없음", e);
-            return super.onContextItemSelected(item);
-        }
-        CommentData commentData = commentDataArrayList.get(position);
-
         switch (item.getItemId()){
-            case R.id.action_edit:  // 수정, 게시글의 수정 페이지로 넘어감
-                Log.i(tag, "현재 댓글 position 값 : " + position);
-
-                break;
+            case R.id.action_edit:  // 수정, 게시글의 수정 페이지로 넘어감 (걍 글쓰기 페이지로 넘어가서 해시값을 넘김 -> 그러면 edit에선 넘겨받은 해시값에 해댱하는 editext, 이미지 등을 출력하겠지)
+                Log.i(tag, "현재 게시글의 해시값 : ");
+                Intent intent = new Intent(CommunityContent.this, CommunityEdit.class);
+//                intent.putExtra("post_hash", hash);  해시값 전달
+                startActivity(intent);
+                return true;
             case R.id.action_delete:    // 삭제, 게시글 삭제함
-                Log.i(tag, "현재 댓글 position 값 : " + position);
-                break;
+                Log.i(tag, "현재 게시글의 position 값 : ");
+                AlertDialog dialog = new AlertDialog.Builder(CommunityContent.this)
+                        .setMessage("게시글을 삭제하시겠습니까?")
+                        .setPositiveButton("확인", (dialog1, which) -> {
+
+                            Log.i(tag, "게시글 삭제O");  // 서버로 함수(해시값) 해서 해댱 해시값에 해당하는 글 삭제, 게시글의 데이터 삭제 요청
+                            finish();
+                        })
+                        .setNeutralButton("취소", (dialog2, which) -> dialog2.dismiss())
+                        .create();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(android.R.color.black));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(android.R.color.black));
+                dialog.show();
+                return true;
         }
-        return true;
+        return super.onContextItemSelected(item);
     }
 
 }

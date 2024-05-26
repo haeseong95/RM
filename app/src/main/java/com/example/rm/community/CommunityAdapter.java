@@ -1,6 +1,7 @@
 package com.example.rm.community;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +55,14 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         holder.mainPlace.setText(communityDataArrayList.get(position).getMain_place());
         holder.mainDate.setText(communityDataArrayList.get(position).getMain_date());
         holder.mainTitle.setText(communityDataArrayList.get(position).getMain_title());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CommunityContent.class);
+                intent.putExtra("hash", communityData.getMain_place());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -102,6 +111,7 @@ class CommunityData {
     public String main_place = "";    // 등급
     public String main_date = "";   // 생성날짜
     public String main_title = "";    // 게시글 제목
+    public String main_hash = "";   // 게시글 해시값
 
     public CommunityData(String main_nickname, String main_place, String main_date, String main_title) {
         this.main_nickname = main_nickname;

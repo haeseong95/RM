@@ -30,7 +30,6 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
     EditText editTextId;
     Button btnPwd, btnNickname, btnEmail;
     TextView textViewNickname, textViewEmail;
-
     //
     private static final String tag = "회원정보 수정, MypageUserInfo";
 

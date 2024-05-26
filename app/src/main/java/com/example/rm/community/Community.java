@@ -101,7 +101,7 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
                     JSONArray jsonArray = new JSONArray(jsonList);  // json 결과를 배열로 저장
 
                     for (int i = 0; i < item_count; i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i); // 객체 1개씩 받음
+                        JSONObject jsonObject = jsonArray.getJSONObject(i); // 객체 1개씩 받음, 해시값 가져와야 함
                         title = jsonObject.getString("title");
                         nickname = jsonObject.getString("nickname");
                         level = jsonObject.getString("level");
