@@ -3,12 +3,10 @@ package com.example.rm;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +37,7 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mypage_modify_userinfo);
+        setContentView(R.layout.mypage_modify);
         imageView = findViewById(R.id.btn_back);
         editTextId = findViewById(R.id.text_modify_id);
         btnPwd = findViewById(R.id.btn_modify_password);

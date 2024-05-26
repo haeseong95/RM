@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context=".community.CommunityContent">
 
-    <!--툴바-->
     <androidx.appcompat.widget.Toolbar
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"

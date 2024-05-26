@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -94,12 +96,10 @@ public class CommunityContent extends AppCompatActivity{
         setRecyclerView();  // 어댑터 설정
         sendComment.setOnClickListener(v -> addComment());  // 댓글 추가
 
+        registerForContextMenu(btnMenu);    // 게시글의 수정/삭제 메뉴 버튼 (btnMenu를 contextmenu로 등록)
         // 상단 메뉴 버튼은 사용자 본인이 올린 게시글이면  버튼 눌려서 수정/삭제 가능, 삭제는 그 자리에서 바로 삭제 , 수정은 수정 페이지하나 만들던가 하기)
-        btnMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnMenu.setOnClickListener(v -> {
 
-            }
         });
 
     }
@@ -216,7 +216,7 @@ public class CommunityContent extends AppCompatActivity{
     }
 
     // 서버에서 댓글 데이터를 보내줘야 함
-    private void getCommentData(){
+    private void getCommentData() {
 
         List<CommentData> newItem = new ArrayList<>();
 
@@ -261,31 +261,37 @@ public class CommunityContent extends AppCompatActivity{
         methodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
+
+    // context menu 설정
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.comment_menu, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
     // 댓글의 수정, 삭제 버튼 (이게 아니라 일단 어댑터에서 설정한 popUpMenu 사용할 거임)
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
 
-//        int position = itemPosition;
-//        try{
-//            position = ((CommentAdapter.CommentViewHolder) recyclerView.findViewHolderForAdapterPosition(item.getGroupId())).getAbsoluteAdapterPosition();  // 현재 어댑터의 position 값 정수로 제대로 받아옴
-//        } catch (Exception e){
-//            Log.d(tag, "Position이 없음", e);
-//            return super.onContextItemSelected(item);
-//        }
-//        CommentData commentData = commentDataArrayList.get(position);
-//
-//        switch (item.getItemId()){
-//            case R.id.action_edit:  // 수정
-//                Log.i(tag, "현재 댓글 position 값 : " + position);
-//
-//                break;
-//            case R.id.action_delete:    // 삭제
-//                Log.i(tag, "현재 댓글 position 값 : " + position);
-//                commentDataArrayList.remove(position);
-//                commentAdapter.notifyItemRemoved(position);
-//                commentAdapter.notifyItemRangeChanged(position, commentDataArrayList.size() - position);
-//                break;
-//        }
+        int position = itemPosition;
+        try{
+            position = ((CommentAdapter.CommentViewHolder) recyclerView.findViewHolderForAdapterPosition(item.getGroupId())).getAbsoluteAdapterPosition();  // 현재 어댑터의 position 값 정수로 제대로 받아옴
+        } catch (Exception e){
+            Log.d(tag, "Position이 없음", e);
+            return super.onContextItemSelected(item);
+        }
+        CommentData commentData = commentDataArrayList.get(position);
+
+        switch (item.getItemId()){
+            case R.id.action_edit:  // 수정, 게시글의 수정 페이지로 넘어감
+                Log.i(tag, "현재 댓글 position 값 : " + position);
+
+                break;
+            case R.id.action_delete:    // 삭제, 게시글 삭제함
+                Log.i(tag, "현재 댓글 position 값 : " + position);
+                break;
+        }
         return true;
     }
 
