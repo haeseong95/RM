@@ -85,6 +85,9 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
         searchPost();
     }
 
+
+
+
     // 게시글 목록 가져오는 okhttp (초기 게시글 10개 가져옴)
     private void getPosts() {
         new Thread(() -> {

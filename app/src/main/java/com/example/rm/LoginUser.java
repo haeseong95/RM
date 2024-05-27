@@ -135,7 +135,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                PreferenceHelper.setLoginState(LoginUser.this, true);   // 로그인 성공 시 true 값 저장
+                                PreferenceHelper.setLoginState(LoginUser.this, true, userId);   // 로그인 성공 시 true 값 저장 + 로그인 id 저장
                                 Intent intent = new Intent(LoginUser.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);

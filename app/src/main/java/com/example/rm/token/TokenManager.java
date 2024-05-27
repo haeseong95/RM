@@ -30,4 +30,10 @@ public class TokenManager {
         editor.remove(TOKEN_KEY);
         editor.apply();
     }
+
+    // 토큰 값을 이용해 로그인 상태 확인 (true-로그인O / false-로그인X)
+    public boolean LoginState(Context context){
+        String token = getToken();
+        return token != null && token.isEmpty();
+    }
 }

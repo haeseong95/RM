@@ -20,59 +20,43 @@
         <TextView android:id="@+id/category_title" android:text="내 정보 관리" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:text="아이디"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        style="@style/textView_mypage"/>
-
-    <EditText
-        android:id="@+id/text_modify_id"
-        style="@style/mypage_id"
-        android:background="@drawable/border_edit_community"
-        android:hint="아이디"
-        android:layout_marginLeft="20dp"
-        android:inputType="text" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/category_gray"
-        android:layout_marginBottom="20dp"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="15dp">
 
+        <TextView
+            android:text="아이디"
+            android:layout_marginTop="20dp"
+            style="@style/textView_mypage"/>
+
+        <TextView
+            android:id="@+id/text_modify_id"
+            android:text="아이디"
+            style="@style/textView_mypageinfo"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="5dp"/>
+
+        <TextView android:text="이메일" style="@style/textView_mypage"/>
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="40dp">
 
             <TextView
-                android:text="비밀번호"
+                android:id="@+id/text_modify_email"
+                android:text="이메일"
                 style="@style/textView_mypageinfo"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"/>
 
-            <Button
-                android:id="@+id/btn_modify_password"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@android:color/transparent"
-                android:text="수정"
-                android:textColor="@color/main_color_green"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:fontFamily="@font/nanum_regular"
-                android:textSize="15dp" />
         </RelativeLayout>
-
 
         <TextView android:text="닉네임" style="@style/textView_mypage"/>
         <RelativeLayout
@@ -101,7 +85,6 @@
                 android:textSize="15dp" />
         </RelativeLayout>
 
-        <TextView android:text="이메일" style="@style/textView_mypage"/>
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -109,14 +92,13 @@
             android:layout_marginBottom="40dp">
 
             <TextView
-                android:id="@+id/text_modify_email"
-                android:text="이메일"
+                android:text="비밀번호"
                 style="@style/textView_mypageinfo"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"/>
 
             <Button
-                android:id="@+id/btn_modify_email"
+                android:id="@+id/btn_modify_password"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 android:backgroundTint="@android:color/transparent"
@@ -127,5 +109,6 @@
                 android:fontFamily="@font/nanum_regular"
                 android:textSize="15dp" />
         </RelativeLayout>
+
     </LinearLayout>
 </LinearLayout>

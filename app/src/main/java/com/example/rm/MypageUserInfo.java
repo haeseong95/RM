@@ -27,9 +27,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class MypageUserInfo extends AppCompatActivity implements View.OnClickListener{
     // 레이아웃
     ImageView imageView;
-    EditText editTextId;
-    Button btnPwd, btnNickname, btnEmail;
-    TextView textViewNickname, textViewEmail;
+    Button btnPwd, btnNickname;
+    TextView textViewNickname, textViewEmail, textViewId;
     //
     private static final String tag = "회원정보 수정, MypageUserInfo";
 
@@ -38,19 +37,15 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mypage_modify);
         imageView = findViewById(R.id.btn_back);
-        editTextId = findViewById(R.id.text_modify_id);
+        textViewId = findViewById(R.id.text_modify_id);
         btnPwd = findViewById(R.id.btn_modify_password);
         btnNickname = findViewById(R.id.btn_modify_nickname);
-        btnEmail = findViewById(R.id.btn_modify_email);
         textViewNickname = findViewById(R.id.text_modify_nickname);
         textViewEmail = findViewById(R.id.text_modify_email);
 
         imageView.setOnClickListener(this);
         btnPwd.setOnClickListener(this);
         btnNickname.setOnClickListener(this);
-        btnEmail.setOnClickListener(this);
-        editTextId.setClickable(false);
-        editTextId.setFocusable(false);
     }
 
     @Override
@@ -66,10 +61,6 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
             case R.id.btn_modify_nickname:  // 닉네임 수정
                 NickNameBottomSheet nickNameBottomSheet = new NickNameBottomSheet();
                 nickNameBottomSheet.show(getSupportFragmentManager(), "닉네임 변경");
-                break;
-            case R.id.text_modify_email:    // 이메일 수정
-                EmailBottomSheet emailBottomSheet = new EmailBottomSheet();
-                emailBottomSheet.show(getSupportFragmentManager(), "이메일 변경");
                 break;
             default:
                 throw new IllegalStateException("버튼 이동 오류남: " + v.getId());
@@ -178,7 +169,7 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    // 이메일 변경 클래스
+    // 이메일 변경 클래스 (닉네임, 비번까지만 하고 이메일 보류)
     public static class EmailBottomSheet extends BottomSheetDialogFragment{
         @Override
         public void onStart() {

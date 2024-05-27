@@ -11,7 +11,8 @@ import java.util.Map;
 public class PreferenceHelper {
     private static final String tag = "preference";
     private static final String SHARED_PREF_NAME = "sharePref";
-    private static final String LOGIN_IN = "loginIn";   // 로그인 상태를 저장할 키
+    private static final String LOGIN_IN = "loginIn";   // 로그인 상태를 저장하는 키
+    private static final String USER_ID = "userId";     // 로그인 시 입력한 아이디를 저장하는 키
     private static SharedPreferences sharedPreferences;     // key-value로 데이터 저장
 
     public static void init(Context context) {      // 앱 시작 시 PreferenceHelper.init(this)를 호출, 모든 액티비티에서 인스턴스 얻음
@@ -19,11 +20,12 @@ public class PreferenceHelper {
     }
 
     // 로그인O true / 로그인X false : 로그인 성공했으므로 true 값 저장
-    public static void setLoginState(Context context, boolean login) {
+    public static void setLoginState(Context context, boolean login, String id) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(LOGIN_IN, login);
+        editor.putString(USER_ID, id);
         editor.apply();
-        Log.d(tag + " 로그인 상태", "로그인O(true) / 로그인X(false) : " + sharedPreferences.getBoolean(LOGIN_IN, false));
+        Log.d(tag + " 로그인 상태", "로그인O(true) / 로그인X(false) : " + sharedPreferences.getBoolean(LOGIN_IN, false) + "로그인 아이디" +id);
     }
 
     // 메인페이지에서 로그인/마이페이지 텍스트 변경을 위한 메소드
@@ -32,11 +34,11 @@ public class PreferenceHelper {
         return sharedPreferences.getBoolean(LOGIN_IN, false);   // LOGIN_ID 키로 저장된 로그인 상태 조회
     }
 
-    // 저장된 로그인 정보 가져오기
+    // 로그인 시 사용된 아이디 문자열 형태로 반환
     public static String getLoginId(Context context){
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        String id = preferences.getString("id", "");    // id키가 없으면 문자열"" 반환
-        Log.i("Preference, getLoginId", "저장된 아이디 정보 가져오기 : " + id);
+        String id = preferences.getString(USER_ID, "");    // id키가 없으면 문자열"" 반환
+        Log.i("Preference, getLoginId", "로그인 시 사용된 아이디 값 : " + id);
         return id;
     }
 
@@ -76,6 +78,11 @@ public class PreferenceHelper {
         return sharedPreferences.getInt("likeCount_" + postId, 0);
     }
 
+    // 로그인 id를 이용해 내가 작성한 게시글이 맞는지 판별 (true - 내 거 맞음, false-남의 거)
+    public static boolean checkMyPost(Context context, String id){
+        String userId = getLoginId(context);    // 로그인 시 사용된 아이디값 저장됨
+        return userId.equals(id);
+    }
 
 
 }

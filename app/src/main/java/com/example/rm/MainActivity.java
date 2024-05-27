@@ -19,6 +19,7 @@ import com.example.rm.category.CategoryInfo;
 import com.example.rm.category.SearchTrash;
 import com.example.rm.community.Community;
 import com.example.rm.community.CommunityEdit;
+import com.example.rm.token.TokenManager;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayout btnSearch, btnCamera;      // 검색창, 카메라
     LinearLayout btnCan, btnCouch, btnPlasticBag, btnBattery, btnStink, btnGlass, btnClothes, btnPaper, btnPlastic, btnRes;      // 카테고리 버튼
     Button mainMap, mainCommunity, mainUserinfo;        // 툴바 아이콘
+    TokenManager tokenManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainUserinfo.setOnClickListener(this);
         mainNotice.setOnClickListener(this);
         PreferenceHelper.init(this);
+        tokenManager = new TokenManager(this);
     }
 
     private void getHashKey() {
@@ -159,6 +162,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
-
+    // 나중에 다 잡히면 사용
+    private void checkToken(){
+        if (tokenManager.LoginState(this)) {                // 로그인O -> 커뮤니티 활동O
+            startActivity(new Intent(this, Community.class));
+        } else {// 로그인 상태X -> 로그인 화면으로 이동
+            startActivity(new Intent(this, LoginUser.class));
+        }
+    }
 
 }
