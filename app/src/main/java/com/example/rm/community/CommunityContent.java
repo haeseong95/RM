@@ -120,6 +120,9 @@ public class CommunityContent extends AppCompatActivity{
                     return CommunityContent.super.onOptionsItemSelected(item);
             }
         });
+
+        String postHash = getIntent().getStringExtra("postHash");
+        String postUserId = getIntent().getStringExtra("postUserId");
     }
 
     // bitmap을 이용해 뷰페이저에서 보여줄 이미지 얻음

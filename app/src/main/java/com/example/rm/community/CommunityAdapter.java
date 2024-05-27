@@ -55,13 +55,11 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         holder.mainPlace.setText(communityDataArrayList.get(position).getMain_place());
         holder.mainDate.setText(communityDataArrayList.get(position).getMain_date());
         holder.mainTitle.setText(communityDataArrayList.get(position).getMain_title());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, CommunityContent.class);
-                intent.putExtra("hash", communityData.getMain_place());
-                context.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(v -> {   // 게시글 목록을 클릭하면 해시, 아이디 값을 상세 페이지로 전달
+            Intent intent = new Intent(context, CommunityContent.class);
+            intent.putExtra("postHash", communityData.getMain_hash());
+            intent.putExtra("postUserId", communityData.getMain_userId());
+            context.startActivity(intent);
         });
     }
 
@@ -107,17 +105,36 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 }
 
 class CommunityData {
-    public String main_nickname = ""; // 닉네임
-    public String main_place = "";    // 등급
-    public String main_date = "";   // 생성날짜
-    public String main_title = "";    // 게시글 제목
-    public String main_hash = "";   // 게시글 해시값
+    private String main_nickname = ""; // 닉네임
+    private String main_place = "";    // 등급
+    private String main_date = "";   // 생성날짜
+    private String main_title = "";    // 게시글 제목
+    private String main_hash = "";   // 게시글 해시값
+    private String main_userId = "";    // 게시글을 작성한 사용자 id
 
-    public CommunityData(String main_nickname, String main_place, String main_date, String main_title) {
+    public CommunityData(String main_nickname, String main_place, String main_date, String main_title, String main_hash, String main_userId) {
         this.main_nickname = main_nickname;
         this.main_place = main_place;
         this.main_date = main_date;
         this.main_title = main_title;
+        this.main_hash = main_hash;
+        this.main_userId = main_userId;
+    }
+
+    public String getMain_hash() {
+        return main_hash;
+    }
+
+    public void setMain_hash(String main_hash) {
+        this.main_hash = main_hash;
+    }
+
+    public String getMain_userId() {
+        return main_userId;
+    }
+
+    public void setMain_userId(String main_userId) {
+        this.main_userId = main_userId;
     }
 
     public String getMain_nickname() {
