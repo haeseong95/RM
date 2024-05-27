@@ -118,7 +118,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                         arrayList.remove(currentPosition);
                                         notifyItemRemoved(currentPosition);
                                         notifyItemRangeChanged(currentPosition, arrayList.size() - currentPosition);
-                                        Toast.makeText(context, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                                        Log.i(tag, "댓글 삭제됨");
                                         dialog.dismiss();
                                     });
                                 }

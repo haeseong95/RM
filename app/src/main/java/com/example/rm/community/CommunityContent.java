@@ -5,13 +5,16 @@ import static com.gun0912.tedpermission.provider.TedPermissionProvider.context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -49,14 +53,14 @@ public class CommunityContent extends AppCompatActivity{
     ViewPagerAdapter viewPagerAdapter;
     CircleIndicator3 indicator3;
     ImageView btnBack;
-    Button btnMenu;
     ImageView likeImage, sendComment;  // 좋아요 아이콘, 댓글 작성 완료 비행기 아이콘
     TextView cNickname, cLevel, cDate, cTitle, cContent, cCount;    // 닉네임, 등급, 생성날짜, 게시글 제목, 게시글 내용, 추천 개수
     RecyclerView recyclerView;  // 댓글
     EditText editText;  // 댓글 입력창
+    Toolbar toolbar;
 
     //
-    private static final String tag = "CommunityContent";
+    private static final String tag = "CommunityContent, 상세 게시글";
     private static int currentItemCount = -1;
     private int itemPosition = RecyclerView.NO_POSITION;    // item 초기값
     ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();    // viewpager의 이미지를 담을 bitmap 리스트
@@ -80,7 +84,7 @@ public class CommunityContent extends AppCompatActivity{
         recyclerView = findViewById(R.id.comment_recyclerview);
         likeImage = findViewById(R.id.heart);
         sendComment = findViewById(R.id.send_comment);
-        btnMenu = findViewById(R.id.btn_menu);
+        toolbar = findViewById(R.id.toolbar);
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
 
@@ -100,14 +104,23 @@ public class CommunityContent extends AppCompatActivity{
         setRecyclerView();  // 어댑터 설정
         sendComment.setOnClickListener(v -> addComment());  // 댓글 추가
 
-        registerForContextMenu(btnMenu);    // 게시글의 수정/삭제 메뉴 버튼 (btnMenu를 contextmenu로 등록)
-        // 상단 메뉴 버튼은 사용자 본인이 올린 게시글이면  버튼 눌려서 수정/삭제 가능, 삭제는 그 자리에서 바로 삭제 , 수정은 수정 페이지하나 만들던가 하기)
-        btnMenu.setOnClickListener(v -> {
-
+        // 게시글 수정, 삭제
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.inflateMenu(R.menu.comment_menu);
+        toolbar.setOnMenuItemClickListener(item -> {
+            switch(item.getItemId()){
+                case R.id.action_delete:    // 게시글 삭제
+                    postDelete();
+                    return true;
+                case R.id.action_edit:      // 게시글 수정
+                    postModify();
+                    return true;
+                default:
+                    return CommunityContent.super.onOptionsItemSelected(item);
+            }
         });
-
     }
-
 
     // bitmap을 이용해 뷰페이저에서 보여줄 이미지 얻음
     private void setViewPager(){
@@ -263,41 +276,33 @@ public class CommunityContent extends AppCompatActivity{
         methodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    // context menu 설정
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.comment_menu, menu);
-        super.onCreateContextMenu(menu, v, menuInfo);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.comment_menu, menu);
+        return true;
     }
 
     // 댓글의 수정, 삭제 버튼 (이게 아니라 일단 어댑터에서 설정한 popUpMenu 사용할 거임), 일단 해당 게시글의 해시값만 있으면 될 듯?
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_edit:  // 수정, 게시글의 수정 페이지로 넘어감 (걍 글쓰기 페이지로 넘어가서 해시값을 넘김 -> 그러면 edit에선 넘겨받은 해시값에 해댱하는 editext, 이미지 등을 출력하겠지)
-                Log.i(tag, "현재 게시글의 해시값 : ");
-                Intent intent = new Intent(CommunityContent.this, CommunityEdit.class);
-//                intent.putExtra("post_hash", hash);  해시값 전달
-                startActivity(intent);
-                return true;
-            case R.id.action_delete:    // 삭제, 게시글 삭제함
-                Log.i(tag, "현재 게시글의 position 값 : ");
-                AlertDialog dialog = new AlertDialog.Builder(CommunityContent.this)
-                        .setMessage("게시글을 삭제하시겠습니까?")
-                        .setPositiveButton("확인", (dialog1, which) -> {
 
-                            Log.i(tag, "게시글 삭제O");  // 서버로 함수(해시값) 해서 해댱 해시값에 해당하는 글 삭제, 게시글의 데이터 삭제 요청
-                            finish();
-                        })
-                        .setNeutralButton("취소", (dialog2, which) -> dialog2.dismiss())
-                        .create();
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(android.R.color.black));
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(android.R.color.black));
-                dialog.show();
-                return true;
-        }
-        return super.onContextItemSelected(item);
+    // 게시글 수정
+    private void postModify(){
+        Log.i(tag, "현재 게시글의 해시값 : ");
+        Intent intent = new Intent(CommunityContent.this, CommunityEdit.class);
+//                intent.putExtra("post_hash", hash);  해시값 전달
+        startActivity(intent);
     }
 
+    private void postDelete(){
+        AlertDialog dialog = new AlertDialog.Builder(CommunityContent.this)
+                .setMessage("게시글을 삭제하시겠습니까?")
+                .setPositiveButton("확인", (dialog1, which) -> {
+                    Log.i(tag, "게시글 삭제O");  // 서버로 함수(해시값) 해서 해댱 해시값에 해당하는 글 삭제, 게시글의 데이터 삭제 요청
+                    finish();
+                })
+                .setNeutralButton("취소", (dialog2, which) -> dialog2.dismiss())
+                .create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(android.R.color.black));
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(context.getResources().getColor(android.R.color.black));
+    }
 }
