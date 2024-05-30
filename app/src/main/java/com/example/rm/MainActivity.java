@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.category.CategoryInfo;
 import com.example.rm.category.SearchTrash;
@@ -26,12 +27,16 @@ import java.security.NoSuchAlgorithmException;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-
+    // 레이아웃
     ImageView mainNotice;
     LinearLayout btnSearch, btnCamera;      // 검색창, 카메라
-    LinearLayout btnCan, btnGlass, btnPaper, btnPlastic;      // 카테고리 버튼
+    LinearLayout btnCan, btnGlass, btnPaper, btnPlastic, btnBattery, btnPlasticBag, btnSofa, btnRes;      // 카테고리 버튼
     Button mainMap, mainCommunity, mainUserinfo;        // 툴바 아이콘
+    RecyclerView recyclerView;
+    //
+    private static final String tag = "메인화면";
     TokenManager tokenManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +50,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnGlass = (LinearLayout) findViewById(R.id.btn_glass);
         btnPaper = (LinearLayout) findViewById(R.id.btn_paper);
         btnPlastic = (LinearLayout) findViewById(R.id.btn_plastic);
+        btnBattery = findViewById(R.id.btn_battery);
+        btnPlasticBag = findViewById(R.id.btn_plastic_bag);
+        btnSofa = findViewById(R.id.btn_sofa);
+        btnRes = findViewById(R.id.btn_res);
         mainMap = (Button)findViewById(R.id.main_map);
         mainCommunity = (Button)findViewById(R.id.main_community);
         mainUserinfo = (Button)findViewById(R.id.main_userinfo);
         mainNotice = (ImageView) findViewById(R.id.main_notice);
+        recyclerView = findViewById(R.id.main_recyclerView);
 
         btnSearch.setOnClickListener(this);
         btnCamera.setOnClickListener(this);
@@ -56,6 +66,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnGlass.setOnClickListener(this);
         btnPaper.setOnClickListener(this);
         btnPlastic.setOnClickListener(this);
+        btnBattery.setOnClickListener(this);
+        btnPlasticBag.setOnClickListener(this);
+        btnSofa.setOnClickListener(this);
+        btnRes.setOnClickListener(this);
         mainMap.setOnClickListener(this);
         mainCommunity.setOnClickListener(this);
         mainUserinfo.setOnClickListener(this);
@@ -85,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -100,6 +113,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_glass: return "유리병";
             case R.id.btn_paper: return "종이류";
             case R.id.btn_plastic: return "플라스틱류";
+            case R.id.btn_sofa: return "대형폐기물";
+            case R.id.btn_plastic_bag: return "비닐류";
+            case R.id.btn_battery: return "생활유혜폐기물";
+            case R.id.btn_res: return "폐가전제품";
             default: return " ";
         }
     }
@@ -118,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_glass:
             case R.id.btn_paper:
             case R.id.btn_plastic:
+            case R.id.btn_sofa:
+            case R.id.btn_plastic_bag:
+            case R.id.btn_battery:
+            case R.id.btn_res:
                 intent = new Intent(MainActivity.this, CategoryInfo.class);
                 intent.putExtra("category", categoryText(v.getId()));
                 break;
@@ -146,5 +167,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(this, LoginUser.class));
         }
     }
+
+    // 리사이클러뷰 세팅
+    private void setRecyclerView(){
+
+    }
+
 
 }

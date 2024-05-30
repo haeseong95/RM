@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="30dp"
+        android:height="50dp"
+        android:gravity="center">
+
+        <bitmap android:src="@drawable/ci_battery"/>
+    </item>
+</layer-list>

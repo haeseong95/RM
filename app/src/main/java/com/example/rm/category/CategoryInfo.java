@@ -11,6 +11,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
 import com.example.rm.retrofit.RetroClient;
@@ -28,6 +29,7 @@ public class CategoryInfo extends AppCompatActivity {
     TextView categoryTitle;
     ImageView btnBack;
     ListView itemListView, mainListview;
+    RecyclerView recyclerView;
 
     // 쓰레기 종류 목록
     ArrayList<TrashListData> arrayList = new ArrayList<>();;
@@ -111,6 +113,11 @@ public class CategoryInfo extends AppCompatActivity {
                 Log.e("categoryInfo 네트워크 오류", "", t);
             }
         });
+    }
+
+    // recyclerView 초기화
+    private void initRecyclerView(){
+
     }
 
 

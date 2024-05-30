@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="10dp">
 
         <LinearLayout
             android:id="@+id/li_search"
@@ -88,49 +88,101 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-
-            <LinearLayout
-                android:id="@+id/btn_can"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                <ImageView android:src="@drawable/cat_can" style="@style/category_image"/>
-                <TextView android:text="고철" style="@style/category_text"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btn_glass" style="@style/category_layout" android:background="@drawable/border_category">
-                <ImageView style="@style/category_image" android:src="@drawable/cat_glass" />
-                <TextView style="@style/category_text" android:text="유리" />
-            </LinearLayout>
-        </LinearLayout>
+        android:scrollbars="none"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:orientation="horizontal">
+
 
             <LinearLayout
-                android:id="@+id/btn_paper"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                <ImageView android:src="@drawable/cat_paper" style="@style/category_image" android:padding="10dp"/>
-                <TextView android:text="종이" style="@style/category_text"/>
-            </LinearLayout>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!--1열-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
 
-            <LinearLayout
-                android:id="@+id/btn_plastic"
-                android:background="@drawable/border_category" style="@style/category_layout">
-                <ImageView android:src="@drawable/cat_plastic" style="@style/category_image"/>
-                <TextView android:text="플라스틱" style="@style/category_text"/>
+                    <LinearLayout
+                        android:id="@+id/btn_can"
+                        android:background="@drawable/border_category_btn" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_can" style="@style/category_image"/>
+                        <TextView android:text="고철" style="@style/category_text"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_glass" style="@style/category_layout" android:background="@drawable/border_category_btn">
+                        <ImageView style="@style/category_image" android:src="@drawable/cat_glass" />
+                        <TextView style="@style/category_text" android:text="유리" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_battery"
+                        android:background="@drawable/border_category_btn" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_battery" style="@style/category_image" android:padding="5dp"/>
+                        <TextView android:text="생활유혜폐기물" style="@style/category_text"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_plastic_bag"
+                        android:background="@drawable/border_category_btn" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_plastic_bag" style="@style/category_image" android:padding="5dp"/>
+                        <TextView android:text="비닐류" style="@style/category_text"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--2열-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <LinearLayout
+                        android:id="@+id/btn_paper"
+                        android:background="@drawable/border_category_btn" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_paper" style="@style/category_image" android:padding="10dp"/>
+                        <TextView android:text="종이" style="@style/category_text"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_plastic"
+                        android:background="@drawable/border_category_btn" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_plastic" style="@style/category_image"/>
+                        <TextView android:text="플라스틱" style="@style/category_text"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_sofa"
+                        android:background="@drawable/border_category_btn" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_sofa" style="@style/category_image"/>
+                        <TextView android:text="대형폐기물" style="@style/category_text"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_res"
+                        android:background="@drawable/border_category_btn" style="@style/category_layout">
+                        <ImageView android:src="@drawable/cat_res" style="@style/category_image"/>
+                        <TextView android:text="폐가전제품" style="@style/category_text"/>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/main_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:layout_width="match_parent"
