@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ImageView mainNotice;
     LinearLayout btnSearch, btnCamera;      // 검색창, 카메라
-    LinearLayout btnCan, btnCouch, btnPlasticBag, btnBattery, btnStink, btnGlass, btnClothes, btnPaper, btnPlastic, btnRes;      // 카테고리 버튼
+    LinearLayout btnCan, btnGlass, btnPaper, btnPlastic;      // 카테고리 버튼
     Button mainMap, mainCommunity, mainUserinfo;        // 툴바 아이콘
     TokenManager tokenManager;
 
@@ -42,15 +42,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSearch = (LinearLayout)findViewById(R.id.li_search);
         btnCamera = (LinearLayout)findViewById(R.id.li_camera);     // 카메라
         btnCan = (LinearLayout) findViewById(R.id.btn_can);
-        btnCouch = (LinearLayout) findViewById(R.id.btn_couch);
-        btnPlasticBag = (LinearLayout) findViewById(R.id.btn_plastic_bag);
-        btnBattery = (LinearLayout) findViewById(R.id.btn_battery);
-        btnStink = (LinearLayout) findViewById(R.id.btn_stink);
         btnGlass = (LinearLayout) findViewById(R.id.btn_glass);
-        btnClothes = (LinearLayout) findViewById(R.id.btn_clothes);
         btnPaper = (LinearLayout) findViewById(R.id.btn_paper);
         btnPlastic = (LinearLayout) findViewById(R.id.btn_plastic);
-        btnRes = (LinearLayout) findViewById(R.id.btn_res);
         mainMap = (Button)findViewById(R.id.main_map);
         mainCommunity = (Button)findViewById(R.id.main_community);
         mainUserinfo = (Button)findViewById(R.id.main_userinfo);
@@ -59,15 +53,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSearch.setOnClickListener(this);
         btnCamera.setOnClickListener(this);
         btnCan.setOnClickListener(this);
-        btnCouch.setOnClickListener(this);
-        btnPlasticBag.setOnClickListener(this);
-        btnBattery.setOnClickListener(this);
-        btnStink.setOnClickListener(this);
         btnGlass.setOnClickListener(this);
-        btnClothes.setOnClickListener(this);
         btnPaper.setOnClickListener(this);
         btnPlastic.setOnClickListener(this);
-        btnRes.setOnClickListener(this);
         mainMap.setOnClickListener(this);
         mainCommunity.setOnClickListener(this);
         mainUserinfo.setOnClickListener(this);
@@ -109,15 +97,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String categoryText(int id){
         switch (id){
             case R.id.btn_can: return "고철류";
-            case R.id.btn_couch: return "대형폐기물";
-            case R.id.btn_plastic_bag: return "비닐류";
-            case R.id.btn_battery: return "생활유혜폐기물";
-            case R.id.btn_stink: return "음식물쓰레기";
             case R.id.btn_glass: return "유리병";
-            case R.id.btn_clothes: return "의류";
             case R.id.btn_paper: return "종이류";
             case R.id.btn_plastic: return "플라스틱류";
-            case R.id.btn_res: return "폐가전제품";
             default: return " ";
         }
     }
@@ -133,15 +115,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(MainActivity.this, Camera.class);
                 break;
             case R.id.btn_can:
-            case R.id.btn_couch:
-            case R.id.btn_plastic_bag:
-            case R.id.btn_battery:
-            case R.id.btn_stink:
             case R.id.btn_glass:
-            case R.id.btn_clothes:
             case R.id.btn_paper:
             case R.id.btn_plastic:
-            case R.id.btn_res:
                 intent = new Intent(MainActivity.this, CategoryInfo.class);
                 intent.putExtra("category", categoryText(v.getId()));
                 break;
