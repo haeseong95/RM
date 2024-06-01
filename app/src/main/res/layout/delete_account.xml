@@ -24,7 +24,8 @@
         android:id="@+id/edit_pw"
         android:hint="비밀번호를 입력하세요" style="@style/editText_style"
         android:inputType="textPassword"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="50dp"/>
 
     <Button
         android:id="@+id/btn_delete"
