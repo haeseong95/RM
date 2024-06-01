@@ -21,6 +21,12 @@
         <TextView android:id="@+id/category_title" android:text="공지사항" style="@style/toolbar_text" android:textColor="#FFFFFF"/>
     </androidx.appcompat.widget.Toolbar>
 
-
+    <TextView
+        android:id="@+id/notice_cotent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="15dp"
+        android:fontFamily="@font/nanum_regular"
+        android:layout_margin="20dp"/>
 
 </LinearLayout>

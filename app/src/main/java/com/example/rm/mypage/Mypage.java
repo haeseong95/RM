@@ -1,21 +1,40 @@
-package com.example.rm;
+package com.example.rm.mypage;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
+import com.example.rm.MainActivity;
+import com.example.rm.token.PreferenceHelper;
+import com.example.rm.R;
 import com.example.rm.token.ApiClient;
 import com.example.rm.token.JWTUtils;
 import com.example.rm.token.TokenManager;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -133,19 +152,89 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
                 alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.black));
                 break;
             case R.id.li_delete:    // 탈퇴하기 페이지
-                Intent intent = new Intent(Mypage.this, DeleteAccount.class);
-                startActivity(intent);
+                DeleteAccountBottomSheet sheet = new DeleteAccountBottomSheet(Mypage.this);
+                sheet.show(getSupportFragmentManager(), "계정 탈퇴하기");
                 break;
             case R.id.li_community: // 내 게시글/댓글 수정 페이지
-                intent = new Intent(Mypage.this, MypageModify.class);
+                Intent intent = new Intent(Mypage.this, MypageModify.class);
                 startActivity(intent);
                 break;
             case R.id.li_user:  // 회원 정보 수정 페이지
-                intent = new Intent(Mypage.this, MypageUserInfo.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(Mypage.this, MypageUserInfo.class);
+                startActivity(intent1);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
+        }
+    }
+
+    // 탈퇴하기
+    public static class DeleteAccountBottomSheet extends BottomSheetDialogFragment {
+       private Context context;
+       public DeleteAccountBottomSheet(Context context){
+           this.context = context;
+       }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
+            if (dialog != null) {
+                FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+                WindowManager wm = getActivity().getWindowManager();
+                Display display = wm.getDefaultDisplay();
+                Point size = new Point();
+                display.getRealSize(size);
+                int screenHeight = size.y;
+
+                bottomSheet.getLayoutParams().height = screenHeight;
+                bottomSheet.setLayoutParams(bottomSheet.getLayoutParams());
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                bottomSheetBehavior.setDraggable(false);
+            }
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.mypage_delete_account, container, false);
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            Button btnCloseDelete = view.findViewById(R.id.btn_close_delete);
+            EditText deleteCheckPwd = view.findViewById(R.id.delete_edit_pwd); // 현 비번이 맞으면 탈퇴시킴
+            Button btnDeleteAccount = view.findViewById(R.id.changePwd);
+            setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme);
+            btnCloseDelete.setOnClickListener(v -> dismiss());
+            btnDeleteAccount.setOnClickListener(v -> {  // 비번 맞는지 검사한 뒤에 탈퇴할거냐는 메시지 띄우기
+                String pwd = deleteCheckPwd.getText().toString();
+                validatePassword(pwd);
+            });
+        }
+
+        private void validatePassword(String checkPwd) {
+            // 비밀번호 검증 로직, 서버에 검증 요청 후 결과에 따라 confirmDeletionDialog 호출
+            checkDelete();
+        }
+
+        private void checkDelete() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("계정 탈퇴");
+            builder.setMessage("계정을 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.");
+            builder.setPositiveButton("확인", (dialog, which) -> finishDelete());
+            builder.setNegativeButton("취소", (dialog, which) -> dialog.dismiss());
+            AlertDialog confirmDialog = builder.create();
+            confirmDialog.show();
+        }
+
+        private void finishDelete() {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            Toast.makeText(getActivity(), "계정이 성공적으로 탈퇴 처리되었습니다.", Toast.LENGTH_LONG).show();
         }
     }
 }

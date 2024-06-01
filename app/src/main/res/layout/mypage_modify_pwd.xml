@@ -7,6 +7,7 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
         android:orientation="horizontal">
 
         <TextView
@@ -32,12 +33,6 @@
             android:fontFamily="@font/nanum_regular"
             android:textSize="15dp" />
     </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginBottom="40dp"
-        android:background="#A9ABAB"/>
 
     <EditText
         android:id="@+id/edit_pwd_current"

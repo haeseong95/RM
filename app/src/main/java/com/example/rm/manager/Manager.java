@@ -1,4 +1,4 @@
-package com.example.rm;
+package com.example.rm.manager;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +7,8 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.rm.R;
 
 public class Manager extends AppCompatActivity implements View.OnClickListener{
     // 레이아웃

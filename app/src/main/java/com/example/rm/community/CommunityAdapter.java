@@ -51,14 +51,14 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     @Override
     public void onBindViewHolder(@NonNull CommuntiyViewHolder holder, int position) {
         CommunityData communityData = communityDataArrayList.get(position);
-        holder.mainNickname.setText(communityDataArrayList.get(position).getMain_nickname());
-        holder.mainPlace.setText(communityDataArrayList.get(position).getMain_place());
-        holder.mainDate.setText(communityDataArrayList.get(position).getMain_date());
-        holder.mainTitle.setText(communityDataArrayList.get(position).getMain_title());
+        holder.mainNickname.setText(communityData.getMain_nickname());
+        holder.mainPlace.setText(communityData.getMain_place());
+        holder.mainDate.setText(communityData.getMain_date());
+        holder.mainTitle.setText(communityData.getMain_title());
         holder.itemView.setOnClickListener(v -> {   // 게시글 목록을 클릭하면 해시, 아이디 값을 상세 페이지로 전달
             Intent intent = new Intent(context, CommunityContent.class);
-            intent.putExtra("postHash", communityData.getMain_hash());
-            intent.putExtra("postUserId", communityData.getMain_userId());
+            intent.putExtra("post_hash", communityData.getMain_hash());
+            intent.putExtra("post_userId", communityData.getMain_userId());
             context.startActivity(intent);
         });
     }
@@ -83,15 +83,13 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             mainDate = itemView.findViewById(R.id.c_date);
             mainTitle = itemView.findViewById(R.id.c_title);
 
-            itemView.setOnClickListener(new View.OnClickListener() {    // 아이템 클릭 이벤트 처리 (ViewHolder 내 itemView에서 클릭 이벤트 처리)
-                @Override
-                public void onClick(View v) {
-                    int position = getAbsoluteAdapterPosition();    // item의 position 반환
-                    if (position != RecyclerView.NO_POSITION){      // item 클릭 시 커스텀 이벤트 메서드 호출
-                        //CommunityData item = communityDataArrayList.get(position);
-                        Log.i(tag, "현재 아이템 position : " + position);
-                        listener.onItemClick(v, getAbsoluteAdapterPosition());
-                    }
+            // 아이템 클릭 이벤트 처리 (ViewHolder 내 itemView에서 클릭 이벤트 처리)
+            itemView.setOnClickListener(v -> {
+                int position = getAbsoluteAdapterPosition();    // item의 position 반환
+                if (position != RecyclerView.NO_POSITION){      // item 클릭 시 커스텀 이벤트 메서드 호출
+                    //CommunityData item = communityDataArrayList.get(position);
+                    Log.i(tag, "현재 아이템 position : " + position);
+                    listener.onItemClick(v, getAbsoluteAdapterPosition());
                 }
             });
         }

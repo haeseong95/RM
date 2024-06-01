@@ -1,19 +1,21 @@
-package com.example.rm;
+package com.example.rm.account;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.rm.MainActivity;
+import com.example.rm.token.PreferenceHelper;
+import com.example.rm.R;
+import com.example.rm.token.SqliteHelper;
 import com.example.rm.token.TokenManager;
 
 import org.json.JSONException;
@@ -26,7 +28,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.json.JSONObject;
 
 
 // 사용자 로그인 화면

@@ -1,6 +1,5 @@
-package com.example.rm;
+package com.example.rm.mypage;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +7,8 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.rm.R;
 
 import java.util.ArrayList;
 

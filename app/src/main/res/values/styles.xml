@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!--카테고리 버튼 레이아웃-->
     <style name="category_layout">
-        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_width">140dp</item>
         <item name="android:layout_height">161dp</item>
         <item name="android:layout_margin">10dp</item>
         <item name="android:paddingTop">20dp</item>
@@ -12,10 +12,11 @@
 
     <!--카테고리 쓰레기 이미지-->
     <style name="category_image">
-        <item name="android:layout_width">100dp</item>
-        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_width">90dp</item>
+        <item name="android:layout_height">90dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:padding">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
     </style>
 
     <!--카테고리 쓰레기 이름-->

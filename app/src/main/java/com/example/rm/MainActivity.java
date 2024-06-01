@@ -10,25 +10,27 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rm.account.LoginUser;
 import com.example.rm.category.CategoryInfo;
 import com.example.rm.category.SearchTrash;
 import com.example.rm.community.Community;
-import com.example.rm.community.CommunityEdit;
+import com.example.rm.mypage.Mypage;
+import com.example.rm.token.PreferenceHelper;
 import com.example.rm.token.TokenManager;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     // 레이아웃
-    ImageView mainNotice;
     LinearLayout btnSearch, btnCamera;      // 검색창, 카메라
     LinearLayout btnCan, btnGlass, btnPaper, btnPlastic, btnBattery, btnPlasticBag, btnSofa, btnRes;      // 카테고리 버튼
     Button mainMap, mainCommunity, mainUserinfo;        // 툴바 아이콘
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //
     private static final String tag = "메인화면";
     TokenManager tokenManager;
+    NoticeAdapter adapter;
+    ArrayList<NoticeData> arrayList = new ArrayList<>();    // 공지사항 데이터 담음
 
 
     @Override
@@ -57,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMap = (Button)findViewById(R.id.main_map);
         mainCommunity = (Button)findViewById(R.id.main_community);
         mainUserinfo = (Button)findViewById(R.id.main_userinfo);
-        mainNotice = (ImageView) findViewById(R.id.main_notice);
         recyclerView = findViewById(R.id.main_recyclerView);
 
         btnSearch.setOnClickListener(this);
@@ -73,9 +76,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMap.setOnClickListener(this);
         mainCommunity.setOnClickListener(this);
         mainUserinfo.setOnClickListener(this);
-        mainNotice.setOnClickListener(this);
         PreferenceHelper.init(this);
         tokenManager = new TokenManager(this);
+
+        // 공지사항
+        setRecyclerView();
     }
 
     private void getHashKey() {
@@ -142,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(MainActivity.this, CategoryInfo.class);
                 intent.putExtra("category", categoryText(v.getId()));
                 break;
-            case R.id.main_notice: intent = new Intent(MainActivity.this, Notice.class); break;
             case R.id.main_map: intent = new Intent(MainActivity.this, RecycleLocation.class); break;
             case R.id.main_community: intent = new Intent(MainActivity.this, Community.class); break;
             case R.id.main_userinfo:
@@ -170,7 +174,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // 리사이클러뷰 세팅
     private void setRecyclerView(){
-
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new NoticeAdapter(arrayList, MainActivity.this);
+        recyclerView.setAdapter(adapter);
     }
 
 

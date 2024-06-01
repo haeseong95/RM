@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SearchId">
+    tools:context=".account.SearchId">
 
     <!--툴바-->
     <androidx.appcompat.widget.Toolbar
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:backgroundTint="@android:color/transparent">
+        android:background="@color/main_color_green">
 
         <ImageView
             android:id="@+id/btn_back"

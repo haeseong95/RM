@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".MypageUserInfo">
+    tools:context=".mypage.MypageUserInfo">
 
     <androidx.appcompat.widget.Toolbar
         app:contentInsetStart="0dp"
