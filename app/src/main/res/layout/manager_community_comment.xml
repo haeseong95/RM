@@ -15,7 +15,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/m_post_title"
+                android:id="@+id/m_comment_title"
                 style="@style/community_text_bold"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -25,24 +25,24 @@
                 android:layout_alignParentTop="true"/>
 
             <TextView
-                android:id="@+id/m_userId"
+                android:id="@+id/m_comment_userId"
                 style="@style/community_text_normal_gray"
                 android:text="댓글 작성자"
-                android:layout_below="@id/m_post_title"
+                android:layout_below="@id/m_comment_title"
                 android:layout_alignParentStart="true"
                 android:textSize="@dimen/community_small_text"/>
 
             <TextView
-                android:id="@+id/m_date"
+                android:id="@+id/m_comment_date"
                 style="@style/community_text_normal_gray"
                 android:textSize="@dimen/community_small_text"
                 android:text="댓글 생성일"
                 android:layout_marginStart="10dp"
-                android:layout_alignBottom="@id/m_userId"
-                android:layout_toEndOf="@id/m_userId"/>
+                android:layout_alignBottom="@id/m_comment_userId"
+                android:layout_toEndOf="@id/m_comment_userId"/>
 
             <Button
-                android:id="@+id/m_delete_post"
+                android:id="@+id/m_delete_comment"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"

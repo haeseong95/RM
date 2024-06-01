@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.rm.account.LoginUser;
 import com.example.rm.category.CategoryInfo;
 import com.example.rm.category.SearchTrash;
+import com.example.rm.category.TrashDetail;
 import com.example.rm.community.Community;
 import com.example.rm.mypage.Mypage;
 import com.example.rm.token.PreferenceHelper;
@@ -27,6 +29,7 @@ import com.example.rm.token.TokenManager;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -80,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tokenManager = new TokenManager(this);
 
         // 공지사항
+        getNoticeData();
         setRecyclerView();
     }
 
@@ -170,6 +174,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {// 로그인 상태X -> 로그인 화면으로 이동
             startActivity(new Intent(this, LoginUser.class));
         }
+    }
+
+    // 서버에서 공지사항 데이터 가져오기
+    private void getNoticeData(){
+        List<NoticeData> newItem = new ArrayList<>();
+        newItem.add(new NoticeData("공지사항1", "2023-22-22", "ㅇ"));
+        newItem.add(new NoticeData("공지사항1", "2023-22-22", "ㅇ"));
+        newItem.add(new NoticeData("공지사항1", "2023-22-22", "ㅇ"));
+        newItem.add(new NoticeData("공지사항1", "2023-22-22", "ㅇ"));
+        arrayList.addAll(newItem);
     }
 
     // 리사이클러뷰 세팅

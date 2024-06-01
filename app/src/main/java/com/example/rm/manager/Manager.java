@@ -1,5 +1,6 @@
 package com.example.rm.manager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,15 +31,17 @@ public class Manager extends AppCompatActivity implements View.OnClickListener{
         liCommunity.setOnClickListener(this);
         liTrashData.setOnClickListener(this);
         bntLogout.setOnClickListener(this);
-
     }
 
     @Override
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()){
             case R.id.manager_notice:   // 공지사항 관리
                 break;
             case R.id.manager_community:    // 게시글, 댓글 관리
+                intent = new Intent(Manager.this, CCommunity.class);
+                startActivity(intent);
                 break;
             case R.id.manager_trash_data:   // 쓰레기 데이터 관리
                 break;

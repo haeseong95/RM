@@ -25,7 +25,7 @@
                 android:layout_alignParentTop="true"/>
 
             <TextView
-                android:id="@+id/m_userId"
+                android:id="@+id/m_post_userId"
                 style="@style/community_text_normal_gray"
                 android:text="아이디"
                 android:layout_below="@id/m_post_title"
@@ -33,13 +33,13 @@
                 android:textSize="@dimen/community_small_text"/>
 
             <TextView
-                android:id="@+id/m_date"
+                android:id="@+id/m_post_date"
                 style="@style/community_text_normal_gray"
                 android:textSize="@dimen/community_small_text"
                 android:text="생성날짜"
                 android:layout_marginStart="10dp"
-                android:layout_alignBottom="@id/m_userId"
-                android:layout_toEndOf="@id/m_userId"/>
+                android:layout_alignBottom="@id/m_post_userId"
+                android:layout_toEndOf="@id/m_post_userId"/>
 
             <Button
                 android:id="@+id/m_delete_post"

@@ -19,12 +19,12 @@ import com.example.rm.R;
 
 import java.util.ArrayList;
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MypageModifyViewHolder> {
+public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MypageModifyViewHolder> {
     static final String tag = "내 게시글 수정 어댑터";
-    private ArrayList<MypageModifyData> modifyDataArrayList;
+    private ArrayList<PostData> modifyDataArrayList;
     private Context context;
 
-    public PostAdapter(Context context, ArrayList<MypageModifyData> arrayList) {
+    public AdapterPost(Context context, ArrayList<PostData> arrayList) {
         this.context = context;
         this.modifyDataArrayList = arrayList;
     }
@@ -38,17 +38,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MypageModifyVi
 
     @Override
     public void onBindViewHolder(@NonNull MypageModifyViewHolder holder, int position) {
-        MypageModifyData mypageModifyData = modifyDataArrayList.get(position);
-        holder.mainDate.setText(mypageModifyData.getMain_date());
-        holder.mainTitle.setText(mypageModifyData.getMain_title());
-
+        PostData postData = modifyDataArrayList.get(position);
+        holder.postDate.setText(postData.getMy_post_date());
+        holder.postTitle.setText(postData.getMy_post_title());
         holder.modifyDeleteButton.setOnClickListener(v -> {
-            // 삭제 버튼 클릭 시 알림 다이얼로그 표시
             AlertDialog dialog = new AlertDialog.Builder(context)
                     .setTitle("게시글 삭제")
                     .setMessage("이 게시글을 삭제하시겠습니까?")
                     .setPositiveButton("확인", (dialogInterface, which) -> {
-                        // 확인 버튼 클릭 시 삭제 처리
                         modifyDataArrayList.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, modifyDataArrayList.size());
@@ -58,10 +55,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MypageModifyVi
                     .create();
 
             dialog.show();
-
-            // 버튼 텍스트 색상 설정
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(android.R.color.black));
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(android.R.color.black));
+        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
         });
     }
 
@@ -76,53 +77,58 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MypageModifyVi
         }
     }
 
-    public void updateData(ArrayList<MypageModifyData> newData) {
+    public void updateData(ArrayList<PostData> newData) {
         this.modifyDataArrayList = newData;
         notifyDataSetChanged();
     }
 
     public class MypageModifyViewHolder extends RecyclerView.ViewHolder {
-        TextView mainDate, mainTitle;
+        TextView postDate, postTitle;
         Button modifyDeleteButton;
 
         public MypageModifyViewHolder(@NonNull View itemView) {
             super(itemView);
-            mainDate = itemView.findViewById(R.id.c_date);
-            mainTitle = itemView.findViewById(R.id.c_title);
+            postDate = itemView.findViewById(R.id.c_date);
+            postTitle = itemView.findViewById(R.id.c_title);
             modifyDeleteButton = itemView.findViewById(R.id.modify_delete);
             modifyDeleteButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ff0000")));
-
-            itemView.setOnClickListener(v -> {
-                int position = getAbsoluteAdapterPosition();
-                // 아이템 클릭 이벤트 처리
-            });
         }
     }
 }
 
-class MypageModifyData {
-    private String main_date;   // 생성날짜
-    private String main_title;  // 게시글 제목
+class PostData {
+    private String my_post_title;   // 게시글 제목
+    private String my_post_date;    // 게시글 작성날짜
+    private String my_post_hash;    // 게시글 해시값
 
-    public MypageModifyData(String main_date, String main_title) {
-        this.main_date = main_date;
-        this.main_title = main_title;
+    public PostData(String my_post_title, String my_post_date, String my_post_hash) {
+        this.my_post_title = my_post_title;
+        this.my_post_date = my_post_date;
+        this.my_post_hash = my_post_hash;
     }
 
-    public String getMain_date() {
-        return main_date;
+    public String getMy_post_title() {
+        return my_post_title;
     }
 
-    public void setMain_date(String main_date) {
-        this.main_date = main_date;
+    public void setMy_post_title(String my_post_title) {
+        this.my_post_title = my_post_title;
     }
 
-    public String getMain_title() {
-        return main_title;
+    public String getMy_post_date() {
+        return my_post_date;
     }
 
-    public void setMain_title(String main_title) {
-        this.main_title = main_title;
+    public void setMy_post_date(String my_post_date) {
+        this.my_post_date = my_post_date;
+    }
+
+    public String getMy_post_hash() {
+        return my_post_hash;
+    }
+
+    public void setMy_post_hash(String my_post_hash) {
+        this.my_post_hash = my_post_hash;
     }
 }
 

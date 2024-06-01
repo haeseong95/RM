@@ -15,13 +15,13 @@ import java.util.ArrayList;
 public class MypageModify extends AppCompatActivity {
     // 레이아웃
     private RecyclerView recyclerView;
-    private PostAdapter postAdapter;
-    private CommentAdapter commentAdapter;
+    private AdapterPost adapterPost;
+    private AdapterComment adapterComment;
     private Button btnPosts, btnComments;
     View indicatorPosts, indicatorComments;
     //
-    private ArrayList<MypageModifyData> postsData = new ArrayList<>();
-    private ArrayList<MypageModifyData> commentsData = new ArrayList<>();
+    private ArrayList<PostData> postsData = new ArrayList<>();
+    private ArrayList<CommentData> commentsData = new ArrayList<>();
 
 
     @Override
@@ -40,10 +40,10 @@ public class MypageModify extends AppCompatActivity {
 
 
         // 초기에는 게시글 목록을 표시
-        postAdapter = new PostAdapter(this, postsData);
-        commentAdapter = new CommentAdapter(this, commentsData);
+        adapterPost = new AdapterPost(this, postsData);
+        adapterComment = new AdapterComment(this, commentsData);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(postAdapter);
+        recyclerView.setAdapter(adapterPost);
 
         btnPosts.setOnClickListener(v -> showPosts());
         btnComments.setOnClickListener(v -> showComments());
@@ -51,8 +51,8 @@ public class MypageModify extends AppCompatActivity {
 
     private void initializeData() {
         // 예시 데이터 추가 (실제 데이터로 대체)
-        postsData.add(new MypageModifyData("2023-05-23", "첫 번째 게시글 제목"));
-        commentsData.add(new MypageModifyData("2023-05-23", "첫 번째 댓글 내용"));
+        postsData.add(new PostData("2023-05-23", "첫 번째 게시글 제목", "d"));
+        commentsData.add(new CommentData("2023-05-23", "첫 번째 댓글 내용", "dd"));
     }
 
     private void showPosts() {
@@ -60,7 +60,7 @@ public class MypageModify extends AppCompatActivity {
         indicatorComments.setVisibility(View.INVISIBLE);
         btnPosts.setTextColor(getResources().getColor(R.color.black));
         btnComments.setTextColor(getResources().getColor(R.color.gray));
-        recyclerView.setAdapter(postAdapter);
+        recyclerView.setAdapter(adapterPost);
     }
 
     private void showComments() {
@@ -68,7 +68,7 @@ public class MypageModify extends AppCompatActivity {
         indicatorPosts.setVisibility(View.INVISIBLE);
         btnPosts.setTextColor(getResources().getColor(R.color.gray));
         btnComments.setTextColor(getResources().getColor(R.color.black));
-        recyclerView.setAdapter(commentAdapter);
+        recyclerView.setAdapter(adapterComment);
     }
 
 

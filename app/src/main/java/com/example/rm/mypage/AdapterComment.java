@@ -1,6 +1,7 @@
 package com.example.rm.mypage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -18,11 +19,11 @@ import com.example.rm.R;
 
 import java.util.ArrayList;
 
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
-    private ArrayList<MypageModifyData> commentDataArrayList;
+public class AdapterComment extends RecyclerView.Adapter<AdapterComment.CommentViewHolder> {
+    private ArrayList<CommentData> commentDataArrayList;
     private Context context;
 
-    public CommentAdapter(Context context, ArrayList<MypageModifyData> arrayList) {
+    public AdapterComment(Context context, ArrayList<CommentData> arrayList) {
         this.context = context;
         this.commentDataArrayList = arrayList;
     }
@@ -36,10 +37,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        MypageModifyData commentData = commentDataArrayList.get(position);
-        holder.mainDate.setText(commentData.getMain_date());
-        holder.mainContent.setText(commentData.getMain_title());
-
+        CommentData commentData = commentDataArrayList.get(position);
+        holder.commentTitle.setText(commentData.getComment_title());
+        holder.commentPost.setText(commentData.getComment_post());
         holder.modifyDeleteButton.setOnClickListener(v -> {
             AlertDialog dialog = new AlertDialog.Builder(context)
                     .setTitle("댓글 삭제")
@@ -54,10 +54,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     .create();
 
             dialog.show();
-
-            // 버튼 텍스트 색상 설정
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(android.R.color.black));
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(android.R.color.black));
+        });
+        holder.itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(context, MypageModify.class);
+            intent.putExtra("mypage_comment_hash", commentData.getComment_hash());
+            context.startActivity(intent);
         });
     }
 
@@ -66,22 +69,57 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         return commentDataArrayList == null ? 0 : commentDataArrayList.size();
     }
 
-    public void updateData(ArrayList<MypageModifyData> newData) {
+    public void updateData(ArrayList<CommentData> newData) {
         this.commentDataArrayList = newData;
         notifyDataSetChanged();
     }
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
-        TextView mainDate, mainContent;
+        TextView commentTitle, commentPost;
         Button modifyDeleteButton;
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
-            mainDate = itemView.findViewById(R.id.c_date);
-            mainContent = itemView.findViewById(R.id.c_comment);
+            commentTitle = itemView.findViewById(R.id.c_comment);
+            commentPost = itemView.findViewById(R.id.c_date);
             modifyDeleteButton = itemView.findViewById(R.id.modify_delete);
             modifyDeleteButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ff0000")));
         }
     }
 }
 
+class CommentData {
+    private String comment_title = "";  // 댓글
+    private String comment_post = "";   // 댓글 단 게시글 제목
+    private String comment_hash = "";   // 댓글의 해시값
+
+    public CommentData(String comment_title, String comment_post, String comment_hash) {
+        this.comment_title = comment_title;
+        this.comment_post = comment_post;
+        this.comment_hash = comment_hash;
+    }
+
+    public String getComment_title() {
+        return comment_title;
+    }
+
+    public void setComment_title(String comment_title) {
+        this.comment_title = comment_title;
+    }
+
+    public String getComment_post() {
+        return comment_post;
+    }
+
+    public void setComment_post(String comment_post) {
+        this.comment_post = comment_post;
+    }
+
+    public String getComment_hash() {
+        return comment_hash;
+    }
+
+    public void setComment_hash(String comment_hash) {
+        this.comment_hash = comment_hash;
+    }
+}
