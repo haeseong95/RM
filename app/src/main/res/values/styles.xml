@@ -2,18 +2,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!--카테고리 버튼 레이아웃-->
     <style name="category_layout">
-        <item name="android:layout_width">160dp</item>
-        <item name="android:layout_height">100dp</item>
-        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_width">140dp</item>
+        <item name="android:layout_height">161dp</item>
+        <item name="android:layout_margin">10dp</item>
         <item name="android:paddingTop">20dp</item>
         <item name="android:orientation">vertical</item>
+        <item name="android:backgroundTint">@color/main_color_green</item>
     </style>
 
     <!--카테고리 쓰레기 이미지-->
     <style name="category_image">
-        <item name="android:layout_width">30dp</item>
-        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_width">90dp</item>
+        <item name="android:layout_height">90dp</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
     </style>
 
     <!--카테고리 쓰레기 이름-->
@@ -21,9 +24,10 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:textSize">13dp</item>
-        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:layout_marginTop">5dp</item>
         <item name="android:fontFamily">@font/nanum_regular</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
     <!--하단 툴바 아이콘-->
@@ -47,7 +51,7 @@
     <style name="toolbar_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">16dp</item>
         <item name="fontFamily">@font/nanum_bold</item>
         <item name="android:layout_gravity">center</item>

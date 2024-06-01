@@ -1,4 +1,4 @@
-package com.example.rm;
+package com.example.rm.mypage;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.rm.R;
 
 import java.util.ArrayList;
 

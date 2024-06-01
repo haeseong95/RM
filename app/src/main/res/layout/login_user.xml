@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".LoginUser">
+    tools:context=".account.LoginUser">
 
     <!-- 툴바 : 백스페이스_toolBar, 페이지 타이틀-->
     <androidx.appcompat.widget.Toolbar
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@android:color/transparent">
+        android:background="@color/main_color_green">
 
         <ImageView
             android:id="@+id/btn_back"

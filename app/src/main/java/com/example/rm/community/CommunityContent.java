@@ -2,43 +2,27 @@ package com.example.rm.community;
 
 import static com.gun0912.tedpermission.provider.TedPermissionProvider.context;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.rm.Mypage;
-import com.example.rm.PreferenceHelper;
+import com.example.rm.token.PreferenceHelper;
 import com.example.rm.R;
 
 import java.io.IOException;
@@ -120,6 +104,9 @@ public class CommunityContent extends AppCompatActivity{
                     return CommunityContent.super.onOptionsItemSelected(item);
             }
         });
+
+        String postHash = getIntent().getStringExtra("post_hash");
+        String postUserId = getIntent().getStringExtra("post_userId");
     }
 
     // bitmap을 이용해 뷰페이저에서 보여줄 이미지 얻음

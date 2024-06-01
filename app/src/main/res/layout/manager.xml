@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".manager.Manager">
+
+    <!--툴바-->
+    <androidx.appcompat.widget.Toolbar
+        app:contentInsetStart="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/main_color_green">
+
+        <TextView android:id="@+id/category_title" android:text="관리자 페이지 " style="@style/toolbar_text" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/category_gray"
+        android:layout_marginBottom="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/manager_notice"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:text="공지시항 관리"
+            style="@style/mypage_button"/>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_right"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/manager_community"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:text="게시글/댓글 관리"
+            style="@style/mypage_button"/>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_right"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/manager_trash_data"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:text="쓰레기 데이터 관리"
+            style="@style/mypage_button"/>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_right"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/manager_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginTop="450dp"
+        android:backgroundTint="@android:color/transparent"
+        android:fontFamily="@font/nanum_regular"
+        android:text="로그아웃"
+        android:textAlignment="center"
+        android:textColor="@color/gray"
+        android:textSize="15dp" />
+
+</LinearLayout>

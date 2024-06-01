@@ -12,18 +12,21 @@
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@android:color/transparent">
+        android:background="@color/main_color_green">
 
         <ImageView
             android:id="@+id/btn_back"
             android:src="@drawable/btn_left" style="@style/back_icon"/>
 
-        <TextView android:id="@+id/category_title" android:text="공지사항" style="@style/toolbar_text" />
+        <TextView android:id="@+id/category_title" android:text="공지사항" style="@style/toolbar_text" android:textColor="#FFFFFF"/>
     </androidx.appcompat.widget.Toolbar>
 
-    <View
+    <TextView
+        android:id="@+id/notice_cotent"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/category_gray" />
+        android:layout_height="match_parent"
+        android:textSize="15dp"
+        android:fontFamily="@font/nanum_regular"
+        android:layout_margin="20dp"/>
 
 </LinearLayout>

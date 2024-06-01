@@ -85,10 +85,7 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
         searchPost();
     }
 
-
-
-
-    // 게시글 목록 가져오는 okhttp (초기 게시글 10개 가져옴)
+    // 게시글 목록 가져오는 okhttp (초기 게시글 10개 가져옴, 게시글을 작성한 아이디, 해시값을 저장)
     private void getPosts() {
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
@@ -99,17 +96,20 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
             try {
                 Response response = client.newCall(request).execute();
                 if(response.isSuccessful()){
-                    String title, nickname, level, date = null;
+                    String title, nickname, level, date, postHash, userId = null;
                     String jsonList = response.body().toString();
                     JSONArray jsonArray = new JSONArray(jsonList);  // json 결과를 배열로 저장
 
                     for (int i = 0; i < item_count; i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i); // 객체 1개씩 받음, 해시값 가져와야 함
+
                         title = jsonObject.getString("title");
                         nickname = jsonObject.getString("nickname");
                         level = jsonObject.getString("level");
                         date = jsonObject.getString("date");
-                        arrayList.add(new CommunityData(nickname, level, date, title));
+                        postHash = jsonObject.getString("hash");
+                        userId = jsonObject.getString("id");
+                        arrayList.add(new CommunityData(nickname, level, date, title, postHash, userId));
                         Log.i(tag, "게시글 정보 : " + arrayList.toString());
                     }
                     currentItemCount += item_count;
@@ -130,7 +130,7 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
     private void getPostList(){
         List<CommunityData> newItem = new ArrayList<>();
         for (int i = 0; i < item_count; i++) {
-            newItem.add(new CommunityData("닉네임 " + (i + 1), "등급 " + (i + 1), "2024-05-19", "제목 " + (i + 1)));
+            newItem.add(new CommunityData("닉네임 " + (i + 1), "등급 " + (i + 1), "2024-05-19", "제목 " + (i + 1), "해시 " + (i + 1), "아이디 " + (i + 1)));
         }
         arrayList.addAll(newItem);
         currentItemCount = item_count;
@@ -142,7 +142,7 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
         ArrayList<CommunityData> newItem = new ArrayList<>();
 
         for(int i=0; i<item_count; i++){
-            newItem.add(new CommunityData("닉네임 " + (currentItemCount + i + 1), "등급 " + (currentItemCount + i + 1), "2024-05-19", "제목 " + (currentItemCount + i + 1)));
+            newItem.add(new CommunityData("닉네임 " + (currentItemCount + i + 1), "등급 " + (currentItemCount + i + 1), "2024-05-19", "제목 " + (currentItemCount + i + 1), "해시 " + (currentItemCount + i + 1), "아이디 " + (currentItemCount + i + 1)));
         }
         arrayList.addAll(newItem);
         adapter.notifyItemRangeInserted(currentItemCount, newItem.size());

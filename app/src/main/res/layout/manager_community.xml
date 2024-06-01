@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context=".mypage.MypageModify">
 
-    <!-- 툴바 -->
     <androidx.appcompat.widget.Toolbar
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
@@ -21,7 +20,7 @@
 
         <TextView
             android:id="@+id/category_title"
-            android:text="내 게시글/댓글 수정"
+            android:text="게시글/댓글 관리"
             style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
@@ -38,7 +37,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btn_posts"
+                android:id="@+id/btn_m_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/transparent"
@@ -49,7 +48,7 @@
                 android:textSize="15dp" />
 
             <View
-                android:id="@+id/indicator_posts"
+                android:id="@+id/indicator_post"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/main_color_green"
@@ -63,7 +62,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btn_comments"
+                android:id="@+id/btn_m_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/transparent"
@@ -74,7 +73,7 @@
                 android:textSize="15dp" />
 
             <View
-                android:id="@+id/indicator_comments"
+                android:id="@+id/indicator_comment"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/main_color_green"
@@ -82,9 +81,8 @@
         </LinearLayout>
     </LinearLayout>
 
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/modify_recyclerview"
+        android:id="@+id/m_com_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:nestedScrollingEnabled="false" />

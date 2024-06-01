@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/m_post_title"
+                style="@style/community_text_bold"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="게시글 제목"
+                android:layout_marginBottom="10dp"
+                android:textSize="@dimen/community_regular_text"
+                android:layout_alignParentTop="true"/>
+
+            <TextView
+                android:id="@+id/m_userId"
+                style="@style/community_text_normal_gray"
+                android:text="아이디"
+                android:layout_below="@id/m_post_title"
+                android:layout_alignParentStart="true"
+                android:textSize="@dimen/community_small_text"/>
+
+            <TextView
+                android:id="@+id/m_date"
+                style="@style/community_text_normal_gray"
+                android:textSize="@dimen/community_small_text"
+                android:text="생성날짜"
+                android:layout_marginStart="10dp"
+                android:layout_alignBottom="@id/m_userId"
+                android:layout_toEndOf="@id/m_userId"/>
+
+            <Button
+                android:id="@+id/m_delete_post"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/border_manager_com"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:fontFamily="@font/nanum_regular"
+                android:text="삭제"
+                android:textColor="@color/black"
+                android:textSize="@dimen/community_regular_text" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

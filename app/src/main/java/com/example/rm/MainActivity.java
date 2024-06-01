@@ -10,28 +10,37 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rm.account.LoginUser;
 import com.example.rm.category.CategoryInfo;
 import com.example.rm.category.SearchTrash;
 import com.example.rm.community.Community;
-import com.example.rm.community.CommunityEdit;
+import com.example.rm.mypage.Mypage;
+import com.example.rm.token.PreferenceHelper;
 import com.example.rm.token.TokenManager;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-
-    ImageView mainNotice;
+    // 레이아웃
     LinearLayout btnSearch, btnCamera;      // 검색창, 카메라
-    LinearLayout btnCan, btnCouch, btnPlasticBag, btnBattery, btnStink, btnGlass, btnClothes, btnPaper, btnPlastic, btnRes;      // 카테고리 버튼
+    LinearLayout btnCan, btnGlass, btnPaper, btnPlastic, btnBattery, btnPlasticBag, btnSofa, btnRes;      // 카테고리 버튼
     Button mainMap, mainCommunity, mainUserinfo;        // 툴바 아이콘
+    RecyclerView recyclerView;
+    //
+    private static final String tag = "메인화면";
     TokenManager tokenManager;
+    NoticeAdapter adapter;
+    ArrayList<NoticeData> arrayList = new ArrayList<>();    // 공지사항 데이터 담음
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,38 +51,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSearch = (LinearLayout)findViewById(R.id.li_search);
         btnCamera = (LinearLayout)findViewById(R.id.li_camera);     // 카메라
         btnCan = (LinearLayout) findViewById(R.id.btn_can);
-        btnCouch = (LinearLayout) findViewById(R.id.btn_couch);
-        btnPlasticBag = (LinearLayout) findViewById(R.id.btn_plastic_bag);
-        btnBattery = (LinearLayout) findViewById(R.id.btn_battery);
-        btnStink = (LinearLayout) findViewById(R.id.btn_stink);
         btnGlass = (LinearLayout) findViewById(R.id.btn_glass);
-        btnClothes = (LinearLayout) findViewById(R.id.btn_clothes);
         btnPaper = (LinearLayout) findViewById(R.id.btn_paper);
         btnPlastic = (LinearLayout) findViewById(R.id.btn_plastic);
-        btnRes = (LinearLayout) findViewById(R.id.btn_res);
+        btnBattery = findViewById(R.id.btn_battery);
+        btnPlasticBag = findViewById(R.id.btn_plastic_bag);
+        btnSofa = findViewById(R.id.btn_sofa);
+        btnRes = findViewById(R.id.btn_res);
         mainMap = (Button)findViewById(R.id.main_map);
         mainCommunity = (Button)findViewById(R.id.main_community);
         mainUserinfo = (Button)findViewById(R.id.main_userinfo);
-        mainNotice = (ImageView) findViewById(R.id.main_notice);
+        recyclerView = findViewById(R.id.main_recyclerView);
 
         btnSearch.setOnClickListener(this);
         btnCamera.setOnClickListener(this);
         btnCan.setOnClickListener(this);
-        btnCouch.setOnClickListener(this);
-        btnPlasticBag.setOnClickListener(this);
-        btnBattery.setOnClickListener(this);
-        btnStink.setOnClickListener(this);
         btnGlass.setOnClickListener(this);
-        btnClothes.setOnClickListener(this);
         btnPaper.setOnClickListener(this);
         btnPlastic.setOnClickListener(this);
+        btnBattery.setOnClickListener(this);
+        btnPlasticBag.setOnClickListener(this);
+        btnSofa.setOnClickListener(this);
         btnRes.setOnClickListener(this);
         mainMap.setOnClickListener(this);
         mainCommunity.setOnClickListener(this);
         mainUserinfo.setOnClickListener(this);
-        mainNotice.setOnClickListener(this);
         PreferenceHelper.init(this);
         tokenManager = new TokenManager(this);
+
+        // 공지사항
+        setRecyclerView();
     }
 
     private void getHashKey() {
@@ -97,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -109,14 +115,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String categoryText(int id){
         switch (id){
             case R.id.btn_can: return "고철류";
-            case R.id.btn_couch: return "대형폐기물";
-            case R.id.btn_plastic_bag: return "비닐류";
-            case R.id.btn_battery: return "생활유혜폐기물";
-            case R.id.btn_stink: return "음식물쓰레기";
             case R.id.btn_glass: return "유리병";
-            case R.id.btn_clothes: return "의류";
             case R.id.btn_paper: return "종이류";
             case R.id.btn_plastic: return "플라스틱류";
+            case R.id.btn_sofa: return "대형폐기물";
+            case R.id.btn_plastic_bag: return "비닐류";
+            case R.id.btn_battery: return "생활유혜폐기물";
             case R.id.btn_res: return "폐가전제품";
             default: return " ";
         }
@@ -133,19 +137,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(MainActivity.this, Camera.class);
                 break;
             case R.id.btn_can:
-            case R.id.btn_couch:
-            case R.id.btn_plastic_bag:
-            case R.id.btn_battery:
-            case R.id.btn_stink:
             case R.id.btn_glass:
-            case R.id.btn_clothes:
             case R.id.btn_paper:
             case R.id.btn_plastic:
+            case R.id.btn_sofa:
+            case R.id.btn_plastic_bag:
+            case R.id.btn_battery:
             case R.id.btn_res:
                 intent = new Intent(MainActivity.this, CategoryInfo.class);
                 intent.putExtra("category", categoryText(v.getId()));
                 break;
-            case R.id.main_notice: intent = new Intent(MainActivity.this, Notice.class); break;
             case R.id.main_map: intent = new Intent(MainActivity.this, RecycleLocation.class); break;
             case R.id.main_community: intent = new Intent(MainActivity.this, Community.class); break;
             case R.id.main_userinfo:
@@ -170,5 +171,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(this, LoginUser.class));
         }
     }
+
+    // 리사이클러뷰 세팅
+    private void setRecyclerView(){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new NoticeAdapter(arrayList, MainActivity.this);
+        recyclerView.setAdapter(adapter);
+    }
+
 
 }

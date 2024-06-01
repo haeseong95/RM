@@ -11,6 +11,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
 import com.example.rm.retrofit.RetroClient;
@@ -28,6 +29,7 @@ public class CategoryInfo extends AppCompatActivity {
     TextView categoryTitle;
     ImageView btnBack;
     ListView itemListView, mainListview;
+    RecyclerView recyclerView;
 
     // 쓰레기 종류 목록
     ArrayList<TrashListData> arrayList = new ArrayList<>();;
@@ -60,6 +62,9 @@ public class CategoryInfo extends AppCompatActivity {
         itemListView.setAdapter(trashAdapter);
         itemListView.setClickable(true);
         clickListviewItem();
+
+        // recyclerview
+
     }
 
     //albumId값에 따라 카테고리 버튼 누르면 분류되게함
@@ -68,15 +73,9 @@ public class CategoryInfo extends AppCompatActivity {
 
         switch (sort) {
             case "고철류": result = 1; break;
-            case "대형폐기물": result = 2; break;
-            case "비닐류": result = 3; break;
-            case "생활유혜폐기물": result = 4; break;
-            case "음식물쓰레기": result = 5; break;
             case "유리병": result = 6; break;
-            case "의류": result = 7; break;
             case "종이류": result = 8; break;
             case "플라스틱류": result = 9; break;
-            case "폐가전제품": result = 10; break;
             default: result = -1;
         }
 
@@ -114,6 +113,11 @@ public class CategoryInfo extends AppCompatActivity {
                 Log.e("categoryInfo 네트워크 오류", "", t);
             }
         });
+    }
+
+    // recyclerView 초기화
+    private void initRecyclerView(){
+
     }
 
 
