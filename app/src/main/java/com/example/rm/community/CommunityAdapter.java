@@ -57,8 +57,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         holder.mainTitle.setText(communityData.getMain_title());
         holder.itemView.setOnClickListener(v -> {   // 게시글 목록을 클릭하면 해시, 아이디 값을 상세 페이지로 전달
             Intent intent = new Intent(context, CommunityContent.class);
-            intent.putExtra("post_hash", communityData.getMain_hash());
-            intent.putExtra("post_userId", communityData.getMain_userId());
+            intent.putExtra("community_post_hash", communityData.getMain_hash());
+            intent.putExtra("community_post_userId", communityData.getMain_userId());
             context.startActivity(intent);
         });
     }

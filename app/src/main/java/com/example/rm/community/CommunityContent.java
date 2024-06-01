@@ -25,11 +25,17 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.rm.token.PreferenceHelper;
 import com.example.rm.R;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator3;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class CommunityContent extends AppCompatActivity{
     // 레이아웃
@@ -72,7 +78,7 @@ public class CommunityContent extends AppCompatActivity{
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
 
-        // 서버에서 받은 댓글 데이터를 게시글 상세 화면에 출력
+        // 게시글 상세 화면 데이터 가져옴
         getPostData();
 
         // ViewPager
@@ -104,9 +110,6 @@ public class CommunityContent extends AppCompatActivity{
                     return CommunityContent.super.onOptionsItemSelected(item);
             }
         });
-
-        String postHash = getIntent().getStringExtra("post_hash");
-        String postUserId = getIntent().getStringExtra("post_userId");
     }
 
     // bitmap을 이용해 뷰페이저에서 보여줄 이미지 얻음
@@ -219,7 +222,6 @@ public class CommunityContent extends AppCompatActivity{
         }
     }
 
-    // 서버에서 전송한 댓글 데이터 받음
     private void getCommentData() {
 
         List<CommentData> newItem = new ArrayList<>();
@@ -234,10 +236,58 @@ public class CommunityContent extends AppCompatActivity{
 
     }
 
-    // 서버에서 해당 게시글의 댓글 데이터를 가져와야 함
-    private void getPostData(){
-        cTitle.setText(getIntent().getStringExtra("contentTitle"));
+    // 서버에서 해당 게시글의 댓글 데이터를 가져와야 함 + 이미지는 따로 가져와야 함
+    private void getPostData() {
+        String postHash = getIntent().getStringExtra("community_post_hash");
+        String postUserId = getIntent().getStringExtra("community_post_userId");
+
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("url 추가해야 함" + "/hash=" + postHash + "&userId=" + postUserId)
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    String jsonData = response.body().string();
+                    JSONObject jsonObject = new JSONObject(jsonData);
+
+                    String nickname = jsonObject.getString("nickname");
+                    String level = jsonObject.getString("level");
+                    String date = jsonObject.getString("date");
+                    String title = jsonObject.getString("title");
+                    String content = jsonObject.getString("content");
+                    int likeCount = jsonObject.getInt("likeCount");
+
+                    runOnUiThread(() -> {
+                        cNickname.setText(nickname);
+                        cLevel.setText(level);
+                        cDate.setText(date);
+                        cTitle.setText(title);
+                        cContent.setText(content);
+                        cCount.setText(String.valueOf(likeCount));
+
+//                        ArrayList<String> encodedImages = new ArrayList<>();
+//                        JSONArray imagesArray = jsonObject.getJSONArray("images");
+//                        for (int i = 0; i < imagesArray.length(); i++) {
+//                            encodedImages.add(imagesArray.getString(i));
+//                        }
+//
+//                        Intent intent = new Intent();
+//                        intent.putStringArrayListExtra("encodedImages", encodedImages);
+//                        showViewPager(intent);
+                    });
+
+                } else {
+                    Log.e(tag, "서버 응답 오류: " + response.message());
+                }
+            } catch (Exception e) {
+                Log.e(tag, "게시글 데이터 가져오기 실패", e);
+            }
+        }).start();
     }
+
 
 
     // 댓글창 recyclerview 어댑터 초기화
@@ -268,8 +318,6 @@ public class CommunityContent extends AppCompatActivity{
         getMenuInflater().inflate(R.menu.comment_menu, menu);
         return true;
     }
-
-    // 댓글의 수정, 삭제 버튼 (이게 아니라 일단 어댑터에서 설정한 popUpMenu 사용할 거임), 일단 해당 게시글의 해시값만 있으면 될 듯?
 
     // 게시글 수정
     private void postModify(){

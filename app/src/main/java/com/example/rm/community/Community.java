@@ -97,7 +97,7 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
                 Response response = client.newCall(request).execute();
                 if(response.isSuccessful()){
                     String title, nickname, level, date, postHash, userId = null;
-                    String jsonList = response.body().toString();
+                    String jsonList = response.body().string();
                     JSONArray jsonArray = new JSONArray(jsonList);  // json 결과를 배열로 저장
 
                     for (int i = 0; i < item_count; i++) {
@@ -115,10 +115,10 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
                     currentItemCount += item_count;
                     Log.i(tag, "현재 item 위치 : " + currentItemCount);
                     runOnUiThread(() -> {
-
+                        adapter.notifyDataSetChanged();
                     });
-
-
+                } else {
+                    Log.e(tag, "서버 응답 오류: " + response.message());
                 }
             } catch (Exception e){
                 Log.e(tag, "json 연결 실패", e);
