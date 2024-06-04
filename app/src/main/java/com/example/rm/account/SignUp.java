@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,7 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rm.MainActivity;
 import com.example.rm.R;
+import com.example.rm.mypage.Mypage;
+import com.example.rm.token.PreferenceHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -191,18 +195,24 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void run() {
                 OkHttpClient client = new OkHttpClient();
-                String url = CHECK_USER_NICKNAME_URL + "/" + nickname;
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("nickname", nickname);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
+                RequestBody body = RequestBody.create(JSON, json.toString());
                 Request request = new Request.Builder()
-                        .url(url)
-                        .get()
+                        .url(CHECK_USER_NICKNAME_URL)
+                        .post(body)
                         .build();
 
                 try {
                     Response response = client.newCall(request).execute();
                     String responseBody = response.body().string();
                     Log.i("닉네임 확인", responseBody);
-
 
                     if (response.isSuccessful()) {
                         JSONObject jsonResponse = new JSONObject(responseBody);
@@ -314,6 +324,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 try {
                     Response response = client.newCall(request).execute();
                     String responseBody = response.body().string();
+                    Log.i(tag, "인증번호 확인" + responseBody);
                     if (response.isSuccessful()) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -405,14 +416,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void showAlert(String message) {
-        new AlertDialog.Builder(SignUp.this)
-                .setMessage(message)
-                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+        AlertDialog alertDialog;
+        builder.setMessage(message);
+        builder.setPositiveButton("확인", (dialog, which) -> {dialog.dismiss();});
+        alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
     }
 }

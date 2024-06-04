@@ -14,6 +14,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
 import com.example.rm.retrofit.RetroClient;
@@ -27,25 +29,27 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SearchTrash extends AppCompatActivity {
-    ListView listView;
-    ArrayList<TrashListData> arrayList = new ArrayList<>();  // retrofit GET으로 결과를 저장할 그릇, 이걸 listview 출력X, arraylist는 사용자가 입력 시 onQueryTextchagne에서 출력값만 listview로 출력하는 형식으로 가는 게 나을 듯
-    TrashListAdapter trashListAdapter;
+    // 레이아웃
+    RecyclerView recyclerView;
+    ArrayList<TrashData> trashData = new ArrayList<>(); // 쓰레기 데이터 담음
+    TrashAdapter trashAdapter;
+    //
+    static final String tag = "쓰레기 검색창";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchtrash);
-        listView = findViewById(R.id.search_listview);
+        recyclerView = findViewById(R.id.search_recyclerview);
 
+        // 툴바
         Toolbar toolbar = (Toolbar)findViewById(R.id.search_toolbar);
-        setSupportActionBar(toolbar);   // 액션바 변경
-        getSupportActionBar().setDisplayShowTitleEnabled(false);    // 툴바 프로젝트 이름 제거
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        trashListAdapter = new TrashListAdapter(SearchTrash.this, new ArrayList<>());
-        listView.setAdapter(trashListAdapter);
-        listView.setClickable(true);
+        // recyclerView
+        setRecyclerView();
         getTrashData();
-        clickItem();
     }
 
     @Override
@@ -59,7 +63,7 @@ public class SearchTrash extends AppCompatActivity {
         searchView.setIconifiedByDefault(false);    // 항상 확장된 상태O
         searchView.requestFocus();  // searchview에 포커스 요청+키보드 자동O
 
-        searchView.post(() ->{  // 키보드가 올라옴
+        searchView.post(() ->{
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
         });
@@ -69,67 +73,41 @@ public class SearchTrash extends AppCompatActivity {
             public boolean onQueryTextSubmit(String str) {return false;}    // 키보드의 검색 버튼을 눌렀을 때 이벤트(=검색 업무 처리), 입력한 값을 str로 받아서 처리
             @Override
             public boolean onQueryTextChange(String text) {    // 검색어 입력할 때마다 실행됨
-                if(text.isEmpty()){trashListAdapter.updateListviewItem(new ArrayList<>());}
+                if(text.isEmpty()){
+                    trashAdapter.updateSearchView(new ArrayList<>());
+                }
                 else {filterTrash(text);}
                 return true;
             }
         });
-
         return true;
     }
 
-    private void filterTrash(String text){      // 검색창에 입력한 텍스트가 있으면 텍스트값과 비교해서 같은 데이터를 result에 추가
-        ArrayList<TrashListData> result = new ArrayList<>();
-
-        for(int i=0; i<arrayList.size(); i++) {
-            TrashListData trashListData = arrayList.get(i);
-            if(trashListData.getTrashListName().toLowerCase().contains(text.toLowerCase())) {    // 입력한 텍스트가 포함되어 있는지 확인 (대소문자 구분X)
-                result.add(trashListData);
+    // 검색창에 입력한 텍스트가 있으면 텍스트값과 비교해서 같은 데이터를 result에 추가
+    private void filterTrash(String text){
+        ArrayList<TrashData> result = new ArrayList<>();
+        for(int i=0; i<trashData.size(); i++){
+            TrashData data = trashData.get(i);
+            if(data.getTrash_name().toLowerCase().contains(text.toLowerCase())){
+                result.add(data);
             }
         }
-        trashListAdapter.updateListviewItem(result);   // listview 업데이트 (초기화 문제인듯)
+        trashAdapter.updateSearchView(result);
     }
 
-    private void getTrashData() {       // 리스트뷰에 출력할 데이터 서버에서 가져와 arrayList에 저장 (검색 전에 이미 만들어져 있어야 하고, 데이터를 가져오기만 하므로 화면에 출력할 필요는 없을 듯)
-
-        Call<List<RetroWriting>> call = RetroClient.getRetroService().getSearchTrashData();
-        call.enqueue(new Callback<List<RetroWriting>>() {
-            @Override
-            public void onResponse(Call<List<RetroWriting>> call, Response<List<RetroWriting>> response) {
-                if (response.isSuccessful()) {
-                    String title, url, thum = null;
-                    List<RetroWriting> retroWritings = response.body();
-
-                    for (int i=0; i<7; i++){
-                        RetroWriting writing = retroWritings.get(i);
-                        title = writing.getTitle();
-                        url = writing.getUrl();
-                        thum = writing.getThumbnailUrl();
-
-                        arrayList.add(new TrashListData(url, title, thum));
-                        Log.i("SearchTrash 데이터 가져옴O", "title : " + arrayList.get(i).getTrashListName() + ", url: " + url + "thum : " + thum);
-                    }
-                }
-                else {Log.e("SearchTrash.listview 출력X", "");}
-            }
-
-            @Override
-            public void onFailure(Call<List<RetroWriting>> call, Throwable t) {
-                Log.e("SearchTrash 네트워크 오류", "", t);
-            }
-        });
+    // recyclerView 초기화
+    private void setRecyclerView(){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SearchTrash.this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        trashAdapter = new TrashAdapter(new ArrayList<>(), SearchTrash.this);
+        recyclerView.setAdapter(trashAdapter);
     }
 
-    public void clickItem(){
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SearchTrash.this, TrashDetail.class);
-                intent.putExtra("trashName", arrayList.get(position).getTrashListName());
-                intent.putExtra("trashImage", arrayList.get(position).getTrashListImage());
-                intent.putExtra("trashInfo", arrayList.get(position).getTrashListInfo());
-                startActivity(intent);
-            }
-        });
+    // 리스트뷰에 출력할 데이터 서버에서 가져와 trashData에 저장 (검색 전에 이미 만들어져 있어야 하고, 데이터를 가져오기만 하므로 화면에 출력X)
+    private void getTrashData() {
+        trashData.add(new TrashData("Plastic Bottle", "Recycle as plastic", "hash001"));
+        trashData.add(new TrashData("Glass Bottle", "Recycle as glass", "hash002"));
+        trashData.add(new TrashData("Newspaper", "Recycle as paper", "hash003"));
+        trashData.add(new TrashData("Aluminum Can", "Recycle as metal", "hash004"));
     }
 }
