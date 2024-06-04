@@ -1,10 +1,6 @@
 package com.example.rm.account;
 
 import android.app.AlertDialog;
-
-import android.content.DialogInterface;
-import android.content.Intent;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,16 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 
-
-import com.example.rm.MainActivity;
-
 import com.example.rm.R;
-import com.example.rm.mypage.Mypage;
-import com.example.rm.token.PreferenceHelper;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -45,13 +36,11 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     private static final String tag = "회원가입";
     private static final String host = "http://ipark4.duckdns.org:58395";
-    private static final String CHECK_USER_ID_URL = host + "/api/create/register/check/userID";
-    private static final String CHECK_USER_NICKNAME_URL = host + "/api/create/register/check/nickname";
-    private static final String SEND_VERIFY_CODE_URL = host + "/api/create/register/check/email/send";
-    private static final String CHECK_VERIFY_CODE_URL = host + "/api/create/register/check/email/verify";
-    private static final String REGISTER_URL = host + "/api/create/register";
-    private static final String CHECK_PASSWORD_URL = host + "/api/create/register/check/password";
-    private static final String CHECK_EMAIL_URL = host + "/api/create/register/check/email";
+    private static final String CHECK_USER_ID_URL = host + "/api/create/register/check/userID";  // CheckUserID.py의 엔드포인트
+    private static final String CHECK_USER_NICKNAME_URL = host + "/api/create/register/check/nickname";  // CheckUserNickname.py의 엔드포인트
+    private static final String SEND_VERIFY_CODE_URL = host + "/api/create/register/check/email/send";  // SendVerifyCode.py의 엔드포인트
+    private static final String CHECK_VERIFY_CODE_URL = host + "/api/create/register/check/email/verify";  // CheckVerifyCode.py의 엔드포인트
+    private static final String REGISTER_URL = host + "/api/create/register";  // Register.py의 엔드포인트
 
     private boolean isIdChecked = false;
     private boolean isNicknameChecked = false;
@@ -140,23 +129,18 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     // 아이디 중복 확인
     private void checkUserId(final String userId) {
-        new Thread(() -> {
-            OkHttpClient client = new OkHttpClient();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
 
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject json = new JSONObject();
-            try {
-                json.put("id", userId);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-            RequestBody body = RequestBody.create(JSON, json.toString());
-            Request request = new Request.Builder()
-                    .url(CHECK_USER_ID_URL)
-                    .post(body)
-                    .build();
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("id", userId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 RequestBody body = RequestBody.create(JSON, json.toString());
                 Request request = new Request.Builder()
@@ -165,45 +149,44 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                         .post(body)
                         .build();
 
-
-            try {
-                Response response = client.newCall(request).execute();
-                String responseBody = response.body().string();
-                Log.i(tag + " 아이디 중복 확인", responseBody);
-                if (response.isSuccessful()) {
-                    runOnUiThread(() -> {
-                        showAlert("사용 가능한 아이디입니다.");
-                        isIdChecked = true;
-                        checkSignUpButtonState();
-                    });
-                } else {
-                    runOnUiThread(() -> {
-                        showAlert("사용 불가능한 아이디입니다.");
-                        isIdChecked = false;
-                        checkSignUpButtonState();
+                try {
+                    Response response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
+                    Log.i(tag + " 아이디 중복 확인", responseBody);
+                    if (response.isSuccessful()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAlert("사용 가능한 아이디입니다.");
+                                isIdChecked = true;
+                                checkSignUpButtonState();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAlert("사용 불가능한 아이디입니다.");
+                                isIdChecked = false;
+                                checkSignUpButtonState();
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e(tag, "네트워크 오류", e);
+                        }
                     });
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                runOnUiThread(() -> Log.e(tag, "네트워크 오류", e));
             }
         }).start();
     }
 
     // 닉네임 중복 확인
     private void checkUserNickname(final String nickname) {
-
-        new Thread(() -> {
-            OkHttpClient client = new OkHttpClient();
-
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject json = new JSONObject();
-            try {
-                json.put("nickname", nickname);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -223,30 +206,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                         .post(body)
                         .build();
 
-
-            RequestBody body = RequestBody.create(JSON, json.toString());
-            Request request = new Request.Builder()
-                    .url(CHECK_USER_NICKNAME_URL)
-                    .post(body)
-                    .build();
-
-
-            try {
-                Response response = client.newCall(request).execute();
-                String responseBody = response.body().string();
-                Log.i("닉네임 확인", responseBody);
-
-                if (response.isSuccessful()) {
-                    runOnUiThread(() -> {
-                        showAlert("사용 가능한 닉네임입니다.");
-                        isNicknameChecked = true;
-                        checkSignUpButtonState();
-                    });
-                } else {
-                    runOnUiThread(() -> {
-                        showAlert("사용 불가능한 닉네임입니다.");
-                        isNicknameChecked = false;
-                        checkSignUpButtonState();
+                try {
+                    Response response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
+                    Log.i("닉네임 확인", responseBody);
 
                     if (response.isSuccessful()) {
                         JSONObject jsonResponse = new JSONObject(responseBody);
@@ -275,44 +238,19 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                         public void run() {
                             Log.e(tag, "네트워크 오류", e);
                         }
-
                     });
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                runOnUiThread(() -> Log.e(tag, "네트워크 오류", e));
             }
         }).start();
     }
 
     // 이메일 인증 번호 전송
     private void sendVerifyCode(final String email) {
-        new Thread(() -> {
-            OkHttpClient client = new OkHttpClient();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
 
-
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject json = new JSONObject();
-            try {
-                json.put("email", email);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            RequestBody body = RequestBody.create(JSON, json.toString());
-            Request request = new Request.Builder()
-                    .url(SEND_VERIFY_CODE_URL)
-                    .post(body)
-                    .build();
-
-            try {
-                Response response = client.newCall(request).execute();
-                String responseBody = response.body().string();
-                Log.i(tag, "인증번호 전송" + responseBody);
-                if (response.isSuccessful()) {
-                    runOnUiThread(() -> showAlert("인증코드를 발송했습니다."));
-                } else {
-                    runOnUiThread(() -> showAlert("인증코드를 보낼 수 없습니다. 이메일을 확인하세요."));
                 MediaType JSON = MediaType.parse("application/json; charset=utf-8");
                 JSONObject json = new JSONObject();
                 try {
@@ -355,50 +293,17 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                             Log.e(tag, "네트워크 오류", e);
                         }
                     });
-
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                runOnUiThread(() -> Log.e(tag, "네트워크 오류", e));
             }
         }).start();
     }
 
     // 인증번호 확인
     private void checkVerifyCode(final String email, final String code) {
-        new Thread(() -> {
-            OkHttpClient client = new OkHttpClient();
-
-
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject json = new JSONObject();
-            try {
-                json.put("code", code);
-                json.put("email", email);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            RequestBody body = RequestBody.create(JSON, json.toString());
-            Request request = new Request.Builder()
-                    .url(CHECK_VERIFY_CODE_URL)
-                    .post(body)
-                    .build();
-
-            try {
-                Response response = client.newCall(request).execute();
-                String responseBody = response.body().string();
-                if (response.isSuccessful()) {
-                    runOnUiThread(() -> {
-                        showAlert("이메일이 인증되었습니다.");
-                        isEmailVerified = true;
-                        checkSignUpButtonState();
-                    });
-                } else {
-                    runOnUiThread(() -> {
-                        showAlert("인증코드가 일치하지 않습니다.");
-                        isEmailVerified = false;
-                        checkSignUpButtonState();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
 
                 MediaType JSON = MediaType.parse("application/json; charset=utf-8");
                 JSONObject json = new JSONObject();
@@ -446,65 +351,71 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                         public void run() {
                             Log.e(tag, "네트워크 오류", e);
                         }
-
                     });
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                runOnUiThread(() -> Log.e(tag, "네트워크 오류", e));
             }
         }).start();
     }
 
     // 회원가입 버튼
     private void registerUser() {
-        new Thread(() -> {
-            OkHttpClient client = new OkHttpClient();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
 
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject json = new JSONObject();
-            try {
-                json.put("id", signId.getText().toString().trim());
-                json.put("nickname", signName.getText().toString().trim());
-                json.put("passwd", signPwd.getText().toString().trim());
-                json.put("email", signEmail.getText().toString().trim());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            RequestBody body = RequestBody.create(JSON, json.toString());
-            Request request = new Request.Builder()
-                    .url(REGISTER_URL)
-                    .post(body)
-                    .addHeader("Content-Type", "application/json")
-                    .build();
-
-            try {
-                Response response = client.newCall(request).execute();
-                String responseBody = response.body().string();
-                Log.i("회원가입 버튼", responseBody);
-                if (response.isSuccessful()) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(SignUp.this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                        finish();   // 로그인 화면으로 이동
-                    });
-                } else {
-                    runOnUiThread(() -> Log.e(tag, "회원가입 실패" + responseBody));
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("id", signId.getText().toString().trim());
+                    json.put("nickname", signName.getText().toString().trim());
+                    json.put("passwd", signPwd.getText().toString().trim());
+                    json.put("email", signEmail.getText().toString().trim());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                runOnUiThread(() -> Log.e(tag, "네트워크 오류", e));
+
+                RequestBody body = RequestBody.create(JSON, json.toString());
+                Request request = new Request.Builder()
+                        .url(REGISTER_URL)
+                        .post(body)
+                        .addHeader("Content-Type", "application/json")
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
+                    Log.i("회원가입 버튼", responseBody);
+                    if (response.isSuccessful()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(SignUp.this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                finish();   // 로그인 화면으로 이동
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e(tag, "회원가입 실패" + responseBody);
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e(tag, "네트워크 오류", e);
+                        }
+                    });
+                }
             }
         }).start();
     }
 
     private void showAlert(String message) {
-
-        new AlertDialog.Builder(SignUp.this)
-                .setMessage(message)
-                .setPositiveButton("확인", (dialog, which) -> dialog.dismiss())
-                .show();
-
         AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
         AlertDialog alertDialog;
         builder.setMessage(message);
