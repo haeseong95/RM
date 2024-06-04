@@ -251,13 +251,13 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
 
                         getActivity().runOnUiThread(() -> {
                             Log.i("현재 비번", currentPw);
-                            callback.onResult(currentPw);
+                            callback.onResult(currentPwd);
                         });
                     } else {
                         getActivity().runOnUiThread(() -> {
                             Log.i("비번 확인 실패", responseBody);
                             Toast.makeText(getContext(), "비밀번호 확인에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                            callback.onResult("");
+                            callback.onResult(currentPwd);
                         });
                     }
                 } catch (IOException | JSONException e) {
