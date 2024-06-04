@@ -78,7 +78,7 @@ public class PreferenceHelper {
         return sharedPreferences.getInt("likeCount_" + postId, 0);
     }
 
-    // 로그인 id를 이용해 내가 작성한 게시글이 맞는지 판별 (true - 내 거 맞음, false-남의 거)
+    // 로그인 id를 이용해 내가 작성한 게시글이 맞는지 판별 (true - 내 거, false-남의 거)
     public static boolean checkMyPost(Context context, String id){
         String userId = getLoginId(context);    // 로그인 시 사용된 아이디값 저장됨
         return userId.equals(id);

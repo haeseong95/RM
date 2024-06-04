@@ -40,6 +40,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
     private static final String tag = "LoginUser";
     SqliteHelper sqliteHelper;
     private static final String LOGIN_URL = "http://ipark4.duckdns.org:58395/api/create/login";  // Flask 서버의 로그인 URL로 변경하세요
+
     private TokenManager tokenManager;
 
     @Override
@@ -110,6 +111,13 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            RequestBody body = RequestBody.create(JSON, json.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/create/login")
+                    .post(body)
+                    .addHeader("Device-Info", deviceModel)
+                    .build();
+
 
             RequestBody body = RequestBody.create(json.toString(), JSON);
             String token = tokenManager.getToken();  // 기존 토큰 가져오기
@@ -157,6 +165,31 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                     });
                 }
             });
+
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    JSONObject responseJson = new JSONObject(responseBody);
+                    String token = responseJson.getString("message");
+                    tokenManager.saveToken(token);  // 토큰 저장
+                    runOnUiThread(() -> {
+                        PreferenceHelper.setLoginState(LoginUser.this, true, userId);   // 로그인 성공 시 true 값 저장 + 로그인 id 저장
+                        Intent intent = new Intent(LoginUser.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Log.e(tag, "로그인 실패" + responseBody);
+                        Toast.makeText(LoginUser.this, "로그인 실패", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            } catch (IOException e) {
+                Log.e(tag, "네트워크 오류", e);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         }).start();
     }
 }

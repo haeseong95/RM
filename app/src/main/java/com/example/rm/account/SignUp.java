@@ -1,6 +1,10 @@
 package com.example.rm.account;
 
 import android.app.AlertDialog;
+
+import android.content.DialogInterface;
+import android.content.Intent;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,9 +16,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import com.example.rm.MainActivity;
+
 import com.example.rm.R;
+import com.example.rm.mypage.Mypage;
+import com.example.rm.token.PreferenceHelper;
 
 import org.json.JSONObject;
 
@@ -141,11 +151,20 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 e.printStackTrace();
             }
 
+
             RequestBody body = RequestBody.create(JSON, json.toString());
             Request request = new Request.Builder()
                     .url(CHECK_USER_ID_URL)
                     .post(body)
                     .build();
+
+                RequestBody body = RequestBody.create(JSON, json.toString());
+                Request request = new Request.Builder()
+                        .url(CHECK_USER_ID_URL)
+                        .addHeader("Content-Type", "application/json")
+                        .post(body)
+                        .build();
+
 
             try {
                 Response response = client.newCall(request).execute();
@@ -173,6 +192,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     // 닉네임 중복 확인
     private void checkUserNickname(final String nickname) {
+
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
 
@@ -184,11 +204,32 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 e.printStackTrace();
             }
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("nickname", nickname);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                RequestBody body = RequestBody.create(JSON, json.toString());
+                Request request = new Request.Builder()
+                        .url(CHECK_USER_NICKNAME_URL)
+                        .addHeader("Content-Type", "application/json")
+                        .post(body)
+                        .build();
+
+
             RequestBody body = RequestBody.create(JSON, json.toString());
             Request request = new Request.Builder()
                     .url(CHECK_USER_NICKNAME_URL)
                     .post(body)
                     .build();
+
 
             try {
                 Response response = client.newCall(request).execute();
@@ -206,6 +247,35 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                         showAlert("사용 불가능한 닉네임입니다.");
                         isNicknameChecked = false;
                         checkSignUpButtonState();
+
+                    if (response.isSuccessful()) {
+                        JSONObject jsonResponse = new JSONObject(responseBody);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAlert("사용 가능한 닉네임입니다.");
+                                isNicknameChecked = true;
+                                checkSignUpButtonState();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAlert("사용 불가능한 닉네임입니다.");
+                                isNicknameChecked = false;
+                                checkSignUpButtonState();
+                            }
+                        });
+                    }
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e(tag, "네트워크 오류", e);
+                        }
+
                     });
                 }
             } catch (IOException e) {
@@ -219,6 +289,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private void sendVerifyCode(final String email) {
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
+
 
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject json = new JSONObject();
@@ -242,6 +313,49 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     runOnUiThread(() -> showAlert("인증코드를 발송했습니다."));
                 } else {
                     runOnUiThread(() -> showAlert("인증코드를 보낼 수 없습니다. 이메일을 확인하세요."));
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("email", email);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                RequestBody body = RequestBody.create(JSON, json.toString());
+                Request request = new Request.Builder()
+                        .url(SEND_VERIFY_CODE_URL)
+                        .addHeader("Content-Type", "application/json")
+                        .post(body)
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
+                    Log.i(tag, "인증번호 전송" + responseBody);
+                    if (response.isSuccessful()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAlert("인증코드를 발송했습니다.");
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAlert("인증코드를 보낼 수 없습니다. 이메일을 확인하세요.");
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e(tag, "네트워크 오류", e);
+                        }
+                    });
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -254,6 +368,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private void checkVerifyCode(final String email, final String code) {
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
+
 
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject json = new JSONObject();
@@ -284,6 +399,54 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                         showAlert("인증코드가 일치하지 않습니다.");
                         isEmailVerified = false;
                         checkSignUpButtonState();
+
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("code", code);
+                    json.put("email", email);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                RequestBody body = RequestBody.create(JSON, json.toString());
+                Request request = new Request.Builder()
+                        .url(CHECK_VERIFY_CODE_URL)
+                        .addHeader("Content-Type", "application/json")
+                        .post(body)
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
+                    Log.i(tag, "인증번호 확인" + responseBody);
+                    if (response.isSuccessful()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAlert("이메일이 인증되었습니다.");
+                                isEmailVerified = true;
+                                checkSignUpButtonState();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAlert("인증코드가 일치하지 않습니다.");
+                                isEmailVerified = false;
+                                checkSignUpButtonState();
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e(tag, "네트워크 오류", e);
+                        }
+
                     });
                 }
             } catch (IOException e) {
@@ -336,9 +499,18 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void showAlert(String message) {
+
         new AlertDialog.Builder(SignUp.this)
                 .setMessage(message)
                 .setPositiveButton("확인", (dialog, which) -> dialog.dismiss())
                 .show();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+        AlertDialog alertDialog;
+        builder.setMessage(message);
+        builder.setPositiveButton("확인", (dialog, which) -> {dialog.dismiss();});
+        alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
     }
 }

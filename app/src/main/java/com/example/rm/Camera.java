@@ -459,12 +459,12 @@ public class Camera extends AppCompatActivity {
             }
         } else {
             Log.d(TAG, "Cancelled or no data");
-            Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "사진촬영이 취소되었거나 적합한 데이터가 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
     private ByteBuffer loadModelFile() throws IOException {
-        AssetFileDescriptor fileDescriptor = getAssets().openFd("yolov8n_float32.tflite");
+        AssetFileDescriptor fileDescriptor = getAssets().openFd("model.tflite");
         FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
         FileChannel fileChannel = inputStream.getChannel();
         long startOffset = fileDescriptor.getStartOffset();
@@ -491,7 +491,7 @@ public class Camera extends AppCompatActivity {
     }
 
     private ByteBuffer convertBitmapToByteBuffer(Bitmap bitmap) {
-        int inputSize = 640; // YOLOv8 모델의 입력 크기 가정
+        int inputSize = 320; // YOLOv8 모델의 입력 크기 가정
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * inputSize * inputSize * 3);
         byteBuffer.order(ByteOrder.nativeOrder());
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, inputSize, inputSize, true);

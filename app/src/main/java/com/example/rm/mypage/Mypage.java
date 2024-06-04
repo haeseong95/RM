@@ -39,8 +39,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Mypage extends AppCompatActivity implements View.OnClickListener {
@@ -73,6 +75,12 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
         btnUserInfo.setOnClickListener(this);
         tokenManager = new TokenManager(this);
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         fetchUserInfo();
     }
 
@@ -82,8 +90,18 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
             OkHttpClient client = ApiClient.getClient(Mypage.this, tokenManager);
 
             try {
+
                 Request request = new Request.Builder()
                         .url(USER_INFO_URL)
+
+                JSONObject decodedToken = JWTUtils.decodeJWT(tokenManager.getToken().replace("Bearer ", ""));
+
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                RequestBody body = RequestBody.create(JSON, (new JSONObject()).toString());
+                Request request = new Request.Builder()
+                        .url(USER_INFO_URL)
+                        .post(body)
+
                         .addHeader("Authorization", tokenManager.getToken())
                         .addHeader("Device-Info", Build.MODEL)
                         .build();
@@ -155,8 +173,7 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
                 alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.black));
                 break;
             case R.id.li_delete:    // 탈퇴하기 페이지
-                DeleteAccountBottomSheet sheet = new DeleteAccountBottomSheet(Mypage.this);
-                sheet.show(getSupportFragmentManager(), "계정 탈퇴하기");
+                checkDelete();
                 break;
             case R.id.li_community: // 내 게시글/댓글 수정 페이지
                 Intent intent = new Intent(Mypage.this, MypageModify.class);
@@ -170,6 +187,7 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
                 throw new IllegalStateException("Unexpected value: " + v.getId());
         }
     }
+
 
     // 탈퇴하기
     public static class DeleteAccountBottomSheet extends BottomSheetDialogFragment {
@@ -241,3 +259,25 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
         }
     }
 }
+
+    private void checkDelete() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Mypage.this);
+        builder.setTitle("계정 탈퇴");
+        builder.setMessage("계정을 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.");
+        builder.setPositiveButton("확인", (dialog, which) -> finishDelete());
+        builder.setNegativeButton("취소", (dialog, which) -> dialog.dismiss());
+        AlertDialog confirmDialog = builder.create();
+        confirmDialog.show();
+    }
+
+    private void finishDelete() {
+        Intent intent = new Intent(Mypage.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        Toast.makeText(getApplicationContext(), "계정이 성공적으로 탈퇴 처리되었습니다.", Toast.LENGTH_LONG).show();
+    }
+
+
+
+}
+
