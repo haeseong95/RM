@@ -41,8 +41,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Mypage extends AppCompatActivity implements View.OnClickListener {
@@ -54,7 +56,7 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
     //
     private static final String tag = "마이페이지";
     TokenManager tokenManager;
-    private static final String USER_INFO_URL = "http://ipark4.duckdns.org:58395/api/read/users/";  // Flask 서버의 유저 정보 URL
+    private static final String USER_INFO_URL = "http://ipark4.duckdns.org:58395/api/read/users/info";  // Flask 서버의 유저 정보 URL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,12 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
         btnUserInfo.setOnClickListener(this);
         tokenManager = new TokenManager(this);
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         fetchUserInfo();
     }
 
@@ -85,10 +93,12 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
 
             try {
                 JSONObject decodedToken = JWTUtils.decodeJWT(tokenManager.getToken().replace("Bearer ", ""));
-                String userIdFromToken = decodedToken.getString("id");
 
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                RequestBody body = RequestBody.create(JSON, (new JSONObject()).toString());
                 Request request = new Request.Builder()
-                        .url(USER_INFO_URL + userIdFromToken.trim() + "/info")
+                        .url(USER_INFO_URL)
+                        .post(body)
                         .addHeader("Authorization", tokenManager.getToken())
                         .addHeader("Device-Info", Build.MODEL)
                         .build();
@@ -183,5 +193,7 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
         startActivity(intent);
         Toast.makeText(getApplicationContext(), "계정이 성공적으로 탈퇴 처리되었습니다.", Toast.LENGTH_LONG).show();
     }
+
+
 
 }

@@ -150,6 +150,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 RequestBody body = RequestBody.create(JSON, json.toString());
                 Request request = new Request.Builder()
                         .url(CHECK_USER_ID_URL)
+                        .addHeader("Content-Type", "application/json")
                         .post(body)
                         .build();
 
@@ -206,6 +207,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 RequestBody body = RequestBody.create(JSON, json.toString());
                 Request request = new Request.Builder()
                         .url(CHECK_USER_NICKNAME_URL)
+                        .addHeader("Content-Type", "application/json")
                         .post(body)
                         .build();
 
@@ -265,6 +267,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 RequestBody body = RequestBody.create(JSON, json.toString());
                 Request request = new Request.Builder()
                         .url(SEND_VERIFY_CODE_URL)
+                        .addHeader("Content-Type", "application/json")
                         .post(body)
                         .build();
 
@@ -311,6 +314,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 JSONObject json = new JSONObject();
                 try {
                     json.put("code", code);
+                    json.put("email", email);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -318,6 +322,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 RequestBody body = RequestBody.create(JSON, json.toString());
                 Request request = new Request.Builder()
                         .url(CHECK_VERIFY_CODE_URL)
+                        .addHeader("Content-Type", "application/json")
                         .post(body)
                         .build();
 
