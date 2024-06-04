@@ -1,7 +1,5 @@
 package com.example.rm.account;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rm.R;
 
@@ -59,55 +59,42 @@ public class SearchPwd extends AppCompatActivity implements View.OnClickListener
     }
 
     private void searchPwdByEmail(final String email) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                OkHttpClient client = new OkHttpClient();
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
 
-                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("email", email);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject json = new JSONObject();
+            try {
+                json.put("email", email);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-                RequestBody body = RequestBody.create(JSON, json.toString());
-                Request request = new Request.Builder()
-                        .url(SEARCH_PWD_URL)
-                        .post(body)
-                        .build();
+            RequestBody body = RequestBody.create(json.toString(), JSON);
+            Request request = new Request.Builder()
+                    .url(SEARCH_PWD_URL)
+                    .post(body)
+                    .build();
 
-                try {
-                    Response response = client.newCall(request).execute();
-                    String responseBody = response.body().string();
-                    if (response.isSuccessful()) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(SearchPwd.this, "비밀번호가 이메일로 전송되었습니다.", Toast.LENGTH_SHORT).show();
-                                finish();   // 로그인 화면으로 이동
-                            }
-                        });
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.e(tag, "비번 찾기 실패" + responseBody);
-                                Toast.makeText(SearchPwd.this, "비밀번호 찾기를 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.e(tag, "네트워크 오류", e);
-                        }
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(SearchPwd.this, "비밀번호가 이메일로 전송되었습니다.", Toast.LENGTH_SHORT).show();
+                        finish();   // 로그인 화면으로 이동
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Log.e(tag, "비번 찾기 실패: " + responseBody);
+                        Toast.makeText(SearchPwd.this, "비밀번호 찾기를 실패하였습니다.", Toast.LENGTH_SHORT).show();
                     });
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+                runOnUiThread(() -> Log.e(tag, "네트워크 오류", e));
             }
         }).start();
     }
 }
+

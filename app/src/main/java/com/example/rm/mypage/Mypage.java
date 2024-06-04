@@ -1,7 +1,6 @@
 package com.example.rm.mypage;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
@@ -27,10 +26,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.rm.MainActivity;
-import com.example.rm.token.PreferenceHelper;
 import com.example.rm.R;
 import com.example.rm.token.ApiClient;
-import com.example.rm.token.JWTUtils;
+import com.example.rm.token.PreferenceHelper;
 import com.example.rm.token.TokenManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -54,7 +52,7 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
     //
     private static final String tag = "마이페이지";
     TokenManager tokenManager;
-    private static final String USER_INFO_URL = "http://ipark4.duckdns.org:58395/api/read/users/";  // Flask 서버의 유저 정보 URL
+    private static final String USER_INFO_URL = "http://ipark4.duckdns.org:58395/api/read/users/info";  // Flask 서버의 유저 정보 URL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,11 +82,8 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
             OkHttpClient client = ApiClient.getClient(Mypage.this, tokenManager);
 
             try {
-                JSONObject decodedToken = JWTUtils.decodeJWT(tokenManager.getToken().replace("Bearer ", ""));
-                String userIdFromToken = decodedToken.getString("id");
-
                 Request request = new Request.Builder()
-                        .url(USER_INFO_URL + userIdFromToken.trim() + "/info")
+                        .url(USER_INFO_URL)
                         .addHeader("Authorization", tokenManager.getToken())
                         .addHeader("Device-Info", Build.MODEL)
                         .build();
@@ -104,10 +99,18 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
 
                         runOnUiThread(() -> {
                             userId.setText(nickname);
+                            userEmail.setText(userEmailStr);
                         });
                     } else {
                         runOnUiThread(() -> {
-                            Log.e(tag, "사용자 정보 가져오기 실패");
+                            Log.e(tag, "사용자 정보 가져오기 실패: " + response.message());
+                            Toast.makeText(Mypage.this, "사용자 정보 가져오기 실패", Toast.LENGTH_SHORT).show();
+                            if (response.code() == 401) {
+                                tokenManager.clearToken();
+                                Intent intent = new Intent(Mypage.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
                         });
                     }
                 } catch (IOException | JSONException e) {
@@ -170,10 +173,10 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
 
     // 탈퇴하기
     public static class DeleteAccountBottomSheet extends BottomSheetDialogFragment {
-       private Context context;
-       public DeleteAccountBottomSheet(Context context){
-           this.context = context;
-       }
+        private Context context;
+        public DeleteAccountBottomSheet(Context context){
+            this.context = context;
+        }
 
         @Override
         public void onStart() {
