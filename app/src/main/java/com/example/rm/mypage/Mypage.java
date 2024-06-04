@@ -1,40 +1,24 @@
 package com.example.rm.mypage;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
 import com.example.rm.MainActivity;
-import com.example.rm.token.PreferenceHelper;
 import com.example.rm.R;
 import com.example.rm.token.ApiClient;
 import com.example.rm.token.JWTUtils;
+import com.example.rm.token.PreferenceHelper;
 import com.example.rm.token.TokenManager;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -197,3 +181,4 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
 
 
 }
+

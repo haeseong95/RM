@@ -1,7 +1,5 @@
 package com.example.rm.account;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,10 +10,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.rm.MainActivity;
-import com.example.rm.token.PreferenceHelper;
 import com.example.rm.R;
-import com.example.rm.token.SqliteHelper;
+import com.example.rm.token.PreferenceHelper;
 import com.example.rm.token.TokenManager;
 
 import org.json.JSONException;

@@ -1,10 +1,6 @@
 package com.example.rm.account;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,10 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rm.MainActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.rm.R;
-import com.example.rm.mypage.Mypage;
-import com.example.rm.token.PreferenceHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
