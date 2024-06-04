@@ -223,41 +223,33 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
             new Thread(() -> {
                 OkHttpClient client = new OkHttpClient();
                 TokenManager tokenManager = new TokenManager(getContext());
-                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("myInputPasswd", currentPwd);
-                    jsonObject.put("newPasswd", "ex");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
-                RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                RequestBody body = RequestBody.create(JSON, (new JSONObject()).toString());
                 Request request = new Request.Builder()
-                        .url("http://ipark4.duckdns.org:58395/api/update/users/info/passwd")
-                        .post(body)
+                        .url("http://ipark4.duckdns.org:58395/api/read/users/info")
                         .addHeader("Authorization", tokenManager.getToken())
                         .addHeader("Device-Info", Build.MODEL)
                         .build();
 
                 try {
                     Response response = client.newCall(request).execute();
-                    String responseBody = response.body().string();
-                    Log.i(tag, "서버 응답: " + responseBody);
-
                     if (response.isSuccessful()) {
-                        JSONObject json = new JSONObject(responseBody);
-                        String currentPw = json.getString("myInputPasswd");
+                        String responseBody = response.body().string();
+                        JSONObject json = new JSONObject(responseBody).getJSONObject("message");
+                        final String userPwd = json.getString("passwd");
+
 
                         getActivity().runOnUiThread(() -> {
-                            Log.i("현재 비번", currentPw);
+                            Log.i(tag, "현재 비번" + userPwd);
                             callback.onResult(currentPwd);
                         });
                     } else {
                         getActivity().runOnUiThread(() -> {
-                            Log.i("비번 확인 실패", responseBody);
+
                             Toast.makeText(getContext(), "비밀번호 확인에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                            callback.onResult(currentPwd);
+                            callback.onResult("");
                         });
                     }
                 } catch (IOException | JSONException e) {
