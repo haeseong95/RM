@@ -181,20 +181,40 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
             Button btnChangePwd = view.findViewById(R.id.changePwd);
             setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme);
             btnClosePwd.setOnClickListener(v -> dismiss());
-            String current = currentPwd.getText().toString();
-            String neW = newPwd.getText().toString();
-            String check = checkPwd.getText().toString();
-            if (neW.equals(check) && !neW.isEmpty()) {
-                btnChangePwd.setEnabled(true);
-                btnChangePwd.setBackgroundColor(getContext().getResources().getColor(R.color.main_color_green));
-                btnChangePwd.setTextColor(getContext().getResources().getColor(R.color.white));
-            } else {
-                btnChangePwd.setEnabled(false);
-                btnChangePwd.setBackgroundColor(getContext().getResources().getColor(R.color.category_gray));
-                btnChangePwd.setTextColor(getContext().getResources().getColor(R.color.black));
-            }
 
-            btnChangePwd.setOnClickListener(v -> {changePassword(current, neW);});  // 새 비번으로 변경
+            TextWatcher textWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    String current = currentPwd.getText().toString();
+                    String neW = newPwd.getText().toString();
+                    String check = checkPwd.getText().toString();
+
+                    if (neW.equals(check) && !neW.isEmpty()) {
+                        btnChangePwd.setEnabled(true);
+                        btnChangePwd.setBackgroundColor(getContext().getResources().getColor(R.color.main_color_green));
+                        btnChangePwd.setTextColor(getContext().getResources().getColor(R.color.white));
+                    } else {
+                        btnChangePwd.setEnabled(false);
+                        btnChangePwd.setBackgroundColor(getContext().getResources().getColor(R.color.category_gray));
+                        btnChangePwd.setTextColor(getContext().getResources().getColor(R.color.black));
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            };
+            currentPwd.addTextChangedListener(textWatcher);
+            newPwd.addTextChangedListener(textWatcher);
+            checkPwd.addTextChangedListener(textWatcher);
+
+            btnChangePwd.setOnClickListener(v -> {changePassword(currentPwd.getText().toString(), newPwd.getText().toString());});  // 새 비번으로 변경
             checkPwd.addTextChangedListener(new TextWatcher() {     // 새 비번이랑 재입력이랑 일치한 지 검사
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {

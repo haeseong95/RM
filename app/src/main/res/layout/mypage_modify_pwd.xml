@@ -73,8 +73,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:text="변경"
-        android:backgroundTint="@color/main_color_green"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/category_gray"
+        android:textColor="@color/black"
         android:layout_marginTop="20dp"/>
 
 </LinearLayout>

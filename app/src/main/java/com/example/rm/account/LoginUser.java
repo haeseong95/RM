@@ -105,7 +105,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                 json.put("passwd", userPw);
                 json.put("device_info", deviceModel);
             } catch (Exception e) {
-                e.printStackTrace();
+                e.toString();
             }
             RequestBody body = RequestBody.create(JSON, json.toString());
             Request request = new Request.Builder()
@@ -133,10 +133,8 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                         Toast.makeText(LoginUser.this, "로그인 실패", Toast.LENGTH_SHORT).show();
                     });
                 }
-            } catch (IOException e) {
+            } catch (IOException | JSONException e) {
                 Log.e(tag, "네트워크 오류", e);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
             }
         }).start();
     }
