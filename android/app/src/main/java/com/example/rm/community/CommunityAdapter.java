@@ -52,7 +52,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     public void onBindViewHolder(@NonNull CommuntiyViewHolder holder, int position) {
         CommunityData communityData = communityDataArrayList.get(position);
         holder.mainNickname.setText(communityData.getMain_nickname());
-        holder.mainPlace.setText(communityData.getMain_place());
+        holder.mainViewCount.setText((int) communityData.getMain_view());
         holder.mainDate.setText(communityData.getMain_date());
         holder.mainTitle.setText(communityData.getMain_title());
         holder.itemView.setOnClickListener(v -> {   // 게시글 목록을 클릭하면 해시, 아이디 값을 상세 페이지로 전달
@@ -75,23 +75,13 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     }
 
     public class CommuntiyViewHolder extends RecyclerView.ViewHolder{
-        TextView mainNickname, mainPlace, mainDate, mainTitle;
+        TextView mainNickname, mainViewCount, mainDate, mainTitle;
         public CommuntiyViewHolder(@NonNull View itemView) {
             super(itemView);
             mainNickname = itemView.findViewById(R.id.c_nickname);
-            mainPlace = itemView.findViewById(R.id.c_level);
+            mainViewCount = itemView.findViewById(R.id.c_views);
             mainDate = itemView.findViewById(R.id.c_date);
             mainTitle = itemView.findViewById(R.id.c_title);
-
-            // 아이템 클릭 이벤트 처리 (ViewHolder 내 itemView에서 클릭 이벤트 처리)
-            itemView.setOnClickListener(v -> {
-                int position = getAbsoluteAdapterPosition();    // item의 position 반환
-                if (position != RecyclerView.NO_POSITION){      // item 클릭 시 커스텀 이벤트 메서드 호출
-                    //CommunityData item = communityDataArrayList.get(position);
-                    Log.i(tag, "현재 아이템 position : " + position);
-                    listener.onItemClick(v, getAbsoluteAdapterPosition());
-                }
-            });
         }
     }
 
@@ -104,34 +94,17 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
 class CommunityData {
     private String main_nickname = ""; // 닉네임
-    private String main_place = "";    // 등급
     private String main_date = "";   // 생성날짜
     private String main_title = "";    // 게시글 제목
+    private final long main_view = 0;  // 조회수
     private String main_hash = "";   // 게시글 해시값
     private String main_userId = "";    // 게시글을 작성한 사용자 id
 
-    public CommunityData(String main_nickname, String main_place, String main_date, String main_title, String main_hash, String main_userId) {
+    public CommunityData(String main_nickname, String main_date, String main_title, String main_hash, String main_userId) {
         this.main_nickname = main_nickname;
-        this.main_place = main_place;
         this.main_date = main_date;
         this.main_title = main_title;
         this.main_hash = main_hash;
-        this.main_userId = main_userId;
-    }
-
-    public String getMain_hash() {
-        return main_hash;
-    }
-
-    public void setMain_hash(String main_hash) {
-        this.main_hash = main_hash;
-    }
-
-    public String getMain_userId() {
-        return main_userId;
-    }
-
-    public void setMain_userId(String main_userId) {
         this.main_userId = main_userId;
     }
 
@@ -141,14 +114,6 @@ class CommunityData {
 
     public void setMain_nickname(String main_nickname) {
         this.main_nickname = main_nickname;
-    }
-
-    public String getMain_place() {
-        return main_place;
-    }
-
-    public void setMain_place(String main_place) {
-        this.main_place = main_place;
     }
 
     public String getMain_date() {
@@ -165,5 +130,25 @@ class CommunityData {
 
     public void setMain_title(String main_title) {
         this.main_title = main_title;
+    }
+
+    public long getMain_view() {
+        return main_view;
+    }
+
+    public String getMain_hash() {
+        return main_hash;
+    }
+
+    public void setMain_hash(String main_hash) {
+        this.main_hash = main_hash;
+    }
+
+    public String getMain_userId() {
+        return main_userId;
+    }
+
+    public void setMain_userId(String main_userId) {
+        this.main_userId = main_userId;
     }
 }

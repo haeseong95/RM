@@ -106,7 +106,7 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
                         String nickname = jsonObject.getString("nickname"); // 닉네임
                         String createTime = jsonObject.getString("createTime"); // 생성날짜
                         String postHash = jsonObject.getString("hash"); // 해시값
-                        allPosts.add(new CommunityData(nickname, author, createTime, title, postHash, author));
+//                        allPosts.add(new CommunityData(nickname, author, createTime, title, postHash, author));
                     }
 
                     runOnUiThread(() -> {

@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="게시글 제목"
-            android:textSize="@dimen/community_regular_text"/>
+            android:textSize="18dp"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -29,25 +29,32 @@
                 style="@style/community_text_normal_gray"
                 android:text="닉네임"
                 android:layout_alignParentStart="true"
-                android:textSize="@dimen/community_small_text"/>
+                android:textSize="15dp"/>
 
-            <TextView
-                android:id="@+id/c_level"
-                style="@style/community_text_normal_gray"
-                android:text="등급"
-                android:textSize="@dimen/community_small_text"
-                android:layout_toEndOf="@id/c_nickname"
-                android:layout_alignBottom="@id/c_nickname"
-                android:layout_marginStart="10dp"/>
 
             <TextView
                 android:id="@+id/c_date"
                 style="@style/community_text_normal_gray"
-                android:textSize="@dimen/community_small_text"
+                android:textSize="15dp"
                 android:text="생성날짜"
                 android:layout_marginStart="10dp"
                 android:layout_alignBottom="@id/c_nickname"
-                android:layout_toEndOf="@id/c_level"/>
+                android:layout_toEndOf="@id/c_nickname"/>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/community_view"
+                android:layout_toStartOf="@id/c_views"/>
+
+            <TextView
+                android:id="@+id/c_views"
+                style="@style/community_text_normal_gray"
+                android:textSize="15dp"
+                android:text="조회수"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@id/c_nickname"/>
+
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
