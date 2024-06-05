@@ -12,11 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.rm.Notice;
 import com.example.rm.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CNotice extends AppCompatActivity {
 
@@ -25,8 +23,8 @@ public class CNotice extends AppCompatActivity {
     private LinearLayout writeIcon;
     private RecyclerView recyclerView;
     private TextView categoryTitle;
-    private CNoticeAdapter cNoticeAdapter; // Assuming there is an adapter named CNoticeAdapter
-    private List<Notice> noticeList = new ArrayList<>(); // Assuming there is a Notice class
+    private CNoticeAdapter cNoticeAdapter;
+    private ArrayList<CNoticeList> noticeList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,5 +82,8 @@ public class CNotice extends AppCompatActivity {
         // cNoticeAdapter.notifyDataSetChanged();
     }
 }
+
+
+
 
 

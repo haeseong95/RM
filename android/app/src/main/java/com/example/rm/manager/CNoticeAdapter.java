@@ -14,17 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.rm.Notice;
 import com.example.rm.R;
 
 import java.util.List;
 
 public class CNoticeAdapter extends RecyclerView.Adapter<CNoticeAdapter.NoticeViewHolder> {
     static final String tag = "관리자 공지사항 수정,삭제 어댑터";
-    private List<Notice> noticeList;
+    private List<CNoticeList> noticeList;
     private Context context;
 
-    public CNoticeAdapter(List<Notice> noticeList, Context context) {
+    public CNoticeAdapter(List<CNoticeList> noticeList, Context context) {
         this.noticeList = noticeList;
         this.context = context;
     }
@@ -38,7 +37,7 @@ public class CNoticeAdapter extends RecyclerView.Adapter<CNoticeAdapter.NoticeVi
 
     @Override
     public void onBindViewHolder(@NonNull NoticeViewHolder holder, int position) {
-        NoticeList notice = noticeList.get(position);
+        CNoticeList notice = noticeList.get(position);
         holder.title.setText(notice.getTitle());
         holder.date.setText(notice.getDate());
         holder.editnotice.setOnClickListener(view -> {
@@ -88,12 +87,12 @@ public class CNoticeAdapter extends RecyclerView.Adapter<CNoticeAdapter.NoticeVi
     }
 }
 
-class NoticeList {
-    private String title; // 게시글 제목
-    private String date; // 생성날짜
-    private String hash; // 게시글 해시값
+class CNoticeList {
+    String title; // 게시글 제목
+    String date; // 생성날짜
+    String hash; // 게시글 해시값
 
-    public NoticeList(String title, String date, String hash) {
+    public CNoticeList(String title, String date, String hash) {
         this.title = title;
         this.date = date;
         this.hash = hash;
@@ -123,6 +122,9 @@ class NoticeList {
         this.hash = hash;
     }
 }
+
+
+
 
 
 
