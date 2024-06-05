@@ -1,15 +1,11 @@
-import uuid
+# import uuid
 from flask_restful import Resource, reqparse
-from flask import Response, request, jsonify
+from flask import request
 from sqlalchemy import func ####
 from DBClass import *
-from sqlalchemy.orm import aliased
 from FlaskAPP import app
-from datetime import datetime, timezone
 from FunctionClass import *
-import numpy as np
-import jwt, json, hashlib
-from io import BytesIO
+import jwt
 
 class GetWritingList(Resource):
     def post(self):
@@ -42,6 +38,7 @@ class GetWritingList(Resource):
         elif user.email != validUserEmail:
             return {'message': 'User Email in Token not match in Server'}, 400
         
+        
         parser = reqparse.RequestParser()
         parser.add_argument('type', type=str, required=True, help='type must be string and necessary key')
         parser.add_argument('whichWriting', type=str, required=False, help='whichWriting must be string and necessary key')
@@ -70,7 +67,6 @@ class GetWritingList(Resource):
     def getListedComment(self, point):
         
         rv = []
-        image_files = []
         
         # comment를 시간별로 내림차순으로 정렬하고 type이 comment이고 whichWriting이 point(여기서는 어떤 글의 해시값)를 가리키는 comment를 전부 조회한다.
         allComment = Writing.query.filter( Writing.whichWriting == point, Writing.type == 'comment' ).order_by(Writing.createTime.desc()).all()
@@ -81,10 +77,13 @@ class GetWritingList(Resource):
         
         # comment가 있다면
         for comment in allComment:
-            
+            user = User.query.filter_by( id=comment.author ).first()
             # comment가 가져야 할 데이터 목록
             commentDict = {
+                    'hash': comment.hash,
                     'author':comment.author,
+                    'nickname': user.nickname,
+                    'place': user.place,
                     'title': comment.title,
                     'createTime': self.isTimeNone(comment.createTime),
                     'modifyTime': self.isTimeNone(comment.modifyTime),
@@ -185,8 +184,13 @@ class GetWritingList(Resource):
         
         for writing, image in writing_images:
             
+            user = User.query.filter_by( id=writing.author ).first()
+            
             rv.append({
+                'hash': writing.hash,
                 'author': writing.author,
+                'nickname': user.nickname,
+                'place': user.place,
                 'title': writing.title,
                 'createTime': self.isTimeNone(writing.createTime),
                 'modifyTime': self.isTimeNone(writing.modifyTime),

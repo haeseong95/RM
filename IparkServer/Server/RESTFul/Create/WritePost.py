@@ -4,7 +4,7 @@ from DBClass import *
 from FlaskAPP import app
 from datetime import datetime, timezone
 from FunctionClass import *
-import base64, io, cv2, os
+import os
 import numpy as np
 import jwt, json, hashlib
 
@@ -45,8 +45,10 @@ class WritePost(Resource):
         type = request.form.get('type')
         whichWriting = request.form.get('whichWriting', None)
         image_lines = json.loads(request.form.get('image_lines', '[]'))
+        print('title, contentText, type, whichWriting, image_lines')
+        print(title, contentText, type, whichWriting, image_lines)
         
-        if not title or not contentText or not type or whichWriting is None:
+        if not title or not contentText or not type:
             return {'message': 'Missing required fields'}, 400
         
         if type not in ['post', 'comment', 'notice', 'category', 'trash']:
@@ -65,6 +67,7 @@ class WritePost(Resource):
         hash = createHash(author, type, title, createTime, addSalt = True)
         
         print('whichWriting is here', whichWriting)
+        
         if whichWriting == '':
             whichWriting = None
         
@@ -85,16 +88,15 @@ class WritePost(Resource):
         files = []
         
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print( len(request.files) )
-        
         for i in range(len(request.files)): # for 문에서도 참조할 수 있나?
-            file = request.files[f'images{i}']
+            print('이제 이미지 처리', i)
+            file = request.files[f'images{i + 1}']
             print(file)
             name = file.filename
             print("name: ", name)
             path = f'images/{type}/{createHash(author, type, title, createTime)}/'
             whichLine = int(image_lines[i])
-            
+            print('이미지 처리 전 단계')
             storedImages.append(
                 Image(
                     name=name,
@@ -103,11 +105,12 @@ class WritePost(Resource):
                     fileLocation=path
                 )
             )
-            
+            print('이미지 처리 후 단계')
             files.append(file)
-            
+            print('이미지를 리스트에 저장 단계 이후')
             print(whichLine)
             print("len:", len(storedImages))
+        
         
         try:
             db.session.add(storedWriting)
