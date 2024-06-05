@@ -1,5 +1,6 @@
 package com.example.rm.manager;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,7 @@ public class CCommunity extends AppCompatActivity {
     private static final String tag = "관리자_게시글/댓글 관리 페이지";
 
 
+    @SuppressLint({"MissingInflatedId", "ResourceType"})
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
