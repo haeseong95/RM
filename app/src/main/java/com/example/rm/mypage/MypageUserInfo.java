@@ -1,5 +1,6 @@
 package com.example.rm.mypage;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
@@ -26,6 +27,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.rm.MainActivity;
 import com.example.rm.R;
+import com.example.rm.account.SignUp;
 import com.example.rm.token.ApiClient;
 import com.example.rm.token.JWTUtils;
 import com.example.rm.token.TokenManager;
@@ -50,7 +52,8 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
     static TextView textViewNickname;
     TextView textViewEmail;
     TextView textViewId;
-    private static final String tag = "회원정보 수정, MypageUserInfo";
+    //
+    private static final String tag = "회원정보 수정";
     TokenManager tokenManager;
 
 
@@ -95,11 +98,8 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
     // 사용자 정보 가져옴
     private void getUserInfo() {
         new Thread(() -> {
-            OkHttpClient client = ApiClient.getClient(MypageUserInfo.this, tokenManager);
-
             try {
-                JSONObject decodedToken = JWTUtils.decodeJWT(tokenManager.getToken().replace("Bearer ", ""));
-
+                OkHttpClient client = ApiClient.getClient(MypageUserInfo.this, tokenManager);
                 MediaType JSON = MediaType.parse("application/json; charset=utf-8");
                 RequestBody body = RequestBody.create(JSON, (new JSONObject()).toString());
                 Request request = new Request.Builder()
@@ -144,8 +144,9 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
         }).start();
     }
 
-    // 비번 수정 페이지 클래스
+    // 비번 수정 클래스
     public static class PasswordBottomSheet extends BottomSheetDialogFragment {
+        private static final String tag = "비번 수정 클래스";
         @Override
         public void onStart() {
             super.onStart();
@@ -180,98 +181,50 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
             Button btnChangePwd = view.findViewById(R.id.changePwd);
             setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme);
             btnClosePwd.setOnClickListener(v -> dismiss());
-            btnChangePwd.setOnClickListener(v -> {
-                if (validatePasswords(currentPwd.getText().toString(), newPwd.getText().toString(), checkPwd.getText().toString())) {
-                    changePassword(currentPwd.getText().toString(), newPwd.getText().toString());
-                } else {
-                    Log.i(tag, "비밀번호 확인이 일치하지 않음");
-                    Toast.makeText(getContext(), "비밀번호 확인이 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
-                }
-            });
+            String current = currentPwd.getText().toString();
+            String neW = newPwd.getText().toString();
+            String check = checkPwd.getText().toString();
+            if (neW.equals(check) && !neW.isEmpty()) {
+                btnChangePwd.setEnabled(true);
+                btnChangePwd.setBackgroundColor(getContext().getResources().getColor(R.color.main_color_green));
+                btnChangePwd.setTextColor(getContext().getResources().getColor(R.color.white));
+            } else {
+                btnChangePwd.setEnabled(false);
+                btnChangePwd.setBackgroundColor(getContext().getResources().getColor(R.color.category_gray));
+                btnChangePwd.setTextColor(getContext().getResources().getColor(R.color.black));
+            }
 
-            // 현 비번 입력한 값이 일치한 지 검사
-            currentPwd.addTextChangedListener(new TextWatcher() {
+            btnChangePwd.setOnClickListener(v -> {changePassword(current, neW);});  // 새 비번으로 변경
+            checkPwd.addTextChangedListener(new TextWatcher() {     // 새 비번이랑 재입력이랑 일치한 지 검사
                 @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    String passwdString = currentPwd.getText().toString();  // 현재 비번
-                    checkPwd(passwdString, new CheckPasswordCallback() {
-                        @Override
-                        public void onResult(String checkCurrentPwd) {
-                            if ((passwdString.isEmpty() && charSequence.toString().isEmpty())) {
-                                currentPwd.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                            } else {
-                                if (passwdString.equals(checkCurrentPwd)) {
-                                    currentPwd.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
-                                } else {
-                                    currentPwd.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.error, 0);
-                                }
-                            }
-                        }
-                    });
                 }
 
                 @Override
-                public void afterTextChanged(Editable editable) {}
-            });
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String passwdString = newPwd.getText().toString();
+                    String passwdChkString = s.toString();
 
-        }
-
-        private void checkPwd(String currentPwd, CheckPasswordCallback callback) {
-            new Thread(() -> {
-                OkHttpClient client = new OkHttpClient();
-                TokenManager tokenManager = new TokenManager(getContext());
-
-
-                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                RequestBody body = RequestBody.create(JSON, (new JSONObject()).toString());
-                Request request = new Request.Builder()
-                        .url("http://ipark4.duckdns.org:58395/api/read/users/info")
-                        .addHeader("Authorization", tokenManager.getToken())
-                        .addHeader("Device-Info", Build.MODEL)
-                        .build();
-
-                try {
-                    Response response = client.newCall(request).execute();
-                    if (response.isSuccessful()) {
-                        String responseBody = response.body().string();
-                        JSONObject json = new JSONObject(responseBody).getJSONObject("message");
-                        final String userPwd = json.getString("passwd");
-
-
-                        getActivity().runOnUiThread(() -> {
-                            Log.i(tag, "현재 비번" + userPwd);
-                            callback.onResult(currentPwd);
-                        });
+                    if((passwdString.isEmpty() && passwdChkString.isEmpty())){
+                        checkPwd.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
                     } else {
-                        getActivity().runOnUiThread(() -> {
-
-                            Toast.makeText(getContext(), "비밀번호 확인에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                            callback.onResult("");
-                        });
+                        if(passwdString.equals(passwdChkString)) {
+                            checkPwd.setCompoundDrawablesWithIntrinsicBounds(0, 0 ,R.drawable.check , 0);
+                        } else {
+                            checkPwd.setCompoundDrawablesWithIntrinsicBounds(0, 0 ,R.drawable.error , 0);
+                        }
                     }
-                } catch (IOException | JSONException e) {
-                    Log.e(tag, "내부 오류: ", e);
-                    getActivity().runOnUiThread(() -> {
-                        callback.onResult("");
-                    });
                 }
-            }).start();
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
         }
 
-
-        private interface CheckPasswordCallback {
-            void onResult(String result);
-
-        }
-
-        private boolean validatePasswords(String current, String newPass, String confirm) {
-            Log.i(tag, "비밀번호 변경 시도");
-            return newPass.equals(confirm) && !newPass.isEmpty();
-        }
-
+        // myInputPasswd는 currentPwd에 입력된 현재 비번을 해시화해서 db에 저장된 비번과 비교해서 일치하면 newPasswd를 해시화해서 db에 저장/일치x -> 400
         private void changePassword(String currentPwd, String newPwd) {
             new Thread(() -> {
                 OkHttpClient client = new OkHttpClient();
@@ -297,14 +250,22 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
                 try {
                     Response response = client.newCall(request).execute();
                     if (response.isSuccessful()) {
-                        Log.i(tag, "비밀번호 변경 성공");
                         getActivity().runOnUiThread(() -> {
                             Toast.makeText(getContext(), "비밀번호가 성공적으로 변경되었습니다.", Toast.LENGTH_SHORT).show();
+                            Log.i(tag, "비번 변경 성공");
                             dismiss();
                         });
                     } else {
-                        Log.e(tag, "비밀번호 변경 실패");
-                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "비밀번호 변경에 실패했습니다.", Toast.LENGTH_SHORT).show());
+                        Log.e(tag, "비번 변경 실패");
+                        getActivity().runOnUiThread(() -> {
+                            AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                                    .setMessage("현재 비밀번호가 올바르지 않습니다. 다시 입력해주세요.")
+                                    .setPositiveButton("확인", (dialog, which) -> dialog.dismiss())
+                                    .create();
+                            alertDialog.show();
+                            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
+                            Log.e(tag, "현재 비번 불일치");
+                        });
                     }
                 } catch (IOException e) {
                     Log.e(tag, "네트워크 오류", e);
@@ -439,10 +400,6 @@ public class MypageUserInfo extends AppCompatActivity implements View.OnClickLis
                         if (status == 404) {
                             Toast.makeText(getContext(), "사용자가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
                             Log.e("user not found", "user not found");
-                        } else if (status == 400) {
-                            Log.e("400", responseBody);
-                        } else if (status == 401) {
-                            Log.e("Token Error", "Token error");
                         } else {
                             Log.e("server Error", "server Error: "+ responseBody);
                         }

@@ -61,12 +61,6 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
         btnUserInfo.setOnClickListener(this);
         tokenManager = new TokenManager(this);
 
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         fetchUserInfo();
     }
 
@@ -177,8 +171,5 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
         startActivity(intent);
         Toast.makeText(getApplicationContext(), "계정이 성공적으로 탈퇴 처리되었습니다.", Toast.LENGTH_LONG).show();
     }
-
-
-
 }
 

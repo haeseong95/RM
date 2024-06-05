@@ -416,12 +416,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void showAlert(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
-        AlertDialog alertDialog;
-        builder.setMessage(message);
-        builder.setPositiveButton("확인", (dialog, which) -> {dialog.dismiss();});
-        alertDialog = builder.create();
+        AlertDialog alertDialog = new AlertDialog.Builder(SignUp.this)
+                .setMessage(message)
+                .setPositiveButton("확인", (dialog, which) -> dialog.dismiss())
+                .create();
         alertDialog.show();
-        alertDialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
     }
+
 }
