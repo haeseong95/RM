@@ -50,7 +50,7 @@
             <TextView
                 android:id="@+id/c_views"
                 style="@style/community_text_normal_gray"
-                android:textSize="15dp"
+                android:textSize="13dp"
                 android:text="조회수"
                 android:layout_alignParentEnd="true"
                 android:layout_alignBottom="@id/c_nickname"/>

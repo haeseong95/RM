@@ -21,25 +21,20 @@
             android:backgroundTint="#F5F5F5"
             android:gravity="center"/>
 
-        <Button
-            android:id="@+id/btn_close_nickname"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:backgroundTint="@android:color/transparent"
-            android:text="닫기"
-            android:textColor="@color/main_color_green"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:fontFamily="@font/nanum_regular"
-            android:textSize="15dp" />
+        <ImageView
+            android:id="@+id/btn_close_"
+            android:src="@drawable/btn_left_black" style="@style/back_icon"
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/comment_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/start_bar"
+        android:layout_above="@id/dd"
         android:orientation="horizontal"
-        android:layout_alignBaseline="@+id/start_bar"/>
+        android:layout_marginBottom="20dp"/>
 
     <RelativeLayout
         android:id="@+id/dd"

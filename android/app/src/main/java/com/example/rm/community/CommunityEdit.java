@@ -93,21 +93,6 @@ public class CommunityEdit extends AppCompatActivity {
         init();     // 이미지 URI 얻기
     }
 
-
-
-    // 리사이클뷰 초기화 + 업데이트
-    private void updateRecyclerView(){
-        if(adapter == null){
-            adapter = new ImageAdapter(uriArrayList, getApplicationContext(), this::updateRecyclerView);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(CommunityEdit.this, LinearLayoutManager.HORIZONTAL, true));
-        }
-        adapter.notifyDataSetChanged();
-        textImageCount.setText("(" + uriArrayList.size() + "/5)");
-    }
-
-
-
     // 작성 버튼을 누르면 글쓰기가 완료되고 입력한 내용이 db에 저장됨 + 게시판에 내가 쓴 글이 올라감
     private void finishEdit(){
         AlertDialog.Builder builder = new AlertDialog.Builder(CommunityEdit.this);
@@ -154,7 +139,7 @@ public class CommunityEdit extends AppCompatActivity {
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                     byte[] byteArray = byteArrayOutputStream.toByteArray();
-                    multipartBodyBuilder.addFormDataPart("images" + i+1, "image" + i+1 + ".jpg", RequestBody.create(byteArray, MediaType.parse("image/jpeg")));
+                    multipartBodyBuilder.addFormDataPart("images" + (i+1), "image" + (i+1) + ".jpg", RequestBody.create(byteArray, MediaType.parse("image/jpeg")));
                     imageList.add(String.valueOf(i));
                 }
                 multipartBodyBuilder.addFormDataPart("image_lines", new JSONArray(imageList).toString());
@@ -193,6 +178,9 @@ public class CommunityEdit extends AppCompatActivity {
                     runOnUiThread(() -> {
                         Log.e(tag, "게시글 작성 완료 " + response.body().toString());
                         Toast.makeText(CommunityEdit.this, "게시글이 성공적으로 작성되었습니다.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(CommunityEdit.this, Community.class);
+                        intent.putExtra("post_create_success", true);
+                        setResult(RESULT_OK, intent);
                         finish();
                     });
                 } else {
@@ -212,6 +200,17 @@ public class CommunityEdit extends AppCompatActivity {
         }).start();
     }
 
+
+    // 리사이클뷰 초기화 + 업데이트
+    private void updateRecyclerView(){
+        if(adapter == null){
+            adapter = new ImageAdapter(uriArrayList, getApplicationContext(), this::updateRecyclerView);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(CommunityEdit.this, LinearLayoutManager.HORIZONTAL, true));
+        }
+        adapter.notifyDataSetChanged();
+        textImageCount.setText("(" + uriArrayList.size() + "/5)");
+    }
 
     // 앨범에서 이미지 가져오기
     private void attachAlbum(){

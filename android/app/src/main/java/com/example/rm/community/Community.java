@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +23,7 @@ import com.example.rm.token.TokenManager;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -31,11 +33,13 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class Community extends AppCompatActivity implements CommunityAdapter.OnItemClickEventListener {
+public class Community extends AppCompatActivity {
     // 레이아웃
     ImageView btnBack;
     EditText searchBar;     // 검색창
@@ -77,50 +81,84 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
         searchPost();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data.getBooleanExtra("post_create_success", true)) {
+            getPostList(); // 새로운 게시글이 작성되었을 때 목록 업데이트
+        }
+    }
+
     // 게시글 목록 가져오는 okhttp (초기 게시글 10개 가져옴, 게시글을 작성한 아이디, 해시값을 저장)
     private void getPosts(int page) {
-        new Thread(() -> {
-            OkHttpClient client = new OkHttpClient();
-            TokenManager tokenManager = new TokenManager(getApplicationContext());
-            String deviceModel = Build.MODEL;
+        OkHttpClient client = new OkHttpClient();
+        TokenManager tokenManager = new TokenManager(getApplicationContext());
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-            Request request = new Request.Builder()
-                    .url("https://ipark4.duckdns.org:58395/api/read/writing/list/" + "?page=" + page + "&items=" + item_count)
-                    .addHeader("Authorization", tokenManager.getToken())
-                    .addHeader("Device-Info", deviceModel)
-                    .build();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("type", "post");
+            jsonObject.put("whichWriting", "");
+            jsonObject.put("page", String.valueOf(page));
+            jsonObject.put("items", String.valueOf(item_count));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            try {
-                Response response = client.newCall(request).execute();
-                String responseBody = response.body().string();
-                if (response.isSuccessful()) {
-                    String jsonList = response.body().string();
-                    JSONObject responseObject = new JSONObject(jsonList);
-                    JSONArray jsonArray = responseObject.getJSONArray("message");  // json 결과를 배열로 저장
-                    List<CommunityData> allPosts = new ArrayList<>();
+        RequestBody requestBody = RequestBody.create(JSON, jsonObject.toString());
 
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        String title = jsonObject.getString("title");   // 게시글 이름
-                        String author = jsonObject.getString("author"); // 아이디
-                        String nickname = jsonObject.getString("nickname"); // 닉네임
-                        String createTime = jsonObject.getString("createTime"); // 생성날짜
-                        String postHash = jsonObject.getString("hash"); // 해시값
-//                        allPosts.add(new CommunityData(nickname, author, createTime, title, postHash, author));
-                    }
+        Request request = new Request.Builder()
+                .url("http://ipark4.duckdns.org:58395/api/read/writing/list")
+                .post(requestBody)
+                .addHeader("Authorization", tokenManager.getToken())
+                .addHeader("Device-Info", Build.MODEL)
+//                .addHeader("Content-Type", "application/json")
+                .build();
 
-                    runOnUiThread(() -> {
-                        arrayList.addAll(allPosts);
-                        adapter.notifyDataSetChanged();
-                        currentPage++;
-                    });
-                } else {
-                    Log.e(tag, "서버 응답 오류: " + responseBody);
-                }
-            } catch (Exception e){
-                e.printStackTrace();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e(tag, "서버 연결 실패", e);
+                runOnUiThread(() -> Toast.makeText(Community.this, "서버 연결에 실패했습니다.", Toast.LENGTH_SHORT).show());
             }
-        }).start();
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    try {
+                        JSONObject responseObject = new JSONObject(responseBody);
+                        JSONArray jsonArray = responseObject.getJSONArray("message");  // json 결과를 배열로 저장
+                        List<CommunityData> allPosts = new ArrayList<>();
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonO = jsonArray.getJSONObject(i);
+                            String title = jsonO.getString("title");   // 게시글 이름
+                            String author = jsonO.getString("author"); // 아이디
+                            String nickname = jsonO.getString("nickname"); // 닉네임
+                            String createTime = jsonO.getString("createTime"); // 생성날짜
+                            long views = Long.parseLong(jsonO.getString("views"));   // 조회수
+                            String postHash = jsonO.getString("hash"); // 해시값
+
+
+                            allPosts.add(new CommunityData(nickname, createTime, title, views, postHash, author));
+                        }
+
+                        runOnUiThread(() -> {
+                            arrayList.addAll(allPosts);
+                            adapter.notifyDataSetChanged();
+                            currentPage++;
+                            Log.i(tag, "게시글 목록 보여줌" + responseBody);
+                        });
+                    } catch (JSONException e) {
+                        Log.e(tag, "JSON 파싱 오류", e);
+                    }
+                } else {
+                    Log.e(tag, "서버 응답 오류: " + response.message());
+                    runOnUiThread(() -> Toast.makeText(Community.this, "서버 응답 오류", Toast.LENGTH_SHORT).show());
+                }
+            }
+        });
     }
 
     // 초기 게시글 10개 데이터 목록 가져오기
@@ -137,22 +175,9 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
     private void setRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(Community.this);
         recyclerView.setLayoutManager(linearLayoutManager); // layoutManager 설정
-        adapter = new CommunityAdapter(Community.this, arrayList, Community.this);
+        adapter = new CommunityAdapter(Community.this, arrayList);
         recyclerView.setAdapter(adapter);
     }
-
-    // 아이템 클릭하면 게시글 상세 페이지로 넘어감
-    @Override
-    public void onItemClick(View view, int position) {
-        Intent intent = new Intent(Community.this, CommunityContent.class);
-        intent.putExtra("contentTitle", arrayList.get(position).getMain_title());   // 서버 연결 때는 게시글의 해시값을 보내야 함
-        intent.putExtra("contentNickname", arrayList.get(position).getMain_nickname());
-        intent.putExtra("contentPlace", arrayList.get(position).getMain_place());
-        intent.putExtra("contentDate", arrayList.get(position).getMain_date());
-        startActivity(intent);
-        Log.i(tag, "현재 게시글 position 값 : " + position);
-    }
-
 
     // 게시글 제목을 입력하면 recyclerview가 업데이트 됨
     private void searchPost(){

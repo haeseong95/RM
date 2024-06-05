@@ -21,15 +21,17 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.rm.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // 게시글 상세 페이지에서 상단에 보여줄 사진
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.PagerHolder> {
     final String tag = "ViewPager 어댑터";
+    private List<String> list;
     private ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();
     private Context context;
-    public ViewPagerAdapter(Context context, ArrayList<Bitmap> bitmapArrayList){
+    public ViewPagerAdapter(Context context, List<String> list){
         this.context = context;
-        this.bitmapArrayList = bitmapArrayList;
+        this.list = list;
     }
 
     @NonNull
