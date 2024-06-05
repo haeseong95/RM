@@ -1,6 +1,7 @@
 package com.example.rm.community;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
+import com.example.rm.token.TokenManager;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -39,13 +41,12 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
     EditText searchBar;     // 검색창
     LinearLayout btnWrite;  // 글쓰기 아이콘
     RecyclerView recyclerView;  // 게시글 목록
-    Button btnMorePost, test;     // 더보기 버튼
+    Button btnMorePost;     // 더보기 버튼
 
     //
     private static final String tag = "Community 게시판 메인";
-    private static final String url = "https://ipark4.duckdns.org:58395";
     private static final int item_count = 10;
-    private int currentItemCount = 0;
+    private int currentPage = 1;
     ArrayList<CommunityData> arrayList = new ArrayList<>();     // 게시글 목록 데이터 저장
     CommunityAdapter adapter;
 
@@ -55,7 +56,6 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.community);
         recyclerView = findViewById(R.id.main_recyclerview);
-        test = findViewById(R.id.content_test);
         btnBack = findViewById(R.id.btn_back);
         btnWrite = findViewById(R.id.c_write);
         searchBar = findViewById(R.id.c_search);
@@ -69,86 +69,68 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
             startActivity(intent);
         });
 
-        // 게시글 상세 페이지
-        test.setOnClickListener(v -> {
-            Intent intent = new Intent(Community.this, CommunityContent.class);
-            intent.putExtra("postId", "post1");
-            startActivity(intent);
-        });
-
         // 게시글 목록
         getPostList();
         setRecyclerView();
-        clickRecyclerViewItem();
 
         // 검색
         searchPost();
     }
 
     // 게시글 목록 가져오는 okhttp (초기 게시글 10개 가져옴, 게시글을 작성한 아이디, 해시값을 저장)
-    private void getPosts() {
+    private void getPosts(int page) {
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            String deviceModel = Build.MODEL;
+
             Request request = new Request.Builder()
-                    .url(url + "")
+                    .url("https://ipark4.duckdns.org:58395/api/read/writing/list/" + "?page=" + page + "&items=" + item_count)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", deviceModel)
                     .build();
 
             try {
                 Response response = client.newCall(request).execute();
-                if(response.isSuccessful()){
-                    String title, nickname, level, date, postHash, userId = null;
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
                     String jsonList = response.body().string();
-                    JSONArray jsonArray = new JSONArray(jsonList);  // json 결과를 배열로 저장
+                    JSONObject responseObject = new JSONObject(jsonList);
+                    JSONArray jsonArray = responseObject.getJSONArray("message");  // json 결과를 배열로 저장
+                    List<CommunityData> allPosts = new ArrayList<>();
 
-                    for (int i = 0; i < item_count; i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i); // 객체 1개씩 받음, 해시값 가져와야 함
-
-                        title = jsonObject.getString("title");
-                        nickname = jsonObject.getString("nickname");
-                        level = jsonObject.getString("level");
-                        date = jsonObject.getString("date");
-                        postHash = jsonObject.getString("hash");
-                        userId = jsonObject.getString("id");
-                        arrayList.add(new CommunityData(nickname, level, date, title, postHash, userId));
-                        Log.i(tag, "게시글 정보 : " + arrayList.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String title = jsonObject.getString("title");   // 게시글 이름
+                        String author = jsonObject.getString("author"); // 아이디
+                        String nickname = jsonObject.getString("nickname"); // 닉네임
+                        String createTime = jsonObject.getString("createTime"); // 생성날짜
+                        String postHash = jsonObject.getString("hash"); // 해시값
+                        allPosts.add(new CommunityData(nickname, author, createTime, title, postHash, author));
                     }
-                    currentItemCount += item_count;
-                    Log.i(tag, "현재 item 위치 : " + currentItemCount);
+
                     runOnUiThread(() -> {
+                        arrayList.addAll(allPosts);
                         adapter.notifyDataSetChanged();
+                        currentPage++;
                     });
                 } else {
-                    Log.e(tag, "서버 응답 오류: " + response.message());
+                    Log.e(tag, "서버 응답 오류: " + responseBody);
                 }
             } catch (Exception e){
-                Log.e(tag, "json 연결 실패", e);
+                e.printStackTrace();
             }
         }).start();
     }
 
-    // 초기 게시글 10개 데이터 목록, getPosts에서 얻은 arrayList값 중에서 다 출력하지 말고 10개만 출력
-    private void getPostList(){
-        List<CommunityData> newItem = new ArrayList<>();
-        for (int i = 0; i < item_count; i++) {
-            newItem.add(new CommunityData("닉네임 " + (i + 1), "등급 " + (i + 1), "2024-05-19", "제목 " + (i + 1), "해시 " + (i + 1), "아이디 " + (i + 1)));
-        }
-        arrayList.addAll(newItem);
-        currentItemCount = item_count;
-        Log.i(tag, "현재 item 위치 : " + currentItemCount);
+    // 초기 게시글 10개 데이터 목록 가져오기
+    private void getPostList() {
+        getPosts(currentPage);
     }
 
     // 더보기 버튼 클릭하면 게시글 10개 추가됨
-    private void getMorePosts(){
-        ArrayList<CommunityData> newItem = new ArrayList<>();
-
-        for(int i=0; i<item_count; i++){
-            newItem.add(new CommunityData("닉네임 " + (currentItemCount + i + 1), "등급 " + (currentItemCount + i + 1), "2024-05-19", "제목 " + (currentItemCount + i + 1), "해시 " + (currentItemCount + i + 1), "아이디 " + (currentItemCount + i + 1)));
-        }
-        arrayList.addAll(newItem);
-        adapter.notifyItemRangeInserted(currentItemCount, newItem.size());
-        currentItemCount += newItem.size();
-        Log.i(tag, "더보기 눌렀을 때 item 위치 : " + currentItemCount);
-
+    private void getMorePosts() {
+        getPosts(currentPage);
     }
 
     // recyclerview 초기화
@@ -160,24 +142,6 @@ public class Community extends AppCompatActivity implements CommunityAdapter.OnI
     }
 
     // 아이템 클릭하면 게시글 상세 페이지로 넘어감
-    private void clickRecyclerViewItem(){
-//        adapter.setOnItemClickListener(new CommunityAdapter.OnItemClickEventListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                Intent intent = new Intent(Community.this, CommunityContent.class);
-//                intent.putExtra("contentTitle", arrayList.get(position).getMain_title());   // 서버 연결 때는 게시글의 해시값을 보내야 함
-//                intent.putExtra("contentNickname", arrayList.get(position).getMain_nickname());
-//                intent.putExtra("contentPlace", arrayList.get(position).getMain_place());
-//                intent.putExtra("contentDate", arrayList.get(position).getMain_date());
-//                startActivity(intent);
-//
-//                CommunityData item = arrayList.get(position);
-//                Log.i(tag, "현재 아이템 정보 " + arrayList.get(position));
-//            }
-//        });
-    }
-
-    // item 클릭 이벤트 처리
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(Community.this, CommunityContent.class);

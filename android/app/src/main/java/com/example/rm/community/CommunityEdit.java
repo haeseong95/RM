@@ -61,6 +61,7 @@ import okhttp3.Response;
 public class CommunityEdit extends AppCompatActivity {
     // 레이아웃
     ImageView btnBack;
+    ProgressBar progressBar;
     RecyclerView recyclerView;
     EditText postTitle, postContent;
     TextView btnCreate, btnDelete, btnAddImage, textImageCount;
@@ -83,19 +84,10 @@ public class CommunityEdit extends AppCompatActivity {
         btnDelete = findViewById(R.id.btn_postdelete);
         btnAddImage = findViewById(R.id.btn_addImage);
         textImageCount = findViewById(R.id.image_count);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
-        progressBar.setIndeterminate(false);
-        progressBar.setProgress(80);
-
+        progressBar = findViewById(R.id.progressBar);
 
         btnAddImage.setOnClickListener(v -> attachAlbum());     // 이미지 첨부하기 버튼
-        btnBack.setOnClickListener(v -> {
-            progressDialog = new ProgressDialog(CommunityEdit.this);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setCancelable(true);
-            progressDialog.show();
-//            cancelEdit();
-        });          // 뒤로 가기 버튼
+        btnBack.setOnClickListener(v -> {cancelEdit();});          // 뒤로 가기 버튼
         btnDelete.setOnClickListener(v -> cancelEdit());       // 취소 버튼
         btnCreate.setOnClickListener(v -> {finishEdit();});        // 작성 버튼
         init();     // 이미지 URI 얻기
@@ -137,72 +129,89 @@ public class CommunityEdit extends AppCompatActivity {
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.black));
     }
 
-    // 게시글 전송 함수
+    // 게시글 제목/내용/이미지 서버로 전송
     private void submitPost(String title, String content) throws IOException {
-        OkHttpClient client = new OkHttpClient();
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("title", title)
+                    .addFormDataPart("contentText", content)
+                    .addFormDataPart("type", "post")
+                    .addFormDataPart("whichWriting", "");
 
-        MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("title", title)
-                .addFormDataPart("contentText", content)
-                .addFormDataPart("type", "post")  // 예시로 "post"로 설정
-                .addFormDataPart("whichWriting", "");  // 필요 시 설정
-
-        // 이미지 추가
-        ArrayList<String> imageLines = new ArrayList<>();
-        for (int i = 0; i < uriArrayList.size(); i++) {
-            Uri uri = uriArrayList.get(i);
-            Bitmap bitmap = decodeBitmap(uri);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            multipartBodyBuilder.addFormDataPart("images" + i, "image" + i + ".jpg",
-                    RequestBody.create(byteArray, MediaType.parse("image/jpeg")));
-            imageLines.add(String.valueOf(i));
-        }
-
-        multipartBodyBuilder.addFormDataPart("image_lines", new JSONArray(imageLines).toString());
-        RequestBody requestBody = multipartBodyBuilder.build();
-
-        TokenManager tokenManager = new TokenManager(getApplicationContext());
-        String token = tokenManager.getToken();
-        String deviceModel = Build.MODEL;
-
-        Request request = new Request.Builder()
-                .url("http://ipark4.duckdns.org:58395/api/create/users/writings")
-                .post(requestBody)
-                .addHeader("Authorization", token)
-                .addHeader("Device-Info", deviceModel)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e(tag, "Failed to submit post", e);
-                runOnUiThread(() -> Toast.makeText(CommunityEdit.this, "게시글 작성에 실패했습니다.", Toast.LENGTH_SHORT).show());
+            // 이미지 추가
+            if (!uriArrayList.isEmpty()) {
+                ArrayList<String> imageList = new ArrayList<>();
+                for (int i = 0; i < uriArrayList.size(); i++) {
+                    Uri uri = uriArrayList.get(i);
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = decodeBitmap(uri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream.toByteArray();
+                    multipartBodyBuilder.addFormDataPart("images" + i+1, "image" + i+1 + ".jpg", RequestBody.create(byteArray, MediaType.parse("image/jpeg")));
+                    imageList.add(String.valueOf(i));
+                }
+                multipartBodyBuilder.addFormDataPart("image_lines", new JSONArray(imageList).toString());
             }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            RequestBody requestBody = multipartBodyBuilder.build();
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            String token = tokenManager.getToken();
+            String deviceModel = Build.MODEL;
+
+            if (token == null) {
+                Log.e(tag, "Token is null");
+                runOnUiThread(() -> Toast.makeText(CommunityEdit.this, "토큰이 유효하지 않습니다.", Toast.LENGTH_SHORT).show());
+                return;
+            }
+
+            if (deviceModel == null) {
+                Log.e(tag, "Device model is null");
+                runOnUiThread(() -> Toast.makeText(CommunityEdit.this, "디바이스 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show());
+                return;
+            }
+
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/create/users/writings")
+                    .post(requestBody)
+                    .addHeader("Authorization", token)
+                    .addHeader("Device-Info", deviceModel)
+                    .build();
+
+            Log.d(tag, "Request: " + request.toString());
+
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
                 if (response.isSuccessful()) {
                     runOnUiThread(() -> {
+                        Log.e(tag, "게시글 작성 완료 " + response.body().toString());
                         Toast.makeText(CommunityEdit.this, "게시글이 성공적으로 작성되었습니다.", Toast.LENGTH_SHORT).show();
-                        finish();  // 액티비티 종료
+                        finish();
                     });
                 } else {
                     runOnUiThread(() -> {
                         try {
-                            String responseBody = response.body().string();
-                            Log.e(tag, "Failed to submit post: " + responseBody);
+                            Log.e(tag, "게시글 작성 실패 " + responseBody);
                             Toast.makeText(CommunityEdit.this, "게시글 작성에 실패했습니다: " + responseBody, Toast.LENGTH_SHORT).show();
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     });
                 }
+            } catch (Exception e){
+                e.printStackTrace();
             }
-        });
+
+        }).start();
     }
+
 
     // 앨범에서 이미지 가져오기
     private void attachAlbum(){
@@ -329,11 +338,11 @@ public class CommunityEdit extends AppCompatActivity {
         AlertDialog alertDialog;
         builder.setMessage("작성을 취소하시겠습니까?");
         builder.setPositiveButton("네", (dialog, which) -> finish());
-        builder.setNeutralButton("아니오", (dialog, which) -> dialog.dismiss());
+        builder.setNegativeButton("아니오", (dialog, which) -> dialog.dismiss());
         alertDialog = builder.create();
         alertDialog.show();
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
-        alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.black));
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.black));
     }
 
 }

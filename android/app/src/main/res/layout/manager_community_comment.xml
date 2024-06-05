@@ -51,7 +51,7 @@
                 android:focusableInTouchMode="false"
                 android:fontFamily="@font/nanum_regular"
                 android:text="삭제"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="@dimen/community_regular_text" />
         </RelativeLayout>
 
