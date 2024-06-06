@@ -117,7 +117,6 @@
                 android:src="@drawable/community_empty_heart"
                 android:layout_alignParentStart="true"/>
 
-
             <ImageView
                 android:id="@+id/chat"
                 android:layout_width="30dp"
@@ -128,8 +127,26 @@
                 android:layout_toEndOf="@id/heart"/>
 
             <TextView
+                android:id="@+id/like_count"
+                style="@style/community_text_normal"
+                android:text="좋아요"
+                android:layout_toStartOf="@id/like_counts"
+                android:layout_alignBottom="@id/heart"
+                android:textSize="@dimen/community_regular_text"/>
+
+            <TextView
+                android:id="@+id/like_counts"
+                android:layout_marginStart="3dp"
+                style="@style/community_text_normal"
+                android:text="개수"
+                android:layout_toStartOf="@id/view_countss"
+                android:layout_alignBottom="@id/heart"
+                android:textSize="@dimen/community_regular_text"/>
+
+            <TextView
                 android:id="@+id/view_countss"
                 style="@style/community_text_normal"
+                android:layout_marginStart="10dp"
                 android:text="조회수"
                 android:layout_toStartOf="@id/view_count"
                 android:layout_alignBottom="@id/heart"
@@ -137,7 +154,7 @@
 
             <TextView
                 android:id="@+id/view_count"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="3dp"
                 style="@style/community_text_normal"
                 android:text="개수"
                 android:layout_alignParentEnd="true"
@@ -145,47 +162,5 @@
                 android:textSize="@dimen/community_regular_text"/>
 
         </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="20dp">
-
-            <TextView
-                android:id="@+id/view_countsss"
-                style="@style/community_text_normal"
-                android:text="조회수"
-                android:layout_alignParentStart="true"
-                android:layout_alignBottom="@id/chatt"
-                android:textSize="@dimen/community_regular_text"/>
-
-            <TextView
-                android:id="@+id/view_countt"
-                style="@style/community_text_normal"
-                android:text="개수"
-                android:layout_alignBottom="@id/chatt"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/view_countsss"
-                android:textSize="@dimen/community_regular_text"/>
-
-            <ImageView
-                android:id="@+id/heartt"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/community_empty_heart"
-                android:layout_toStartOf="@id/chatt"
-                android:layout_alignBottom="@id/chatt"/>
-
-            <ImageView
-                android:id="@+id/chatt"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/community_chat"
-                android:layout_alignParentEnd="true"/>
-
-        </RelativeLayout>
     </LinearLayout>
-
-
 </LinearLayout>
