@@ -304,27 +304,6 @@ public class CommunityEdit extends AppCompatActivity {
         return sampleSize;
     }
 
-    // 이미지 resize
-    private Bitmap resizeBitmap(Bitmap bitmap, int maxWidth, int maxHeight) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-
-        if (width <= maxWidth && height <= maxHeight) {
-            return bitmap; // 이미지가 최대 크기보다 작거나 같으면 리사이징 없이 반환
-        }
-
-        float bitmapRatio = (float)width / (float)height;
-        if (bitmapRatio > 1) {
-            width = maxWidth;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxHeight;
-            width = (int) (height * bitmapRatio);
-        }
-
-        return Bitmap.createScaledBitmap(bitmap, width, height, true);
-    }
-
     // 디바이스의 DPI 계산 (dp -> 픽셀 변환)
     public int dpToPx(Context context, int dp){
         float density = context.getResources().getDisplayMetrics().density;

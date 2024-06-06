@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -152,7 +153,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra("category", categoryText(v.getId()));
                 break;
             case R.id.main_map: intent = new Intent(MainActivity.this, RecycleLocation.class); break;
-            case R.id.main_community: intent = new Intent(MainActivity.this, Community.class); break;
+            case R.id.main_community:
+                String token = tokenManager.getToken();
+                if(token != null && !token.isEmpty()){
+                    intent = new Intent(MainActivity.this, Community.class);
+                    startActivity(intent);
+                }
+
+                else {
+                    Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
+                }
+                return;
             case R.id.main_userinfo:
 
                 boolean login = PreferenceHelper.getLoginState();
