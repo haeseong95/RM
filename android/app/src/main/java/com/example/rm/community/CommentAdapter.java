@@ -39,7 +39,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public CommentAdapter(Context context, ArrayList<CommentData> arrayList){
         this.arrayList = arrayList;
         this.context = context;
-        //this.currentUserId = currentUserId;
     }
 
     @NonNull

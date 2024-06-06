@@ -1,10 +1,14 @@
 package com.example.rm.account;
 
+import static com.gun0912.tedpermission.provider.TedPermissionProvider.context;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -70,6 +74,8 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else if (v.getId() == R.id.btn_login) {
+            InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             userId = loginId.getText().toString();  // 사용자가 입력한 아이디, 비번 텍스트값 받기
             userPw = loginPwd.getText().toString();
 

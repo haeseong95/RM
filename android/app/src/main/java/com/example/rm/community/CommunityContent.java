@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
@@ -45,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -54,6 +56,7 @@ import me.relex.circleindicator.CircleIndicator3;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -67,16 +70,12 @@ public class CommunityContent extends AppCompatActivity{
     ImageView btnBack;
     ImageView likeImage, commentImage;  // 좋아요 아이콘, 댓글 이동 아이콘
     TextView cNickname, cLevel, cDate, cTitle, cContent, cLike, cView;    // 닉네임, 등급, 생성날짜, 게시글 제목, 게시글 내용, 좋아요 개수, 조회수 개수
-    EditText editText;  // 댓글 입력창
     Toolbar toolbar;
-
     //
     private static final String tag = "CommunityContent, 상세 게시글";
     private static int currentItemCount = -1;
     private int itemPosition = RecyclerView.NO_POSITION;    // item 초기값
     ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();    // viewpager의 이미지를 담을 bitmap 리스트
-    ArrayList<CommentData> commentDataArrayList = new ArrayList<>();    // 댓글 데이터 담음
-    CommentAdapter commentAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,11 +120,15 @@ public class CommunityContent extends AppCompatActivity{
         });
 
         // 게시글 상세 내용
-        String hash = getIntent().getStringExtra("community_post_hash");
-        getTextData(hash);
+        String post_hash = getIntent().getStringExtra("community_post_hash");
+        getTextData(post_hash);
 
 
-
+        // 말풍선 아이콘 클릭하면 댓글창 열림
+        commentImage.setOnClickListener(view -> {
+            CommentBottomSheet commentBottomSheet = new CommentBottomSheet();
+            commentBottomSheet.show(getSupportFragmentManager(), "댓글창");
+        });
 
     }
 
@@ -252,12 +255,12 @@ public class CommunityContent extends AppCompatActivity{
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-        Log.e(tag, "이미지 사이즈 조절4");
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
     }
 
+    // 이미지 사이즈 줄임2
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -266,7 +269,6 @@ public class CommunityContent extends AppCompatActivity{
         if (height > reqHeight || width > reqWidth) {
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;
-
             while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
                 inSampleSize *= 2;
             }
@@ -361,6 +363,15 @@ public class CommunityContent extends AppCompatActivity{
     // 댓글 클래스
     public static class CommentBottomSheet extends BottomSheetDialogFragment {
         private static final String tag = "댓글 클래스";
+        CommentAdapter commentAdapter;
+        RecyclerView recyclerView;
+        EditText editText;
+        ImageView sendComment;
+        //
+        ArrayList<CommentData> commentDataArrayList = new ArrayList<>();    // 댓글 데이터 담음
+//        String post_hash = getIntent().getStringExtra("community_post_hash");
+
+
         @Override
         public void onStart() {
             super.onStart();
@@ -389,106 +400,69 @@ public class CommunityContent extends AppCompatActivity{
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            ImageView btnClose = view.findViewById(R.id.btn_close_);
-            RecyclerView recyclerView1 = view.findViewById(R.id.comment_recyclerview);
-            EditText editText1 = view.findViewById(R.id.cc_edit_comment);
-            ImageView sendComment = view.findViewById(R.id.send_comment);
-            btnClose.setOnClickListener(v -> dismiss());
+            Button btnClose = view.findViewById(R.id.btn_close_comment);
+            recyclerView = view.findViewById(R.id.comment_recyclerview);
+            editText = view.findViewById(R.id.cc_edit_comment);
+            sendComment = view.findViewById(R.id.send_comment);
+            btnClose.setOnClickListener(v -> dismiss());    // 뒤로 가기
+
+            // 댓글창
+//            getCommentData(post_hash, editText.getText().toString());
+            setRecyclerView();
+
 
         }
 
-        /*
-        private void getCommentData() {
 
-            List<CommentData> newItem = new ArrayList<>();
-
-
-            for (int i = 0; i < 2; i++) {
-                commentDataArrayList.add(new CommentData("닉네임 " + (i + 1), "등급 " + (i + 1), "2024-05-19", "댓글 " + (i + 1)));
-                currentItemCount += 1;
-            }
-            commentDataArrayList.addAll(newItem);
-            Log.i(tag, "현재 item 위치 : " + commentDataArrayList + ", 마지막 item 위치 : " + currentItemCount);
-
+        // 댓글창 초기화
+        private void setRecyclerView(){
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            commentAdapter = new CommentAdapter(getContext(), commentDataArrayList);
+            recyclerView.setAdapter(commentAdapter);
+            recyclerView.setItemAnimator(null);
         }
 
-        // 서버에서 해당 게시글의 댓글 데이터를 가져와야 함 + 이미지는 따로 가져와야 함
-        private void getPostData() {
-            String postHash = getIntent().getStringExtra("community_post_hash");
-            String postUserId = getIntent().getStringExtra("community_post_userId");
-
+        // 댓글창 데이터 가져옴
+        private void getCommentData(String postHash, String content) {
             new Thread(() -> {
                 OkHttpClient client = new OkHttpClient();
+                MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("title", "")
+                        .addFormDataPart("contentText", content)
+                        .addFormDataPart("type", "comment")
+                        .addFormDataPart("whichWriting", postHash);
+
+                RequestBody requestBody = multipartBodyBuilder.build();
+                TokenManager tokenManager = new TokenManager(getContext());
+                String token = tokenManager.getToken();
+                String deviceModel = Build.MODEL;
                 Request request = new Request.Builder()
-                        .url("url 추가해야 함" + "/hash=" + postHash + "&userId=" + postUserId)
+                        .url("http://ipark4.duckdns.org:58395/api/create/users/writings")
+                        .post(requestBody)
+                        .addHeader("Authorization", token)
+                        .addHeader("Device-Info", deviceModel)
                         .build();
 
                 try {
                     Response response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
                     if (response.isSuccessful()) {
-                        String jsonData = response.body().string();
-                        JSONObject jsonObject = new JSONObject(jsonData);
-
-                        String nickname = jsonObject.getString("nickname");
-                        String level = jsonObject.getString("level");
-                        String date = jsonObject.getString("date");
-                        String title = jsonObject.getString("title");
-                        String content = jsonObject.getString("content");
-                        int likeCount = jsonObject.getInt("likeCount");
-
-                        runOnUiThread(() -> {
-                            cNickname.setText(nickname);
-                            cLevel.setText(level);
-                            cDate.setText(date);
-                            cTitle.setText(title);
-                            cContent.setText(content);
-                            cCount.setText(String.valueOf(likeCount));
-
-//                        ArrayList<String> encodedImages = new ArrayList<>();
-//                        JSONArray imagesArray = jsonObject.getJSONArray("images");
-//                        for (int i = 0; i < imagesArray.length(); i++) {
-//                            encodedImages.add(imagesArray.getString(i));
-//                        }
-//
-//                        Intent intent = new Intent();
-//                        intent.putStringArrayListExtra("encodedImages", encodedImages);
-//                        showViewPager(intent);
-                        });
-
+                        Log.e(tag, "댓글 작성 완료 " + response.body().toString());
+                        Intent intent = new Intent(getContext(), Community.class);
+                        intent.putExtra("post_create_success", true);
+//                        setResult(RESULT_OK, intent);
+//                        finish();
                     } else {
-                        Log.e(tag, "서버 응답 오류: " + response.message());
+                        Log.e(tag, "댓글 작성 실패 " + responseBody);
                     }
-                } catch (Exception e) {
-                    Log.e(tag, "게시글 데이터 가져오기 실패", e);
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
+
             }).start();
         }
-
-
-        // 댓글창 recyclerview 어댑터 초기화
-    private void setRecyclerView(){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CommunityContent.this);
-        recyclerView.setLayoutManager(linearLayoutManager); // layoutManager 설정
-        commentAdapter = new CommentAdapter(CommunityContent.this, commentDataArrayList);
-        recyclerView.setAdapter(commentAdapter);
-        recyclerView.setItemAnimator(null); // 애니메이션 효과 제거
-    }
-
-    // 댓글 입력창에 댓글 입력한 걸 recyclerview 댓글창에 추가하기
-    private void addComment(){
-        String comment = editText.getText().toString();     // 댓글 입력한 문자열 얻음
-        String nickname = getIntent().getStringExtra("contentNickname"); // 서버에 연결해서 데이터 받고 원래는 사용자 본인 닉네임이 떠야 함
-        String level = getIntent().getStringExtra("contentPlace");
-        String date = getIntent().getStringExtra("contentPlace");
-
-        commentDataArrayList.add(new CommentData(nickname, level, date, comment));
-        commentAdapter.notifyItemInserted(commentDataArrayList.size());
-        editText.setText(null);
-        final InputMethodManager methodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        methodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-    }
-
-         */
 
     }
 }

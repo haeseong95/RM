@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,6 +53,7 @@ public class Community extends AppCompatActivity {
     private static final String tag = "Community 게시판 메인";
     private static final int item_count = 10;
     private int currentPage = 1;
+    private static final int REQUEST_CODE_EDIT = 1;
     ArrayList<CommunityData> arrayList = new ArrayList<>();     // 게시글 목록 데이터 저장
     CommunityAdapter adapter;
 
@@ -70,7 +73,7 @@ public class Community extends AppCompatActivity {
         // 연필 아이콘 클릭 -> 글쓰기 화면
         btnWrite.setOnClickListener(v -> {
             Intent intent = new Intent(Community.this, CommunityEdit.class);
-            startActivity(intent);
+            activityResultLauncher.launch(intent);
         });
 
         // 게시글 목록
@@ -81,13 +84,17 @@ public class Community extends AppCompatActivity {
         searchPost();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && data.getBooleanExtra("post_create_success", true)) {
-            getPostList(); // 새로운 게시글이 작성되었을 때 목록 업데이트
-        }
-    }
+    // setResult로 전송한 결과를 받는 코드
+    private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    if (result.getData().getBooleanExtra("post_create_success", false)) {
+                        getPostList();
+                        Log.i(tag, "게시글 업데이트");
+                    }
+                }
+            });
 
     // 게시글 목록 가져오는 okhttp (초기 게시글 10개 가져옴, 게시글을 작성한 아이디, 해시값을 저장)
     private void getPosts(int page) {
@@ -112,7 +119,6 @@ public class Community extends AppCompatActivity {
                 .post(requestBody)
                 .addHeader("Authorization", tokenManager.getToken())
                 .addHeader("Device-Info", Build.MODEL)
-//                .addHeader("Content-Type", "application/json")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {

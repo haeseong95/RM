@@ -20,143 +20,149 @@
         <TextView android:id="@+id/category_title" android:text="게시판" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <FrameLayout
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="400dp">
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:clipChildren="false"/>
-
-            <me.relex.circleindicator.CircleIndicator3
-                android:id="@+id/indicator"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_gravity="bottom"/>
-        </FrameLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="20dp">
-
-            <TextView
-                android:id="@+id/cc_nickname"
-                style="@style/community_text_bold"
-                android:text="닉네임"
-                android:layout_alignParentStart="true"
-                android:textSize="@dimen/community_regular_text"/>
-
-            <TextView
-                android:id="@+id/cc_level"
-                style="@style/community_text_normal_gray"
-                android:text="등급"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/cc_nickname"
-                android:layout_alignBottom="@id/cc_nickname"
-                android:textSize="@dimen/community_small_text"/>
-
-            <TextView
-                android:id="@+id/cc_date"
-                style="@style/community_text_normal_gray"
-                android:text="생성날짜"
-                android:layout_alignBottom="@id/cc_nickname"
-                android:layout_marginStart="10dp"
-                android:textSize="@dimen/community_small_text"
-                android:layout_toEndOf="@id/cc_level"/>
-        </RelativeLayout>
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="10dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/cc_title"
-                style="@style/community_text_bold"
-                android:text="게시글 제목"
-                android:textStyle="bold"
-                android:textSize="@dimen/community_18_text"
-                android:layout_marginLeft="10dp"/>
+            <FrameLayout
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="400dp">
 
-            <TextView
-                android:id="@+id/cc_content"
-                style="@style/community_text_normal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="게시글 내용"
-                android:textSize="@dimen/community_regular_text"/>
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:clipChildren="false"/>
+
+                <me.relex.circleindicator.CircleIndicator3
+                    android:id="@+id/indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="bottom"/>
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="20dp">
+
+                <TextView
+                    android:id="@+id/cc_nickname"
+                    style="@style/community_text_bold"
+                    android:text="닉네임"
+                    android:layout_alignParentStart="true"
+                    android:textSize="@dimen/community_regular_text"/>
+
+                <TextView
+                    android:id="@+id/cc_level"
+                    style="@style/community_text_normal_gray"
+                    android:text="등급"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/cc_nickname"
+                    android:layout_alignBottom="@id/cc_nickname"
+                    android:textSize="@dimen/community_small_text"/>
+
+                <TextView
+                    android:id="@+id/cc_date"
+                    style="@style/community_text_normal_gray"
+                    android:text="생성날짜"
+                    android:layout_alignBottom="@id/cc_nickname"
+                    android:layout_marginStart="10dp"
+                    android:textSize="@dimen/community_small_text"
+                    android:layout_toEndOf="@id/cc_level"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="10dp">
+
+                <TextView
+                    android:id="@+id/cc_title"
+                    style="@style/community_text_bold"
+                    android:text="게시글 제목"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/community_18_text"
+                    android:layout_marginLeft="10dp"/>
+
+                <TextView
+                    android:id="@+id/cc_content"
+                    style="@style/community_text_normal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="게시글 내용"
+                    android:textSize="@dimen/community_regular_text"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="20dp">
+
+                <ImageView
+                    android:id="@+id/heart"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/community_empty_heart"
+                    android:layout_alignParentStart="true"/>
+
+                <ImageView
+                    android:id="@+id/chat"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/community_chat"
+                    android:layout_alignBottom="@id/heart"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/heart"/>
+
+                <TextView
+                    android:id="@+id/like_count"
+                    style="@style/community_text_normal"
+                    android:text="좋아요"
+                    android:layout_toStartOf="@id/like_counts"
+                    android:layout_alignBottom="@id/heart"
+                    android:textSize="@dimen/community_regular_text"/>
+
+                <TextView
+                    android:id="@+id/like_counts"
+                    android:layout_marginStart="3dp"
+                    style="@style/community_text_normal"
+                    android:text="개수"
+                    android:layout_toStartOf="@id/view_countss"
+                    android:layout_alignBottom="@id/heart"
+                    android:textSize="@dimen/community_regular_text"/>
+
+                <TextView
+                    android:id="@+id/view_countss"
+                    style="@style/community_text_normal"
+                    android:layout_marginStart="10dp"
+                    android:text="조회수"
+                    android:layout_toStartOf="@id/view_count"
+                    android:layout_alignBottom="@id/heart"
+                    android:textSize="@dimen/community_regular_text"/>
+
+                <TextView
+                    android:id="@+id/view_count"
+                    android:layout_marginStart="3dp"
+                    style="@style/community_text_normal"
+                    android:text="개수"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignBottom="@id/heart"
+                    android:textSize="@dimen/community_regular_text"/>
+
+            </RelativeLayout>
         </LinearLayout>
+    </ScrollView>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="20dp">
-
-            <ImageView
-                android:id="@+id/heart"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/community_empty_heart"
-                android:layout_alignParentStart="true"/>
-
-            <ImageView
-                android:id="@+id/chat"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/community_chat"
-                android:layout_alignBottom="@id/heart"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/heart"/>
-
-            <TextView
-                android:id="@+id/like_count"
-                style="@style/community_text_normal"
-                android:text="좋아요"
-                android:layout_toStartOf="@id/like_counts"
-                android:layout_alignBottom="@id/heart"
-                android:textSize="@dimen/community_regular_text"/>
-
-            <TextView
-                android:id="@+id/like_counts"
-                android:layout_marginStart="3dp"
-                style="@style/community_text_normal"
-                android:text="개수"
-                android:layout_toStartOf="@id/view_countss"
-                android:layout_alignBottom="@id/heart"
-                android:textSize="@dimen/community_regular_text"/>
-
-            <TextView
-                android:id="@+id/view_countss"
-                style="@style/community_text_normal"
-                android:layout_marginStart="10dp"
-                android:text="조회수"
-                android:layout_toStartOf="@id/view_count"
-                android:layout_alignBottom="@id/heart"
-                android:textSize="@dimen/community_regular_text"/>
-
-            <TextView
-                android:id="@+id/view_count"
-                android:layout_marginStart="3dp"
-                style="@style/community_text_normal"
-                android:text="개수"
-                android:layout_alignParentEnd="true"
-                android:layout_alignBottom="@id/heart"
-                android:textSize="@dimen/community_regular_text"/>
-
-        </RelativeLayout>
-    </LinearLayout>
 </LinearLayout>

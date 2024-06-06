@@ -1,11 +1,15 @@
 package com.example.rm.account;
 
+import static com.gun0912.tedpermission.provider.TedPermissionProvider.context;
+
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -121,6 +125,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         } else if (v.getId() == R.id.btn_sign_up) {
             registerUser(); // 회원가입 버튼
         }
+        InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     private void checkSignUpButtonState() {
