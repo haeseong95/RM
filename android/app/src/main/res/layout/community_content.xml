@@ -25,15 +25,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="500dp">
+            android:layout_height="400dp">
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="1000dp"
+                android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:clipChildren="false"/>
 
@@ -41,11 +41,8 @@
                 android:id="@+id/indicator"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_alignParentBottom="true"
-                app:ci_drawable="@drawable/white_radius_circle_indicator"
-                app:ci_drawable_unselected="@drawable/black_radius_circle_indicator"/>
-
-        </RelativeLayout>
+                android:layout_gravity="bottom"/>
+        </FrameLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

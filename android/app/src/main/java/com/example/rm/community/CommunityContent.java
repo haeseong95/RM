@@ -120,16 +120,16 @@ public class CommunityContent extends AppCompatActivity{
             }
         });
 
-
+        // 게시글 상세 내용
         String hash = getIntent().getStringExtra("community_post_hash");
-
-        getTextData(hash);  // 게시글 상세 내용
+        getTextData(hash);
 
 
 
 
     }
 
+    // 텍스트 데이터 얻음
     private void getTextData(String hash) {
         OkHttpClient client = new OkHttpClient();
         TokenManager tokenManager = new TokenManager(getApplicationContext());
@@ -200,61 +200,7 @@ public class CommunityContent extends AppCompatActivity{
         });
     }
 
-    /*
-    private void getImageData(String []image) {
-        OkHttpClient client = new OkHttpClient();
-        TokenManager tokenManager = new TokenManager(getApplicationContext());
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");//
-        JSONObject jsonObject = new JSONObject();
-        try {
-            JSONArray jsonArray = new JSONArray();
-            for (String url : image) {
-                jsonArray.put(url);
-                Log.e("url", url);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-        Request request = new Request.Builder()
-                .url("http://ipark4.duckdns.org:58395/api/read/image")
-                .post(body)
-                .addHeader("Authorization", tokenManager.getToken())
-                .addHeader("Device-Info", Build.MODEL)
-                .build();
-
-        try{
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                JSONObject responseObject = new JSONObject(responseBody);
-                JSONObject messageObject = responseObject.getJSONObject("message");
-
-                runOnUiThread(() -> {
-                    try {
-                        JSONArray imagesArray = messageObject.getJSONArray("images");
-                        List<String> imageUrl = new ArrayList<>();
-                        for (int i = 0; i < imagesArray.length(); i++) {
-                            JSONObject imageObject = imagesArray.getJSONObject(i);
-                            imageUrl.add(imageObject.getString("fileLocation"));    // 이미지가 저장된 파일 위치
-                        }
-                        setupViewPager(imageUrl);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Log.e(tag, "데이터 망 " + response.code());
-                    }
-                });
-            } else {
-                Log.e(tag, "서버 응답 오류남 " + response.body().string());
-            }
-        } catch (Exception e){
-            Log.e(tag, "네트워크 오류남 " + e);
-        }
-    }
-
-     */
-
+    // 이미지 데이터 출력
     private void getImageData(String[] directories, String[] files) {
         OkHttpClient client = new OkHttpClient();
         TokenManager tokenManager = new TokenManager(getApplicationContext());
@@ -285,12 +231,9 @@ public class CommunityContent extends AppCompatActivity{
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    Log.e("response body", String.valueOf(response.body()));
                     if (response.isSuccessful()) {
-                        InputStream inputStream = response.body().byteStream();
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        inputStream.close();
-
+                        byte[] imageBytes = response.body().bytes();
+                        Bitmap bitmap = decodeSampledBitmapFromBytes(imageBytes, 1080, 1920);  // 원하는 크기로 디코딩
                         runOnUiThread(() -> {
                             bitmapArrayList.add(bitmap);
                             viewPagerAdapter.notifyDataSetChanged();
@@ -304,6 +247,34 @@ public class CommunityContent extends AppCompatActivity{
         setupViewPager(bitmapArrayList);
     }
 
+    // 이미지 사이즈 줄임
+    private Bitmap decodeSampledBitmapFromBytes(byte[] bytes, int reqWidth, int reqHeight) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+        Log.e(tag, "이미지 사이즈 조절4");
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+    }
+
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
+
+    // 뷰페이저 설정
     private void setupViewPager(ArrayList<Bitmap> bitmaps) {
         viewPagerAdapter = new ViewPagerAdapter(getApplicationContext(), bitmaps);
         viewPager2.setAdapter(viewPagerAdapter);
@@ -311,43 +282,6 @@ public class CommunityContent extends AppCompatActivity{
         indicator3.setViewPager(viewPager2);
     }
 
-
-
-    // 서버에서 보낸 base64 이미지 -> bitmap으로 변환하기
-    private void decodeBase64toBitmap(String base64) throws IOException {
-        try {
-            byte[] decodeBytes = Base64.decode(base64, Base64.NO_WRAP);     // base64 문자열 -> byte[]로 디코딩, Base64 클래스가 java 라이브러리면 플래그X /android 클래스는 플래그 사용O
-            BitmapFactory.Options options = new BitmapFactory.Options();    // 이미지 크기를 먼저 파악
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeByteArray(decodeBytes, 0, decodeBytes.length, options);
-            options.inSampleSize = calculateInSampleSize(options);
-            options.inJustDecodeBounds = false;
-            Bitmap bitmap = BitmapFactory.decodeByteArray(decodeBytes, 0, decodeBytes.length);      // byte[] -> bitmap 변환
-            bitmapArrayList.add(bitmap);
-            Log.d(tag, "base64 -> bitamp 디코딩 성공");
-        } catch (Exception e){
-            Log.e(tag, "base64 -> bitamp 디코딩 실패", e);
-        }
-    }
-
-
-    // 이미지 사이즈 계산 (용량 줄이기)
-    private int calculateInSampleSize(BitmapFactory.Options options){
-        CommunityEdit communityEdit = new CommunityEdit();
-        int MAX_WIDTH = communityEdit.dpToPx(getApplicationContext(), 384);
-        int MAX_HEIGHT = communityEdit.dpToPx(getApplicationContext(), 250);
-        int height = options.outHeight;    // 이미지 세로, 가로, MIME 타입("image/jpeg" 등) 얻음 -> 이미지 원본 크기를 얻어 inSampleSize를 설정해 이미지 비율 축소O
-        int width = options.outWidth;
-        int sampleSize = 4;
-        if (height > MAX_HEIGHT || width > MAX_WIDTH) {
-            int halfHeight = height / 2;
-            int halfWidth = width / 2;
-            while ((halfHeight / sampleSize) >= MAX_HEIGHT && (halfWidth / sampleSize) >= MAX_WIDTH) {
-                sampleSize *= 2;
-            }
-        }
-        return sampleSize;
-    }
 
     // 초기 좋아요 정보
     private void setLike(String postId){
@@ -394,7 +328,7 @@ public class CommunityContent extends AppCompatActivity{
         }
     }
 
-
+    // 툴바 상단 버튼 (게시글 수정/삭제)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.comment_menu, menu);
