@@ -178,9 +178,14 @@ public class CommunityEdit extends AppCompatActivity {
                     runOnUiThread(() -> {
                         Log.e(tag, "게시글 작성 완료 " + response.body().toString());
                         Toast.makeText(CommunityEdit.this, "게시글이 성공적으로 작성되었습니다.", Toast.LENGTH_SHORT).show();
+
+                        Intent result = new Intent();
+                        result.putExtra("post_create_success", true);
+                        setResult(RESULT_OK, result);
+
                         Intent intent = new Intent(CommunityEdit.this, Community.class);
-                        intent.putExtra("post_create_success", true);
-                        setResult(RESULT_OK, intent);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                         finish();
                     });
                 } else {
@@ -272,8 +277,6 @@ public class CommunityEdit extends AppCompatActivity {
             bitmap = BitmapFactory.decodeStream(inputStream, null, options);
             inputStream.close();
 
-            // resize
-//            bitmap = resizeBitmap(bitmap, 500, 500);
         } finally {
             if (inputStream != null) {
                 try {
