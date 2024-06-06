@@ -2,6 +2,7 @@ package com.example.rm.community;
 
 import static com.gun0912.tedpermission.provider.TedPermissionProvider.context;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,7 +46,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator3;
@@ -92,11 +95,12 @@ public class CommunityContent extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
-        String postId = getIntent().getStringExtra("postId");
+        String postHash = getIntent().getStringExtra("community_post_hash");
 
         // 좋아요 버튼
-        setLike(postId);
-        likeImage.setOnClickListener(v -> currentLike(postId));
+        likeImage.setOnClickListener(v -> {
+            updateLike(postHash);
+        });
 
         // 게시글 수정, 삭제
         setSupportActionBar(toolbar);
@@ -105,10 +109,10 @@ public class CommunityContent extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.action_delete:    // 게시글 삭제
-                    postDelete(postId);
+//                    postDelete(postId);
                     return true;
                 case R.id.action_edit:      // 게시글 수정
-                    postModify(postId);
+//                    postModify(postId);
                     return true;
                 default:
                     return CommunityContent.super.onOptionsItemSelected(item);
@@ -124,11 +128,13 @@ public class CommunityContent extends AppCompatActivity {
         });
 
         // 게시글 상세 내용
-        String post_hash = getIntent().getStringExtra("community_post_hash");
-        getTextData(post_hash);
+        getTextData(postHash);
         setupViewPager();
 
 //        increaseViewCount(hash); // 조회수 증가
+
+
+
 
     }
 
@@ -283,11 +289,12 @@ public class CommunityContent extends AppCompatActivity {
         indicator3.setViewPager(viewPager2);
     }
 
+
     // 초기 좋아요 정보
-    private void setLike(String postId) {
-        boolean likeState = PreferenceHelper.getLikeState(postId); // 좋아요 상태 정보 가져옴 (눌림-true, 안눌림-false)
+    private void setLike(String hash) {
+        boolean likeState = PreferenceHelper.getLikeState(hash); // 좋아요 상태 정보 가져옴 (눌림-true, 안눌림-false)
         updateLikeImage(likeState);
-        int likeCount = PreferenceHelper.getLikeCount(postId); // 좋아요 개수 정보 가져옴
+        int likeCount = PreferenceHelper.getLikeCount(hash); // 좋아요 개수 정보 가져옴
         cLike.setText(String.valueOf(likeCount));
     }
 
@@ -295,26 +302,31 @@ public class CommunityContent extends AppCompatActivity {
     private void currentLike(String postId) {
         boolean currentLikeState = PreferenceHelper.getLikeState(postId);
         int currentLikeCount = Integer.parseInt(cLike.getText().toString());
-        setLikeState(postId, currentLikeState, currentLikeCount);
+//        setLikeState(postId, currentLikeState, currentLikeCount);
     }
 
+
+
     // 좋아요 클릭 시 상태/개수 변경
-    private void setLikeState(String postId, boolean likeState, int count) {
-        int likeCount = count;
+    private void setLikeState(String hash, boolean likeState) {
+        int likeCount = -1;
 
         if (likeState) { // likestate가 true, 즉 눌린 상태에서 또 누른거니까 취소
-            PreferenceHelper.likeState(postId, false);
+            PreferenceHelper.likeState(hash, false);
             updateLikeImage(false);
-            likeCount -= 1;
-            PreferenceHelper.likeCount(postId, likeCount);
+
+            PreferenceHelper.likeCount(hash, likeCount);
         } else {
-            PreferenceHelper.likeState(postId, true);
+            PreferenceHelper.likeState(hash, true);
             updateLikeImage(true);
-            likeCount += 1;
-            PreferenceHelper.likeCount(postId, likeCount);
+            PreferenceHelper.likeCount(hash, likeCount);
         }
         cLike.setText(String.valueOf(likeCount));
     }
+
+
+
+
 
     // 좋아요 상태 정보에 따라 하트 이미지 달라짐
     private void updateLikeImage(boolean state) {
@@ -326,6 +338,42 @@ public class CommunityContent extends AppCompatActivity {
     }
 
 
+    //
+    private void updateLike(String hash){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(context.getApplicationContext()); //
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hash", hash);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/update/writing/info/internal/like")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    Log.e("좋아요 누름", "좋아요 누름" + responseBody);
+                } else {
+                    Log.e("실패", "이유는 " + responseBody);
+                }
+            } catch (IOException e) {
+                Log.e(tag, "오류", e);
+            }
+        }).start();
+    }
 
 
     // 툴바 상단 버튼 (게시글 수정/삭제)
@@ -398,9 +446,6 @@ public class CommunityContent extends AppCompatActivity {
 
 
 
-
-
-
     // 댓글 클래스
     public static class CommentBottomSheet extends BottomSheetDialogFragment {
         private static final String tag = "댓글 클래스";
@@ -462,11 +507,21 @@ public class CommunityContent extends AppCompatActivity {
             sendComment = view.findViewById(R.id.send_comment);
             sendComment.setOnClickListener(view1 -> {
                 sendComments(editText.getText().toString()); // 댓글 서버에 전송
-                getCommentData(postHash);   // 업데이트
+                InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             });
 
             getCommentData(postHash);
             setRecyclerView();
+        }
+
+        // 댓글창 초기화
+        private void setRecyclerView(){
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            commentAdapter = new CommentAdapter(getContext(), commentDataArrayList);
+            recyclerView.setAdapter(commentAdapter);
+            recyclerView.setItemAnimator(null);
         }
 
         // 전체 댓글창 데이터 가져옴
@@ -506,14 +561,18 @@ public class CommunityContent extends AppCompatActivity {
                         String author = jsonO.getString("author"); // 아이디
                         String nickname = jsonO.getString("nickname"); // 닉네임
                         String place = jsonO.getString("place");    // 등급
+                        String hash = jsonO.getString("hash");  // 댓글의 해시값
                         String createTime = jsonO.getString("createTime"); // 생성날짜
                         String date = createTime.split("T")[0];
+
                         Log.i(tag, "댓글 : " + contentText);
-                        allComments.add(new CommentData(nickname, place, date, contentText));
+                        allComments.add(new CommentData(nickname, place, date, contentText, hash));
                     }
-                    commentDataArrayList.addAll(allComments);
-                    commentAdapter.notifyDataSetChanged();
-                    Log.i(tag, "댓글 전송 성공!" + responseBody);
+                    getActivity().runOnUiThread(() -> {
+                        commentDataArrayList.addAll(allComments);
+                        commentAdapter.notifyDataSetChanged();
+                        Log.i(tag, "댓글 전송 성공!" + responseBody);
+                    });
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -549,65 +608,19 @@ public class CommunityContent extends AppCompatActivity {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    String responseBody = response.body().string();
                     if (response.isSuccessful()) {
                         Log.e(tag, "댓글 작성 완료 " + response.body().toString());
-                        getActivity().runOnUiThread(() ->
-                                Toast.makeText(getContext(), "댓글 작성 완료", Toast.LENGTH_SHORT).show());
+                        getActivity().runOnUiThread(() -> {
+                            commentDataArrayList.clear();
+                            getCommentData(postHash);
+                            editText.setText("");
+                        });
                     } else {
                         Log.e(tag, "서버 응답 오류: " + response.message());
-                        getActivity().runOnUiThread(() ->
-                                Toast.makeText(getContext(), "서버 연결에 실패했습니다.", Toast.LENGTH_SHORT).show());
                     }
                 }
             });
         }
-
-        // 입력한 문자열을 서버에서 가져와서 recyclerView에 item 1개 추가하기
-
-        // 댓글창 초기화
-        private void setRecyclerView(){
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(linearLayoutManager);
-            commentAdapter = new CommentAdapter(getContext(), commentDataArrayList);
-            recyclerView.setAdapter(commentAdapter);
-            recyclerView.setItemAnimator(null);
-        }
-
-
-
-        /*
-        private void getCommentData() {
-            List<CommentData> newItem = new ArrayList<>();
-            for (int i = 0; i < 2; i++) {
-                commentDataArrayList.add(new CommentData("닉네임 " + (i + 1), "등급 " + (i + 1), "2024-05-19", "댓글 " + (i + 1)));
-                currentItemCount += 1;
-            }
-            commentDataArrayList.addAll(newItem);
-            Log.i(tag, "현재 item 위치 : " + commentDataArrayList);
-            Log.i(tag, "현재 item 위치 : " + commentDataArrayList + ", 마지막 item 위치 : " + currentItemCount);
-        }
-
-        private void addComment(){
-            String comment = editText.getText().toString();     // 댓글 입력한 문자열 얻음
-            String nickname = getIntent().getStringExtra("contentNickname"); // 서버에 연결해서 데이터 받고 원래는 사용자 본인 닉네임이 떠야 함
-            String level = getIntent().getStringExtra("contentPlace");
-            String date = getIntent().getStringExtra("contentPlace");
-
-            commentDataArrayList.add(new CommentData(nickname, level, date, comment));
-            commentAdapter.notifyItemInserted(commentDataArrayList.size());
-            editText.setText(null);
-            final InputMethodManager methodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            methodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-
-
-         */
-
-
-
-
-
     }
 
 }

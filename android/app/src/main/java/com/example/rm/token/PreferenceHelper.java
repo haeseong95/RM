@@ -83,6 +83,4 @@ public class PreferenceHelper {
         String userId = getLoginId(context);    // 로그인 시 사용된 아이디값 저장됨
         return userId.equals(id);
     }
-
-
 }
