@@ -2,13 +2,10 @@ package com.example.rm.community;
 
 import static com.gun0912.tedpermission.provider.TedPermissionProvider.context;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
@@ -32,12 +29,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.rm.R;
+import com.example.rm.token.PreferenceHelper;
 import com.example.rm.token.TokenManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -47,9 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +68,7 @@ public class CommunityContent extends AppCompatActivity {
     TextView cNickname, cLevel, cDate, cTitle, cContent, cLike, cView;    // 닉네임, 등급, 생성날짜, 게시글 제목, 게시글 내용, 좋아요 개수, 조회수 개수
     Toolbar toolbar;
     //
-    private static final String tag = "CommunityContent, 상세 게시글";
+    private static final String tag = "상세 게시글 화면";
     private static int currentItemCount = -1;
     private int itemPosition = RecyclerView.NO_POSITION;    // item 초기값
     ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();    // viewpager의 이미지를 담을 bitmap 리스트
@@ -97,7 +92,6 @@ public class CommunityContent extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
-
         String postId = getIntent().getStringExtra("postId");
 
         // 좋아요 버튼
@@ -121,24 +115,21 @@ public class CommunityContent extends AppCompatActivity {
             }
         });
 
-<<<<<<< HEAD
+        // 말풍선 아이콘 클릭하면 댓글창 열림
+        commentImage.setOnClickListener(view -> {
+            String post_hash = getIntent().getStringExtra("community_post_hash");
+            Log.e(tag, "커뮤니티 메인 화면에서 얻은 해시값" + post_hash);
+            CommentBottomSheet commentBottomSheet = CommentBottomSheet.newInstance(post_hash);
+            commentBottomSheet.show(getSupportFragmentManager(), "댓글창");
+        });
+
         // 게시글 상세 내용
         String post_hash = getIntent().getStringExtra("community_post_hash");
         getTextData(post_hash);
+        setupViewPager();
 
+//        increaseViewCount(hash); // 조회수 증가
 
-        // 말풍선 아이콘 클릭하면 댓글창 열림
-        commentImage.setOnClickListener(view -> {
-            CommentBottomSheet commentBottomSheet = new CommentBottomSheet();
-            commentBottomSheet.show(getSupportFragmentManager(), "댓글창");
-        });
-=======
-
-        String hash = getIntent().getStringExtra("community_post_hash");
->>>>>>> 43fc512a359ba2541f64ce69a183678480566141
-
-        getTextData(hash);  // 게시글 상세 내용
-        increaseViewCount(hash); // 조회수 증가
     }
 
     // 텍스트 데이터 얻음
@@ -191,13 +182,14 @@ public class CommunityContent extends AppCompatActivity {
                                 JSONArray imageArray = messageObject.getJSONArray("images");
                                 String[] directories = new String[imageArray.length()];
                                 String[] files = new String[imageArray.length()];
+
                                 for (int i = 0; i < imageArray.length(); i++) {
                                     JSONObject image = imageArray.getJSONObject(i);
-                                    directories[i] = image.getString("fileLocation");
-                                    files[i] = image.getString("name");
-                                    Log.e("디렉터리 파일", directories[i] + files[i]);
+                                    String directory = image.getString("fileLocation");
+                                    String file = image.getString("name");
+                                    Log.e("디렉터리 파일", directory + file);
+                                    getImageData(directory, file);
                                 }
-                                getImageData(directories, files);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -214,50 +206,47 @@ public class CommunityContent extends AppCompatActivity {
 
 
     // 이미지 데이터 출력
-    private void getImageData(String[] directories, String[] files) {
+    private void getImageData(String directories, String files) {
         OkHttpClient client = new OkHttpClient();
         TokenManager tokenManager = new TokenManager(getApplicationContext());
+        JSONObject jsonObject = new JSONObject();
+        Log.e("값 뭐냐", directories + files);
+        try {
+            jsonObject.put("directory", directories);
+            jsonObject.put("file", files);
+            Log.e("디렉터리 파일", directories + files);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        for (int i = 0; i < directories.length; ++i) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("directory", directories[i]);
-                jsonObject.put("file", files[i]);
-                Log.e("디렉터리 파일", directories[i] + files[i]);
-            } catch (JSONException e) {
-                e.printStackTrace();
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+        Request request = new Request.Builder()
+                .url("http://ipark4.duckdns.org:58395/api/read/image")
+                .post(body)
+                .addHeader("Authorization", tokenManager.getToken())
+                .addHeader("Device-Info", Build.MODEL)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e(tag, "이미지 서버 연결 실패", e);
             }
 
-            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
-            Request request = new Request.Builder()
-                    .url("http://ipark4.duckdns.org:58395/api/read/image")
-                    .post(body)
-                    .addHeader("Authorization", tokenManager.getToken())
-                    .addHeader("Device-Info", Build.MODEL)
-                    .build();
-
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.e(tag, "이미지 서버 연결 실패", e);
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    byte[] imageBytes = response.body().bytes();
+                    Bitmap bitmap = decodeSampledBitmapFromBytes(imageBytes, 1080, 1920);  // 원하는 크기로 디코딩
+                    runOnUiThread(() -> {
+                        bitmapArrayList.add(bitmap);
+                        viewPagerAdapter.notifyDataSetChanged();
+                    });
+                } else {
+                    Log.e(tag, "이미지 서버 응답 오류: " + response.body().toString());
                 }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        byte[] imageBytes = response.body().bytes();
-                        Bitmap bitmap = decodeSampledBitmapFromBytes(imageBytes, 1080, 1920);  // 원하는 크기로 디코딩
-                        runOnUiThread(() -> {
-                            bitmapArrayList.add(bitmap);
-                            viewPagerAdapter.notifyDataSetChanged();
-                        });
-                    } else {
-                        Log.e(tag, "이미지 서버 응답 오류: " + response.body().toString());
-                    }
-                }
-            });
-        }
-        setupViewPager(bitmapArrayList);
+            }
+        });
     }
 
     // 이미지 사이즈 줄임
@@ -287,46 +276,12 @@ public class CommunityContent extends AppCompatActivity {
     }
 
     // 뷰페이저 설정
-    private void setupViewPager(ArrayList<Bitmap> bitmaps) {
-        viewPagerAdapter = new ViewPagerAdapter(getApplicationContext(), bitmaps);
+    private void setupViewPager() {
+        viewPagerAdapter = new ViewPagerAdapter(getApplicationContext(), bitmapArrayList);
         viewPager2.setAdapter(viewPagerAdapter);
         viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         indicator3.setViewPager(viewPager2);
     }
-
-    private void decodeBase64toBitmap(String base64) throws IOException {
-        try {
-            byte[] decodeBytes = Base64.decode(base64, Base64.NO_WRAP);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeByteArray(decodeBytes, 0, decodeBytes.length, options);
-            options.inSampleSize = calculateInSampleSize(options);
-            options.inJustDecodeBounds = false;
-            Bitmap bitmap = BitmapFactory.decodeByteArray(decodeBytes, 0, decodeBytes.length);
-            bitmapArrayList.add(bitmap);
-            Log.d(tag, "base64 -> bitamp 디코딩 성공");
-        } catch (Exception e) {
-            Log.e(tag, "base64 -> bitamp 디코딩 실패", e);
-        }
-    }
-
-    private int calculateInSampleSize(BitmapFactory.Options options) {
-        CommunityEdit communityEdit = new CommunityEdit();
-        int MAX_WIDTH = communityEdit.dpToPx(getApplicationContext(), 384);
-        int MAX_HEIGHT = communityEdit.dpToPx(getApplicationContext(), 250);
-        int height = options.outHeight;
-        int width = options.outWidth;
-        int sampleSize = 4;
-        if (height > MAX_HEIGHT || width > MAX_WIDTH) {
-            int halfHeight = height / 2;
-            int halfWidth = width / 2;
-            while ((halfHeight / sampleSize) >= MAX_HEIGHT && (halfWidth / sampleSize) >= MAX_WIDTH) {
-                sampleSize *= 2;
-            }
-        }
-        return sampleSize;
-    }
-
 
     // 초기 좋아요 정보
     private void setLike(String postId) {
@@ -359,7 +314,6 @@ public class CommunityContent extends AppCompatActivity {
             PreferenceHelper.likeCount(postId, likeCount);
         }
         cLike.setText(String.valueOf(likeCount));
-        updateLikeCountOnServer(postId, likeCount); // 서버에서 새로운 좋아요 개수 업데이트
     }
 
     // 좋아요 상태 정보에 따라 하트 이미지 달라짐
@@ -372,84 +326,7 @@ public class CommunityContent extends AppCompatActivity {
     }
 
 
-    // 좋아요 개수 서버 업데이트
-    private void updateLikeCountOnServer(String hash, int likeCount) {
-        OkHttpClient client = new OkHttpClient();
-        TokenManager tokenManager = new TokenManager(getApplicationContext());
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("hash", hash);
-            jsonObject.put("likeCount", likeCount);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-        Request request = new Request.Builder()
-                .url("http://ipark4.duckdns.org:58395/api/update/like")
-                .post(body)
-                .addHeader("Authorization", tokenManager.getToken())
-                .addHeader("Device-Info", Build.MODEL)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e(tag, "서버 연결 실패", e);
-                runOnUiThread(() -> Toast.makeText(CommunityContent.this, "서버 연결에 실패했습니다.", Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    Log.e(tag, "서버 응답 오류: " + response.body().string());
-                }
-            }
-        });
-    }
-
-    // 조회수 증가
-    private void increaseViewCount(String hash) {
-        OkHttpClient client = new OkHttpClient();
-        TokenManager tokenManager = new TokenManager(getApplicationContext());
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("hash", hash);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-        Request request = new Request.Builder()
-                .url("http://ipark4.duckdns.org:58395/api/increase/view")
-                .post(body)
-                .addHeader("Authorization", tokenManager.getToken())
-                .addHeader("Device-Info", Build.MODEL)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e(tag, "서버 연결 실패", e);
-                runOnUiThread(() -> Toast.makeText(CommunityContent.this, "서버 연결에 실패했습니다.", Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    Log.i(tag, "조회수 증가 성공");
-                    runOnUiThread(() -> {
-                        int currentViewCount = Integer.parseInt(cView.getText().toString());
-                        cView.setText(String.valueOf(currentViewCount + 1));
-                    });
-                } else {
-                    Log.e(tag, "서버 응답 오류: " + response.body().string());
-                }
-            }
-        });
-    }
 
     // 툴바 상단 버튼 (게시글 수정/삭제)
     @Override
@@ -518,20 +395,39 @@ public class CommunityContent extends AppCompatActivity {
         });
     }
 
+
+
+
+
+
+
     // 댓글 클래스
     public static class CommentBottomSheet extends BottomSheetDialogFragment {
         private static final String tag = "댓글 클래스";
-<<<<<<< HEAD
         CommentAdapter commentAdapter;
         RecyclerView recyclerView;
         EditText editText;
         ImageView sendComment;
         //
         ArrayList<CommentData> commentDataArrayList = new ArrayList<>();    // 댓글 데이터 담음
-//        String post_hash = getIntent().getStringExtra("community_post_hash");
+        private String postHash; // post_hash 값을 저장할 변수
 
-=======
->>>>>>> 43fc512a359ba2541f64ce69a183678480566141
+        public static CommentBottomSheet newInstance(String postHash) {
+            CommentBottomSheet fragment = new CommentBottomSheet();
+            Bundle args = new Bundle();
+            args.putString("community_post_hash", postHash);
+            fragment.setArguments(args);
+            Log.e(tag, "넘겨받은 해시값" + postHash);
+            return fragment;
+        }
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            if (getArguments() != null) {
+                postHash = getArguments().getString("community_post_hash");
+                Log.e(tag, "넘겨받은 해시값" + postHash);
+            }
+        }
 
         @Override
         public void onStart() {
@@ -561,29 +457,113 @@ public class CommunityContent extends AppCompatActivity {
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-<<<<<<< HEAD
-            Button btnClose = view.findViewById(R.id.btn_close_comment);
             recyclerView = view.findViewById(R.id.comment_recyclerview);
             editText = view.findViewById(R.id.cc_edit_comment);
             sendComment = view.findViewById(R.id.send_comment);
-            btnClose.setOnClickListener(v -> dismiss());    // 뒤로 가기
+            sendComment.setOnClickListener(view1 -> {
+                sendComments(editText.getText().toString()); // 댓글 서버에 전송
+                getCommentData(postHash);   // 업데이트
+            });
 
-            // 댓글창
-//            getCommentData(post_hash, editText.getText().toString());
+            getCommentData(postHash);
             setRecyclerView();
-
-
-=======
-            ImageView btnClose = view.findViewById(R.id.btn_close_);
-            RecyclerView recyclerView1 = view.findViewById(R.id.comment_recyclerview);
-            EditText editText1 = view.findViewById(R.id.cc_edit_comment);
-            ImageView sendComment = view.findViewById(R.id.send_comment);
-            btnClose.setOnClickListener(v -> dismiss());
->>>>>>> 43fc512a359ba2541f64ce69a183678480566141
         }
-    }
 
-<<<<<<< HEAD
+        // 전체 댓글창 데이터 가져옴
+        private void getCommentData(String postHash) {
+            new Thread(() -> {
+                OkHttpClient client = new OkHttpClient();
+                TokenManager tokenManager = new TokenManager(getContext());
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("type", "comment");
+                    jsonObject.put("whichWriting", postHash);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+                String token = tokenManager.getToken();
+                String deviceModel = Build.MODEL;
+                Request request = new Request.Builder()
+                        .url("http://ipark4.duckdns.org:58395/api/read/writing/list")
+                        .post(body)
+                        .addHeader("Authorization", token)
+                        .addHeader("Device-Info", deviceModel)
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
+                    JSONObject responseObject = new JSONObject(responseBody);
+                    JSONArray jsonArray = responseObject.getJSONArray("message");  // json 결과를 배열로 저장
+                    List<CommentData> allComments = new ArrayList<>();
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonO = jsonArray.getJSONObject(i);
+                        String contentText = jsonO.getString("contentText");   // 댓글 내용
+                        String author = jsonO.getString("author"); // 아이디
+                        String nickname = jsonO.getString("nickname"); // 닉네임
+                        String place = jsonO.getString("place");    // 등급
+                        String createTime = jsonO.getString("createTime"); // 생성날짜
+                        String date = createTime.split("T")[0];
+                        Log.i(tag, "댓글 : " + contentText);
+                        allComments.add(new CommentData(nickname, place, date, contentText));
+                    }
+                    commentDataArrayList.addAll(allComments);
+                    commentAdapter.notifyDataSetChanged();
+                    Log.i(tag, "댓글 전송 성공!" + responseBody);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }).start();
+        }
+
+        // 댓글창에 입력한 문자열 서버로 전송
+        private void sendComments(String comment) {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(getContext());
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+            MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("type", "comment")
+                    .addFormDataPart("contentText", comment)
+                    .addFormDataPart("whichWriting", postHash);
+
+            RequestBody requestBody = builder.build();
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/create/users/writings")
+                    .post(requestBody)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e(tag, "서버 연결 실패", e);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String responseBody = response.body().string();
+                    if (response.isSuccessful()) {
+                        Log.e(tag, "댓글 작성 완료 " + response.body().toString());
+                        getActivity().runOnUiThread(() ->
+                                Toast.makeText(getContext(), "댓글 작성 완료", Toast.LENGTH_SHORT).show());
+                    } else {
+                        Log.e(tag, "서버 응답 오류: " + response.message());
+                        getActivity().runOnUiThread(() ->
+                                Toast.makeText(getContext(), "서버 연결에 실패했습니다.", Toast.LENGTH_SHORT).show());
+                    }
+                }
+            });
+        }
+
+        // 입력한 문자열을 서버에서 가져와서 recyclerView에 item 1개 추가하기
 
         // 댓글창 초기화
         private void setRecyclerView(){
@@ -594,77 +574,40 @@ public class CommunityContent extends AppCompatActivity {
             recyclerView.setItemAnimator(null);
         }
 
-        // 댓글창 데이터 가져옴
-        private void getCommentData(String postHash, String content) {
-            new Thread(() -> {
-                OkHttpClient client = new OkHttpClient();
-                MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("title", "")
-                        .addFormDataPart("contentText", content)
-                        .addFormDataPart("type", "comment")
-                        .addFormDataPart("whichWriting", postHash);
 
-                RequestBody requestBody = multipartBodyBuilder.build();
-                TokenManager tokenManager = new TokenManager(getContext());
-                String token = tokenManager.getToken();
-                String deviceModel = Build.MODEL;
-                Request request = new Request.Builder()
-                        .url("http://ipark4.duckdns.org:58395/api/create/users/writings")
-                        .post(requestBody)
-                        .addHeader("Authorization", token)
-                        .addHeader("Device-Info", deviceModel)
-                        .build();
 
-                try {
-                    Response response = client.newCall(request).execute();
-                    String responseBody = response.body().string();
-                    if (response.isSuccessful()) {
-                        Log.e(tag, "댓글 작성 완료 " + response.body().toString());
-                        Intent intent = new Intent(getContext(), Community.class);
-                        intent.putExtra("post_create_success", true);
-//                        setResult(RESULT_OK, intent);
-//                        finish();
-                    } else {
-                        Log.e(tag, "댓글 작성 실패 " + responseBody);
-                    }
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            }).start();
-        }
-
-=======
-    // PreferenceHelper 클래스
-    public static class PreferenceHelper {
-        private static SharedPreferences sharedPreferences;
-        private static SharedPreferences.Editor editor;
-
-        public static void init(Context context) {
-            if (sharedPreferences == null) {
-                sharedPreferences = context.getSharedPreferences("like_pref", Context.MODE_PRIVATE);
-                editor = sharedPreferences.edit();
+        /*
+        private void getCommentData() {
+            List<CommentData> newItem = new ArrayList<>();
+            for (int i = 0; i < 2; i++) {
+                commentDataArrayList.add(new CommentData("닉네임 " + (i + 1), "등급 " + (i + 1), "2024-05-19", "댓글 " + (i + 1)));
+                currentItemCount += 1;
             }
+            commentDataArrayList.addAll(newItem);
+            Log.i(tag, "현재 item 위치 : " + commentDataArrayList);
+            Log.i(tag, "현재 item 위치 : " + commentDataArrayList + ", 마지막 item 위치 : " + currentItemCount);
         }
 
-        public static void likeState(String postId, boolean state) {
-            editor.putBoolean(postId + "_liked", state);
-            editor.apply();
+        private void addComment(){
+            String comment = editText.getText().toString();     // 댓글 입력한 문자열 얻음
+            String nickname = getIntent().getStringExtra("contentNickname"); // 서버에 연결해서 데이터 받고 원래는 사용자 본인 닉네임이 떠야 함
+            String level = getIntent().getStringExtra("contentPlace");
+            String date = getIntent().getStringExtra("contentPlace");
+
+            commentDataArrayList.add(new CommentData(nickname, level, date, comment));
+            commentAdapter.notifyItemInserted(commentDataArrayList.size());
+            editText.setText(null);
+            final InputMethodManager methodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            methodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
 
-        public static boolean getLikeState(String postId) {
-            return sharedPreferences.getBoolean(postId + "_liked", false);
-        }
 
-        public static void likeCount(String postId, int count) {
-            editor.putInt(postId + "_like_count", count);
-            editor.apply();
-        }
+         */
 
-        public static int getLikeCount(String postId) {
-            return sharedPreferences.getInt(postId + "_like_count", 0);
-        }
->>>>>>> 43fc512a359ba2541f64ce69a183678480566141
+
+
+
+
     }
+
 }
