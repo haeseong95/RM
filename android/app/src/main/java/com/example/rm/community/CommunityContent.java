@@ -46,6 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,9 +98,6 @@ public class CommunityContent extends AppCompatActivity{
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
 
-        // ViewPager
-        showViewPager();
-
         // 좋아요 버튼
         String postId = "post1";    // 게시글 고유 ID 값
         setLike(postId);
@@ -121,26 +119,32 @@ public class CommunityContent extends AppCompatActivity{
                     return CommunityContent.super.onOptionsItemSelected(item);
             }
         });
+
+
+        String hash = getIntent().getStringExtra("community_post_hash");
+
+        getTextData(hash);  // 게시글 상세 내용
+
+
+
+
     }
 
-    private void getPost(){
-        String hash = getIntent().getStringExtra("community_post_hash");
-        String userId = getIntent().getStringExtra("community_post_userId");
-
-
-    }
-
-
-    private void fetchPostData() {
-        String hash = getIntent().getStringExtra("community_post_hash");
-        String userId = getIntent().getStringExtra("community_post_userId");
-
+    private void getTextData(String hash) {
         OkHttpClient client = new OkHttpClient();
         TokenManager tokenManager = new TokenManager(getApplicationContext());
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("hash", hash);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .url("https://ipark4.duckdns.org:58395/api/read/writing/post/")
-                .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), "{\"hash\":\"" + hash + "\"}"))
+                .url("http://ipark4.duckdns.org:58395/api/read/writing/list/post")
+                .post(body)
                 .addHeader("Authorization", tokenManager.getToken())
                 .addHeader("Device-Info", Build.MODEL)
                 .build();
@@ -163,21 +167,25 @@ public class CommunityContent extends AppCompatActivity{
                         runOnUiThread(() -> {
                             try {
                                 cNickname.setText(messageObject.getString("nickname"));
-                                cLevel.setText(messageObject.getString("place")); // Assuming level is stored in "place"
+                                cLevel.setText(messageObject.getString("place"));
                                 cDate.setText(messageObject.getString("createTime"));
                                 cTitle.setText(messageObject.getString("title"));
                                 cContent.setText(messageObject.getString("contentText"));
                                 cLike.setText(messageObject.getString("thumbsUp"));
                                 cView.setText(messageObject.getString("views"));
+                                String date = messageObject.getString("createTime");
+                                cDate.setText(date.split("T")[0]);
 
-                                // 이미지 설정
-                                JSONArray imagesArray = messageObject.getJSONArray("images");
-                                List<String> imageUrls = new ArrayList<>();
-                                for (int i = 0; i < imagesArray.length(); i++) {
-                                    JSONObject imageObject = imagesArray.getJSONObject(i);
-                                    imageUrls.add(imageObject.getString("fileLocation"));
+                                JSONArray imageArray = messageObject.getJSONArray("images");
+                                String []directories = new String[imageArray.length()];
+                                String []files = new String[imageArray.length()];
+                                for (int i=0; i<imageArray.length(); i++){
+                                    JSONObject image = imageArray.getJSONObject(i);
+                                    directories[i] = image.getString("fileLocation");
+                                    files[i] = image.getString("name");
+                                    Log.e("디렉터리 파일", directories[i] + files[i]);
                                 }
-                                setupViewPager(imageUrls);
+                                getImageData(directories, files);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -186,19 +194,124 @@ public class CommunityContent extends AppCompatActivity{
                         Log.e(tag, "JSON 파싱 오류", e);
                     }
                 } else {
-                    Log.e(tag, "서버 응답 오류: " + response.message());
-                    runOnUiThread(() -> Toast.makeText(CommunityContent.this, "서버 응답 오류", Toast.LENGTH_SHORT).show());
+                    Log.e(tag, "서버 응답 오류: " + response.body().string());
                 }
             }
         });
     }
 
-    private void setupViewPager(List<String> imageUrls) {
-        viewPagerAdapter = new ViewPagerAdapter(getApplicationContext(), imageUrls);   // 어댑터 초기화 문제였나 arraylist에 데이터를 넣기 전에 초기화를 하는 게 맞나
-        viewPager2.setAdapter(viewPagerAdapter);     // viepager2에 어댑터 연결
-        viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);   // 가로 슬라이드
-        indicator3.setViewPager(viewPager2);    // 인디케이터 설정
+    /*
+    private void getImageData(String []image) {
+        OkHttpClient client = new OkHttpClient();
+        TokenManager tokenManager = new TokenManager(getApplicationContext());
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");//
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray jsonArray = new JSONArray();
+            for (String url : image) {
+                jsonArray.put(url);
+                Log.e("url", url);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url("http://ipark4.duckdns.org:58395/api/read/image")
+                .post(body)
+                .addHeader("Authorization", tokenManager.getToken())
+                .addHeader("Device-Info", Build.MODEL)
+                .build();
+
+        try{
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String responseBody = response.body().string();
+                JSONObject responseObject = new JSONObject(responseBody);
+                JSONObject messageObject = responseObject.getJSONObject("message");
+
+                runOnUiThread(() -> {
+                    try {
+                        JSONArray imagesArray = messageObject.getJSONArray("images");
+                        List<String> imageUrl = new ArrayList<>();
+                        for (int i = 0; i < imagesArray.length(); i++) {
+                            JSONObject imageObject = imagesArray.getJSONObject(i);
+                            imageUrl.add(imageObject.getString("fileLocation"));    // 이미지가 저장된 파일 위치
+                        }
+                        setupViewPager(imageUrl);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e(tag, "데이터 망 " + response.code());
+                    }
+                });
+            } else {
+                Log.e(tag, "서버 응답 오류남 " + response.body().string());
+            }
+        } catch (Exception e){
+            Log.e(tag, "네트워크 오류남 " + e);
+        }
     }
+
+     */
+
+    private void getImageData(String[] directories, String[] files) {
+        OkHttpClient client = new OkHttpClient();
+        TokenManager tokenManager = new TokenManager(getApplicationContext());
+
+        for (int i = 0; i < directories.length; ++i) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("directory", directories[i]);
+                jsonObject.put("file", files[i]);
+                Log.e("디렉터리 파일", directories[i] + files[i]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/read/image")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e(tag, "이미지 서버 연결 실패", e);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Log.e("response body", String.valueOf(response.body()));
+                    if (response.isSuccessful()) {
+                        InputStream inputStream = response.body().byteStream();
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        inputStream.close();
+
+                        runOnUiThread(() -> {
+                            bitmapArrayList.add(bitmap);
+                            viewPagerAdapter.notifyDataSetChanged();
+                        });
+                    } else {
+                        Log.e(tag, "이미지 서버 응답 오류: " + response.body().toString());
+                    }
+                }
+            });
+        }
+        setupViewPager(bitmapArrayList);
+    }
+
+    private void setupViewPager(ArrayList<Bitmap> bitmaps) {
+        viewPagerAdapter = new ViewPagerAdapter(getApplicationContext(), bitmaps);
+        viewPager2.setAdapter(viewPagerAdapter);
+        viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+        indicator3.setViewPager(viewPager2);
+    }
+
+
 
     // 서버에서 보낸 base64 이미지 -> bitmap으로 변환하기
     private void decodeBase64toBitmap(String base64) throws IOException {
@@ -217,27 +330,6 @@ public class CommunityContent extends AppCompatActivity{
         }
     }
 
-    // edit에서 변환한 base64값을 테스트해보기 위해 viewpager2에 출력해봄
-    private void showViewPager(){
-        Intent intent = getIntent();
-        ArrayList<String> encodedImages = intent.getStringArrayListExtra("encodedImages");
-        if (encodedImages != null) {
-            bitmapArrayList.clear();    // 기존 데이터 초기화
-            for (String base64 : encodedImages) {
-                try {
-                    decodeBase64toBitmap(base64);  // Base64 문자열을 Bitmap으로 변환 후 RecyclerView에 추가
-                    Log.i(tag, "base64 값 : " + base64);
-                } catch (IOException e) {
-                    Log.e(tag, "base64 -> bitmap 변환 오류", e);
-                }
-            }
-            if (viewPagerAdapter == null){  // 어댑터가 초기화X 실행 -> 이미 초기화가 된 경우에는 데이터 변경 업데이트
-//                setViewPager();
-            } else {
-                viewPagerAdapter.notifyDataSetChanged();
-            }
-        }
-    }
 
     // 이미지 사이즈 계산 (용량 줄이기)
     private int calculateInSampleSize(BitmapFactory.Options options){

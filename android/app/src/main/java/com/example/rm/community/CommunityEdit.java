@@ -273,7 +273,7 @@ public class CommunityEdit extends AppCompatActivity {
             inputStream.close();
 
             // resize
-            bitmap = resizeBitmap(bitmap, 500, 500);
+//            bitmap = resizeBitmap(bitmap, 500, 500);
         } finally {
             if (inputStream != null) {
                 try {

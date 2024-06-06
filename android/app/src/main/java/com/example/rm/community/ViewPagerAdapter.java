@@ -26,12 +26,11 @@ import java.util.List;
 // 게시글 상세 페이지에서 상단에 보여줄 사진
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.PagerHolder> {
     final String tag = "ViewPager 어댑터";
-    private List<String> list;
     private ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();
     private Context context;
-    public ViewPagerAdapter(Context context, List<String> list){
+    public ViewPagerAdapter(Context context, ArrayList<Bitmap> bitmaps){
         this.context = context;
-        this.list = list;
+        this.bitmapArrayList = bitmaps;
     }
 
     @NonNull
@@ -47,11 +46,8 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.Page
         Bitmap bitmap = bitmapArrayList.get(position);
         Glide.with(context)
                 .load(bitmap)
-                .format(DecodeFormat.PREFER_RGB_565)
                 .skipMemoryCache(false)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .thumbnail(0.1f)
-                .override(200, 200)
                 .into(holder.imageView);
     }
 
@@ -66,6 +62,11 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.Page
         }
     }
 
+    public void updateBitmap(Bitmap bitmaps){
+        bitmapArrayList.add(bitmaps);
+        notifyDataSetChanged();
+    }
+
     public class PagerHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 
@@ -74,4 +75,5 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.Page
             imageView = itemView.findViewById(R.id.viewpager_image);
         }
     }
+
 }

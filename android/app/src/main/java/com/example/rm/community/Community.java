@@ -137,11 +137,11 @@ public class Community extends AppCompatActivity {
                             String author = jsonO.getString("author"); // 아이디
                             String nickname = jsonO.getString("nickname"); // 닉네임
                             String createTime = jsonO.getString("createTime"); // 생성날짜
+                            String date = createTime.split("T")[0];
                             long views = Long.parseLong(jsonO.getString("views"));   // 조회수
                             String postHash = jsonO.getString("hash"); // 해시값
 
-
-                            allPosts.add(new CommunityData(nickname, createTime, title, views, postHash, author));
+                            allPosts.add(new CommunityData(nickname, date, title, views, postHash, author));
                         }
 
                         runOnUiThread(() -> {
