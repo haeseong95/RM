@@ -14,7 +14,7 @@
         android:layout_height="60dp"
         android:background="@color/main_color_green">
 
-        <TextView android:id="@+id/category_title" android:text="관리자 페이지 " style="@style/toolbar_text" />
+        <TextView android:id="@+id/category_title" android:text="관리자 페이지" style="@style/toolbar_text" />
     </androidx.appcompat.widget.Toolbar>
 
     <View
@@ -63,7 +63,24 @@
         android:layout_height="50dp"
         android:layout_marginBottom="10dp">
         <TextView
-            android:text="쓰레기 데이터"
+            android:text="쓰레기/카테고리 데이터"
+            style="@style/mypage_button"/>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_right"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/userStatusManage"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:text="사용자 관리"
             style="@style/mypage_button"/>
 
         <ImageView

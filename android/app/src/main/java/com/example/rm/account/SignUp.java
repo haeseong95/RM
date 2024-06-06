@@ -405,6 +405,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                             @Override
                             public void run() {
                                 Log.e(tag, "회원가입 실패" + responseBody);
+                                Toast.makeText(SignUp.this, "회원가입 실패" + responseBody, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
