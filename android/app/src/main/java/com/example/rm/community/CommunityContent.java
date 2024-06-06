@@ -200,7 +200,10 @@ public class CommunityContent extends AppCompatActivity{
         });
     }
 
+<<<<<<< Updated upstream
     // 이미지 데이터 출력
+=======
+>>>>>>> Stashed changes
     private void getImageData(String[] directories, String[] files) {
         OkHttpClient client = new OkHttpClient();
         TokenManager tokenManager = new TokenManager(getApplicationContext());
@@ -282,7 +285,10 @@ public class CommunityContent extends AppCompatActivity{
         indicator3.setViewPager(viewPager2);
     }
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     // 초기 좋아요 정보
     private void setLike(String postId){
         boolean likeState = PreferenceHelper.getLikeState(postId);      // 좋아요 상태 정보 가져옴 (눌림-ture, 안눌림-false)
