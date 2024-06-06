@@ -1,5 +1,6 @@
 package com.example.rm.community;
 
+import static com.example.rm.token.PreferenceHelper.getLikeCount;
 import static com.gun0912.tedpermission.provider.TedPermissionProvider.context;
 
 import android.content.Context;
@@ -122,14 +123,13 @@ public class CommunityContent extends AppCompatActivity {
             }
         });
 
-
         String hash = getIntent().getStringExtra("community_post_hash");
 
         getTextData(hash);  // 게시글 상세 내용
+        getLikeCount(hash); // 좋아요 개수 가져오기
         increaseViewCount(hash); // 조회수 증가
     }
 
-    // 텍스트 데이터 얻음
     private void getTextData(String hash) {
         OkHttpClient client = new OkHttpClient();
         TokenManager tokenManager = new TokenManager(getApplicationContext());
@@ -171,10 +171,14 @@ public class CommunityContent extends AppCompatActivity {
                                 cDate.setText(messageObject.getString("createTime"));
                                 cTitle.setText(messageObject.getString("title"));
                                 cContent.setText(messageObject.getString("contentText"));
-                                cLike.setText(messageObject.getString("thumbsUp"));
-                                cView.setText(messageObject.getString("views"));
+                                int likeCount = messageObject.getInt("thumbsUp");
+                                cLike.setText(String.valueOf(likeCount));
+                                int viewCount = messageObject.getInt("views");
+                                cView.setText(String.valueOf(viewCount));
                                 String date = messageObject.getString("createTime");
                                 cDate.setText(date.split("T")[0]);
+
+                                PreferenceHelper.likeCount(hash, likeCount); // 좋아요 개수 저장
 
                                 JSONArray imageArray = messageObject.getJSONArray("images");
                                 String[] directories = new String[imageArray.length()];
@@ -200,8 +204,6 @@ public class CommunityContent extends AppCompatActivity {
         });
     }
 
-
-    // 이미지 데이터 출력
     private void getImageData(String[] directories, String[] files) {
         OkHttpClient client = new OkHttpClient();
         TokenManager tokenManager = new TokenManager(getApplicationContext());
@@ -232,9 +234,12 @@ public class CommunityContent extends AppCompatActivity {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
+                    Log.e("response body", String.valueOf(response.body()));
                     if (response.isSuccessful()) {
-                        byte[] imageBytes = response.body().bytes();
-                        Bitmap bitmap = decodeSampledBitmapFromBytes(imageBytes, 1080, 1920);  // 원하는 크기로 디코딩
+                        InputStream inputStream = response.body().byteStream();
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        inputStream.close();
+
                         runOnUiThread(() -> {
                             bitmapArrayList.add(bitmap);
                             viewPagerAdapter.notifyDataSetChanged();
@@ -248,34 +253,6 @@ public class CommunityContent extends AppCompatActivity {
         setupViewPager(bitmapArrayList);
     }
 
-    // 이미지 사이즈 줄임
-    private Bitmap decodeSampledBitmapFromBytes(byte[] bytes, int reqWidth, int reqHeight) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-        Log.e(tag, "이미지 사이즈 조절4");
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-    }
-
-    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-        return inSampleSize;
-    }
-
-    // 뷰페이저 설정
     private void setupViewPager(ArrayList<Bitmap> bitmaps) {
         viewPagerAdapter = new ViewPagerAdapter(getApplicationContext(), bitmaps);
         viewPager2.setAdapter(viewPagerAdapter);
@@ -315,7 +292,6 @@ public class CommunityContent extends AppCompatActivity {
         }
         return sampleSize;
     }
-
 
     // 초기 좋아요 정보
     private void setLike(String postId) {
@@ -359,7 +335,6 @@ public class CommunityContent extends AppCompatActivity {
             likeImage.setImageResource(R.drawable.community_empty_heart);
         }
     }
-
 
     // 좋아요 개수 서버 업데이트
     private void updateLikeCountOnServer(String hash, int likeCount) {
@@ -440,7 +415,6 @@ public class CommunityContent extends AppCompatActivity {
         });
     }
 
-    // 툴바 상단 버튼 (게시글 수정/삭제)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.comment_menu, menu);
@@ -578,3 +552,4 @@ public class CommunityContent extends AppCompatActivity {
         }
     }
 }
+
