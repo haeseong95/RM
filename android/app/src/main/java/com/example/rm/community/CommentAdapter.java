@@ -1,10 +1,15 @@
 package com.example.rm.community;
 
+import static android.app.PendingIntent.getActivity;
+//import static com.example.rm.token.ApiClient.runOnUiThread;
+import static java.security.AccessController.getContext;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,8 +31,20 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
+import com.example.rm.token.TokenManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 // 댓글 어댑터
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder>{
@@ -53,12 +70,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
         int currentPosition = holder.getAbsoluteAdapterPosition();  // 클릭한 item의 position 값
         CommentData commentData = arrayList.get(position);
+        String comment_hash = commentData.getComment_hash();
         holder.commentNickname.setText(commentData.getComment_nickname());
         holder.commentPlace.setText(commentData.getComment_place());
         holder.commentDate.setText(commentData.getComment_date());
         holder.commentComment.setText(commentData.getComment_comment());
         holder.commentEdit.setText(commentData.getComment_comment());
-
+        
         // 댓글 수정, 삭제 버튼 팝업 메뉴창
         if (holder.btnMenu != null){    // findviewbyId가 null을 반환하는 경우가 있음
             holder.btnMenu.setOnClickListener(v -> {
@@ -113,7 +131,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                 if (positiveButton != null) {
                                     positiveButton.setTextColor(context.getResources().getColor(android.R.color.black));
                                     positiveButton.setOnClickListener(v1 -> {
-                                        // 삭제 로직 처리
+                                        deleteComment(comment_hash);
                                         arrayList.remove(currentPosition);
                                         notifyItemRemoved(currentPosition);
                                         notifyItemRangeChanged(currentPosition, arrayList.size() - currentPosition);
@@ -172,6 +190,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 String updateComment = holder.commentEdit.getText().toString();
                 commentData.setComment_comment(updateComment);
                 notifyItemChanged(currentPosition);
+                changeComment(updateComment, comment_hash);
 
                 holder.commentComment.setText(updateComment);
                 holder.commentComment.setVisibility(View.VISIBLE);
@@ -200,6 +219,89 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         } else {
             Log.e(tag, "댓글 수정 취소 버튼 오류");
         }
+    }
+
+    // 댓글 삭제 버튼을 누르면 서버에 저장된 데이터 값 삭제시킴
+    private void deleteComment(String hash){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(context.getApplicationContext()); //
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hash", hash);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/delete/writing/info")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    Log.e("댓글 삭제 성공", "댓글 삭제되었어" + responseBody);
+                } else {
+                    Log.e("댓글 삭제 실패", "이유는 " + responseBody);
+                }
+            } catch (IOException e) {
+                Log.e(tag, "오류", e);
+            }
+        }).start();
+    }
+
+
+    // 댓글 수정한 값 서버에 전달
+    private void changeComment(String comment, String hash) {
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(context.getApplicationContext()); //
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hash", hash);
+                jsonObject.put("title", "");
+                jsonObject.put("contentText", comment);
+
+//                JSONArray imagesArray = new JSONArray();
+                jsonObject.put("images", "[]");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/update/writing/info")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .addHeader("Content-Type", "application/json")  // Content-Type을 명확하게 설정
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+
+//                    Toast.makeText(context.getApplicationContext(), "", Toast.LENGTH_SHORT).show();
+                    Log.e("댓글 변경 성공", "댓글 변경되었어" + responseBody);
+                    
+                } else {
+                    Log.e("댓글 변경 실패", "이유는 " + responseBody);
+                }
+            } catch (IOException e) {
+                Log.e(tag, "오류", e);
+            }
+        }).start();
     }
 
     @Override
@@ -245,6 +347,15 @@ class CommentData {
     private String comment_date = "";   // 생성날짜
     private String comment_comment = "";    // 게시글 댓글
     private String comment_edit = "";   // 댓글 수정
+    private String comment_hash = "";   // 댓글의 해시값 
+
+    public String getComment_hash() {
+        return comment_hash;
+    }
+
+    public void setComment_hash(String comment_hash) {
+        this.comment_hash = comment_hash;
+    }
 
     public String getComment_edit() {
         return comment_edit;
@@ -286,10 +397,11 @@ class CommentData {
         this.comment_comment = comment_comment;
     }
 
-    public CommentData(String comment_nickname, String comment_place, String comment_date, String comment_comment) {
+    public CommentData(String comment_nickname, String comment_place, String comment_date, String comment_comment, String comment_hash) {
         this.comment_nickname = comment_nickname;
         this.comment_place = comment_place;
         this.comment_date = comment_date;
         this.comment_comment = comment_comment;
+        this.comment_hash = comment_hash;
     }
 }

@@ -47,7 +47,6 @@ public class Community extends AppCompatActivity {
     EditText searchBar;     // 검색창
     LinearLayout btnWrite;  // 글쓰기 아이콘
     RecyclerView recyclerView;  // 게시글 목록
-    Button btnMorePost;     // 더보기 버튼
 
     //
     private static final String tag = "Community 게시판 메인";
@@ -66,9 +65,7 @@ public class Community extends AppCompatActivity {
         btnBack = findViewById(R.id.btn_back);
         btnWrite = findViewById(R.id.c_write);
         searchBar = findViewById(R.id.c_search);
-        btnMorePost = findViewById(R.id.btn_morepost);
         btnBack.setOnClickListener(v -> finish());
-        btnMorePost.setOnClickListener(v -> getMorePosts());
 
         // 연필 아이콘 클릭 -> 글쓰기 화면
         btnWrite.setOnClickListener(v -> {
@@ -77,7 +74,7 @@ public class Community extends AppCompatActivity {
         });
 
         // 게시글 목록
-        getPostList();
+        getPosts();
         setRecyclerView();
 
         // 검색
@@ -90,14 +87,14 @@ public class Community extends AppCompatActivity {
             result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     if (result.getData().getBooleanExtra("post_create_success", false)) {
-                        getPostList();
+                        getPosts();
                         Log.i(tag, "게시글 업데이트");
                     }
                 }
             });
 
-    // 게시글 목록 가져오는 okhttp (초기 게시글 10개 가져옴, 게시글을 작성한 아이디, 해시값을 저장)
-    private void getPosts(int page) {
+    // 게시글 목록 가져옴
+    private void getPosts() {
         OkHttpClient client = new OkHttpClient();
         TokenManager tokenManager = new TokenManager(getApplicationContext());
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -106,8 +103,6 @@ public class Community extends AppCompatActivity {
         try {
             jsonObject.put("type", "post");
             jsonObject.put("whichWriting", "");
-            jsonObject.put("page", String.valueOf(page));
-            jsonObject.put("items", String.valueOf(item_count));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -165,16 +160,6 @@ public class Community extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    // 초기 게시글 10개 데이터 목록 가져오기
-    private void getPostList() {
-        getPosts(currentPage);
-    }
-
-    // 더보기 버튼 클릭하면 게시글 10개 추가됨
-    private void getMorePosts() {
-        getPosts(currentPage);
     }
 
     // recyclerview 초기화

@@ -1,55 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/start_bar"
+    <androidx.appcompat.widget.Toolbar
+        app:contentInsetStart="0dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="55dp"
+        android:background="@color/main_color_green">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="댓글"
-            android:fontFamily="@font/nanum_bold"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            android:padding="20dp"
-            android:backgroundTint="#F5F5F5"
-            android:gravity="center"/>
-
-        <Button
-            android:id="@+id/btn_close_comment"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:backgroundTint="@android:color/transparent"
-            android:text="닫기"
-            android:textColor="@color/main_color_green"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:fontFamily="@font/nanum_regular"
-            android:textSize="15dp" />
-
-    </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/comment_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/start_bar"
-        android:layout_above="@id/dd"
-        android:orientation="horizontal"
-        android:layout_marginBottom="20dp"/>
+        <TextView android:id="@+id/category_title" android:text="댓글" style="@style/toolbar_text" />
+    </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout
         android:id="@+id/dd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/cc_edit_comment"
@@ -78,4 +47,12 @@
 
     </RelativeLayout>
 
-</RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/comment_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/dd"
+        android:orientation="horizontal"
+        android:layout_marginBottom="100dp"/>
+
+</LinearLayout>
