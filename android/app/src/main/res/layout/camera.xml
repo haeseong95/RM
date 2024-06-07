@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,17 +26,29 @@
         android:text="사진 촬영" />
 
     <TextView
+        android:id="@+id/classification_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@id/capture_btn"
+        android:layout_centerHorizontal="true"
+        android:text="분류 결과가 여기에 표시됩니다"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+       />
+
+    <TextView
         android:id="@+id/resultTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="47dp"
+        android:layout_marginBottom="40dp"
         android:gravity="center"
         android:text="캡처 결과가 여기에 나타납니다."
         android:textColor="@android:color/black"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:textStyle="bold" />
-
 
 </RelativeLayout>
 
