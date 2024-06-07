@@ -62,7 +62,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CommunityContent extends AppCompatActivity {
-    // 레이아웃
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
     CircleIndicator3 indicator3;
@@ -73,7 +72,7 @@ public class CommunityContent extends AppCompatActivity {
     //
     private static final String tag = "상세 게시글 화면";
     private static int currentItemCount = -1;
-    private int itemPosition = RecyclerView.NO_POSITION;    // item 초기값
+    private int itemPosition = RecyclerView.NO_POSITION, statusCount = -1;    // item 초기값
     ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();    // viewpager의 이미지를 담을 bitmap 리스트
 
     @Override
@@ -122,7 +121,6 @@ public class CommunityContent extends AppCompatActivity {
         // 말풍선 아이콘 클릭하면 댓글창 열림
         commentImage.setOnClickListener(view -> {
             String post_hash = getIntent().getStringExtra("community_post_hash");
-            Log.e(tag, "커뮤니티 메인 화면에서 얻은 해시값" + post_hash);
             CommentBottomSheet commentBottomSheet = CommentBottomSheet.newInstance(post_hash);
             commentBottomSheet.show(getSupportFragmentManager(), "댓글창");
         });
@@ -131,11 +129,13 @@ public class CommunityContent extends AppCompatActivity {
         getTextData(postHash);
         setupViewPager();
 
-//        increaseViewCount(hash); // 조회수 증가
+        // 좋아요
+        likeState(postHash);
+        getLikeCount(postHash);
 
-
-
-
+        // 조회수
+        getViews(postHash);
+        updateViews(postHash);
     }
 
     // 텍스트 데이터 얻음
@@ -209,7 +209,6 @@ public class CommunityContent extends AppCompatActivity {
             }
         });
     }
-
 
     // 이미지 데이터 출력
     private void getImageData(String directories, String files) {
@@ -289,45 +288,6 @@ public class CommunityContent extends AppCompatActivity {
         indicator3.setViewPager(viewPager2);
     }
 
-
-    // 초기 좋아요 정보
-    private void setLike(String hash) {
-        boolean likeState = PreferenceHelper.getLikeState(hash); // 좋아요 상태 정보 가져옴 (눌림-true, 안눌림-false)
-        updateLikeImage(likeState);
-        int likeCount = PreferenceHelper.getLikeCount(hash); // 좋아요 개수 정보 가져옴
-        cLike.setText(String.valueOf(likeCount));
-    }
-
-    // 현재 좋아요 정보
-    private void currentLike(String postId) {
-        boolean currentLikeState = PreferenceHelper.getLikeState(postId);
-        int currentLikeCount = Integer.parseInt(cLike.getText().toString());
-//        setLikeState(postId, currentLikeState, currentLikeCount);
-    }
-
-
-
-    // 좋아요 클릭 시 상태/개수 변경
-    private void setLikeState(String hash, boolean likeState) {
-        int likeCount = -1;
-
-        if (likeState) { // likestate가 true, 즉 눌린 상태에서 또 누른거니까 취소
-            PreferenceHelper.likeState(hash, false);
-            updateLikeImage(false);
-
-            PreferenceHelper.likeCount(hash, likeCount);
-        } else {
-            PreferenceHelper.likeState(hash, true);
-            updateLikeImage(true);
-            PreferenceHelper.likeCount(hash, likeCount);
-        }
-        cLike.setText(String.valueOf(likeCount));
-    }
-
-
-
-
-
     // 좋아요 상태 정보에 따라 하트 이미지 달라짐
     private void updateLikeImage(boolean state) {
         if (state) {  // true, 즉 좋아요가 눌린 상태
@@ -337,9 +297,162 @@ public class CommunityContent extends AppCompatActivity {
         }
     }
 
+    // 초기 좋아요 상태
+    private void likeState(String hash){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(context.getApplicationContext());
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hash", hash);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/read/writing/info/internal/like/first")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
 
-    //
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    String isYes = new JSONObject(responseBody).getString("message");
+                    updateLikeImage(isYes.equals("yes"));   // 받은 결과값이 yes이면 하트가 눌린 상태로 변함
+                    Log.e("좋아요 버튼, likeState", "초기 좋아요 상태 : " + responseBody);
+                } else {
+                    Log.e("실패, likeState", "이유는 " + responseBody);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e(tag, "오류, likeState", e);
+            }
+        }).start();
+    }
+
+    // 초기 좋아요 개수
+    private void getLikeCount(String hash){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(context.getApplicationContext());
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hash", hash);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/read/writing/info/internal/like")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    String count = new JSONObject(responseBody).getString("message");   // 좋아요 개수값 가져옴
+                    runOnUiThread(() -> {
+                        cLike.setText(count);
+                        statusCount = Integer.parseInt(count);
+                        Log.e("좋아요 버튼, getLikeCount", "좋아요 개수 : " + count + "  " + responseBody);
+                    });
+                } else {
+                    Log.e("좋아요 개수 실패, getLikeCount", "이유는 " + responseBody);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e(tag, "좋아요 개수 오류, getLikeCount", e);
+            }
+        }).start();
+    }
+
+    // 좋아요 개수 업데이트
     private void updateLike(String hash){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(context.getApplicationContext());
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hash", hash);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/update/writing/info/internal/like")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    String changeStatus = new JSONObject(responseBody).getString("message");
+                    runOnUiThread(() -> {
+                        updateLikeImage(changeStatus.equals("no2yes"));
+                        Log.e("좋아요 버튼", "좋아요 개수 : "  + " 12415sdfkjsadfgsdfhak " + responseBody);
+                    });
+                } else {
+                    Log.e("실패", "이유는 " + responseBody);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e(tag, "오류", e);
+            }
+        }).start();
+    }
+
+    private void updateViews(String hash){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(context.getApplicationContext());
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hash", hash);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/update/writing/info/internal/view")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    String changeStatus = new JSONObject(responseBody).getString("message");
+                    runOnUiThread(() -> {
+                        Log.e("조회수 버튼", "조회수 개수 : "  + changeStatus + responseBody);
+                    });
+                } else {
+                    Log.e("실패", "이유는 " + responseBody);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e(tag, "오류", e);
+            }
+        }).start();
+    }
+
+
+    // 조회수 개수 가져옴
+    private void getViews(String hash){
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
             TokenManager tokenManager = new TokenManager(context.getApplicationContext()); //
@@ -354,7 +467,7 @@ public class CommunityContent extends AppCompatActivity {
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Request request = new Request.Builder()
-                    .url("http://ipark4.duckdns.org:58395/api/update/writing/info/internal/like")
+                    .url("http://ipark4.duckdns.org:58395/api/read/writing/info/internal/view")
                     .post(body)
                     .addHeader("Authorization", tokenManager.getToken())
                     .addHeader("Device-Info", Build.MODEL)
@@ -365,12 +478,16 @@ public class CommunityContent extends AppCompatActivity {
                 Response response = client.newCall(request).execute();
                 String responseBody = response.body().string();
                 if (response.isSuccessful()) {
-                    Log.e("좋아요 누름", "좋아요 누름" + responseBody);
+                    String views = new JSONObject(responseBody).getString("message");
+                    runOnUiThread(() -> {
+                        cView.setText(views);
+                        Log.e("조회수 버튼", "조회수 개수 : " + views + "  " + responseBody);
+                    });
                 } else {
-                    Log.e("실패", "이유는 " + responseBody);
+                    Log.e("조회수 개수 실패", "이유는 " + responseBody);
                 }
-            } catch (IOException e) {
-                Log.e(tag, "오류", e);
+            } catch (IOException | JSONException e) {
+                Log.e(tag, "조회수 개수 오류", e);
             }
         }).start();
     }
@@ -510,7 +627,6 @@ public class CommunityContent extends AppCompatActivity {
                 InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                 manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             });
-
             getCommentData(postHash);
             setRecyclerView();
         }
@@ -537,7 +653,6 @@ public class CommunityContent extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
                 RequestBody body = RequestBody.create(JSON, jsonObject.toString());
                 String token = tokenManager.getToken();
                 String deviceModel = Build.MODEL;
@@ -622,5 +737,4 @@ public class CommunityContent extends AppCompatActivity {
             });
         }
     }
-
 }
