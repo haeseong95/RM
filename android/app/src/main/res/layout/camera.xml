@@ -19,7 +19,7 @@
         android:id="@+id/capture_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/resultTextView"
+        android:layout_above="@id/classification_result"
         android:layout_centerHorizontal="true"
         style="@style/button_style"
         android:layout_marginBottom="20dp"
@@ -27,25 +27,12 @@
 
     <TextView
         android:id="@+id/classification_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:layout_above="@id/capture_btn"
-        android:layout_centerHorizontal="true"
-        android:text="분류 결과가 여기에 표시됩니다"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-       />
-
-    <TextView
-        android:id="@+id/resultTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="40dp"
         android:gravity="center"
-        android:text="캡처 결과가 여기에 나타납니다."
+        android:text="분류 결과가 여기에 나타납니다."
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold" />

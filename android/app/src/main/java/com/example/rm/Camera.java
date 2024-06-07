@@ -579,10 +579,15 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
@@ -592,23 +597,27 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.normal.TedPermission;
 
 import org.tensorflow.lite.Interpreter;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class Camera extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 672;
-    private static final int RESULT_CODE = 22;
     private Interpreter tflite;
+    private Uri photoURI;
 
     Button btn_capture;
     ImageView imageview;
@@ -647,27 +656,77 @@ public class Camera extends AppCompatActivity {
             Log.d(TAG, "Capture button clicked");
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException e) {
+                    Log.e(TAG, "Error creating image file", e);
+                }
+                if (photoFile != null) {
+                    photoURI = FileProvider.getUriForFile(this, "com.example.rm.fileprovider", photoFile);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                }
             } else {
                 Log.e(TAG, "No camera app available");
             }
         });
     }
 
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        return image;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
-            Log.d(TAG, "Image capture successful");
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            if (photo != null) {
-                imageview.setImageBitmap(photo);
-                runModelInference(photo);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            try {
+                Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(photoURI));
+                if (photo != null) {
+                    photo = rotateImageIfRequired(photo, photoURI);
+                    imageview.setImageBitmap(photo);
+                    runModelInference(photo);
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Error loading image", e);
             }
         } else {
             Log.d(TAG, "Cancelled or no data");
             Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private Bitmap rotateImageIfRequired(Bitmap img, Uri selectedImage) throws IOException {
+        ExifInterface ei = new ExifInterface(getContentResolver().openInputStream(selectedImage));
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return rotateImage(img, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotateImage(img, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotateImage(img, 270);
+            default:
+                return img;
+        }
+    }
+
+    private Bitmap rotateImage(Bitmap img, int degree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        img.recycle();
+        return rotatedImg;
     }
 
     private ByteBuffer loadModelFile() throws IOException {
@@ -685,13 +744,17 @@ public class Camera extends AppCompatActivity {
             return;
         }
 
-        ByteBuffer inputBuffer = convertBitmapToByteBuffer(bitmap);
-        float[][][] output = new float[1][10][2100]; // YOLOv8 모델의 출력 형태 (가정)
+        // YOLO 모델 입력 크기에 맞게 이미지 리사이즈
+        int inputSize = 320; // YOLOv8 모델의 입력 크기 가정
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, inputSize, inputSize, true);
+
+        ByteBuffer inputBuffer = convertBitmapToByteBuffer(resizedBitmap);
+        float[][][] output = new float[1][25200][7]; // YOLO 모델의 출력 형식 (조정 필요)
 
         try {
             tflite.run(inputBuffer, output);
             Log.d(TAG, "Inference result: " + output[0][0][4]); // 예시 출력 로그
-            drawResult(bitmap, output);
+            drawResult(bitmap, output); // 원본 이미지를 사용하여 결과를 그림
             displayClassificationResult(output);
         } catch (Exception e) {
             Log.e(TAG, "Error during inference", e);
@@ -702,10 +765,9 @@ public class Camera extends AppCompatActivity {
         int inputSize = 320; // YOLOv8 모델의 입력 크기 가정
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * inputSize * inputSize * 3); // 4 bytes per float
         byteBuffer.order(ByteOrder.nativeOrder());
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, inputSize, inputSize, true);
 
         int[] intValues = new int[inputSize * inputSize];
-        resizedBitmap.getPixels(intValues, 0, resizedBitmap.getWidth(), 0, 0, resizedBitmap.getWidth(), resizedBitmap.getHeight());
+        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
         int pixel = 0;
         for (int i = 0; i < inputSize; ++i) {
@@ -743,16 +805,17 @@ public class Camera extends AppCompatActivity {
     }
 
     private void displayClassificationResult(float[][][] output) {
-        // 분류 결과가 output[0][i][6]에 저장되어 있다고 가정
-        // 실제 모델의 출력 형식에 맞게 조정해야 함
         StringBuilder resultBuilder = new StringBuilder();
+        Log.d(TAG, "Output length: " + output[0].length); // 추가된 로그
         for (int i = 0; i < output[0].length; i++) {
             float confidence = output[0][i][4];
+            Log.d(TAG, "Object " + i + " confidence: " + confidence); // 추가된 로그
             if (confidence > 0.3) { // 신뢰도 임계값 가정
-                resultBuilder.append("객체: ").append(output[0][i][4]).append(" 신뢰도: ").append(confidence).append("\n");
+                resultBuilder.append("객체: ").append(output[0][i][5]).append(" 신뢰도: ").append(confidence).append("\n");
             }
         }
         String resultText = resultBuilder.toString();
+        Log.d(TAG, "Classification result: " + resultText); // 추가된 로그
         runOnUiThread(() -> classificationResult.setText(resultText));
     }
 
@@ -768,3 +831,9 @@ public class Camera extends AppCompatActivity {
         }
     };
 }
+
+
+
+
+
+
