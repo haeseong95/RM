@@ -37,7 +37,9 @@ import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Camera extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 672;
@@ -216,7 +218,7 @@ public class Camera extends AppCompatActivity {
 
         for (int i = 0; i < output[0].length; i++) {
             float confidence = output[0][i][4];
-            if (confidence > 0.3) { // 신뢰도 임계값 가정
+            if (confidence > 0.2) { // 신뢰도 임계값을 낮춤
                 float x = output[0][i][0] * bitmap.getWidth();
                 float y = output[0][i][1] * bitmap.getHeight();
                 float w = output[0][i][2] * bitmap.getWidth();
@@ -230,16 +232,20 @@ public class Camera extends AppCompatActivity {
 
     private void displayClassificationResult(float[][][] output) {
         StringBuilder resultBuilder = new StringBuilder();
-        String[] labels = {"baterias", "metal", "outros", "papel", "plastico", "vidro"}; // 모델의 클래스 레이블 (적절히 수정)
+        String[] labels = {"배터리", "금속", "기타", "종이", "플라스틱", "유리"}; // 모델의 클래스 레이블 (적절히 수정)
+        Map<String, Integer> labelCount = new HashMap<>();
+        float confidenceThreshold = 0.2f; // 신뢰도 임계값을 더 낮춤
+
+        for (String label : labels) {
+            labelCount.put(label, 0);
+        }
 
         Log.d(TAG, "Output length: " + output[0].length);
         for (int i = 0; i < output[0].length; i++) {
             float confidence = output[0][i][4];
             Log.d(TAG, "Object " + i + " confidence: " + confidence);
 
-            float confidenceValue = (float) Math.round(confidence * 1000) / 1000;
-            if (confidenceValue > 0.0) { // 신뢰도 임계값을 0으로 낮춤
-                // 가장 높은 클래스 점수를 찾기
+            if (confidence > confidenceThreshold) { // 신뢰도 임계값 조정
                 float maxClassScore = output[0][i][5];
                 int classIndex = 0;
                 for (int j = 6; j < output[0][i].length; j++) {
@@ -249,15 +255,27 @@ public class Camera extends AppCompatActivity {
                     }
                 }
 
-                // 클래스 인덱스가 labels 배열의 길이를 초과하지 않도록 함
                 if (classIndex < labels.length) {
                     String label = labels[classIndex];
-                    Log.d(TAG, "분류 결과 - 객체: " + label + ", 신뢰도: " + confidenceValue); // 추가된 로그
-                    resultBuilder.append("객체: ").append(label).append(" 신뢰도: ").append(confidenceValue).append("\n");
-                } else {
-                    Log.e(TAG, "클래스 인덱스가 labels 배열의 길이를 초과했습니다: " + classIndex);
+                    labelCount.put(label, labelCount.get(label) + 1);
                 }
             }
+        }
+
+        // 다수결 방식으로 최종 레이블 결정
+        String finalLabel = null;
+        int maxCount = 0;
+        for (Map.Entry<String, Integer> entry : labelCount.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                finalLabel = entry.getKey();
+            }
+        }
+
+        if (finalLabel != null) {
+            resultBuilder.append("쓰레기 종류 : ").append(finalLabel).append("\n");
+        } else {
+            resultBuilder.append("객체를 인식하지 못했습니다.\n");
         }
 
         String resultText = resultBuilder.toString();
@@ -286,6 +304,4 @@ public class Camera extends AppCompatActivity {
         }
     };
 }
-
-
 
