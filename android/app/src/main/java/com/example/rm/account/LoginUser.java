@@ -69,8 +69,8 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         } else if (v.getId() == R.id.btn_login) {
             InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            userId = loginId.getText().toString();  // 사용자가 입력한 아이디, 비번 텍스트값 받기
-            userPw = loginPwd.getText().toString();
+            userId = loginId.getText().toString().trim();  // 사용자가 입력한 아이디, 비번 텍스트값 받기
+            userPw = loginPwd.getText().toString().trim();
 
             // 아이디 또는 비번이 입력되지 않았을 때
             if (userId.isEmpty()) {

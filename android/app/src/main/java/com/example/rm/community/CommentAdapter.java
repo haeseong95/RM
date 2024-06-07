@@ -78,10 +78,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
                 popupMenu.inflate(R.menu.comment_menu);
                 String currentUserId = PreferenceHelper.getLoginId(context);    // 로그인 시 사용된 아이디
-                String commentUserId = commentData.getCommnet_userId();     // 댓글을 작성한 아이디
+                String commentUserId = commentData.getCommnet_userId().trim();     // 댓글을 작성한 아이디
                 Log.e(tag, "댓글 작성한 아이디 : " + commentUserId + ", 로그인 시 사용된 아이디 : " + currentUserId);
-                if (!currentUserId.equals(commentUserId)){   // 본인이 작성한 댓글이 맞는지 확인 (본인이 아니면 메뉴창 눌러도 안뜸)
-                    Log.d(tag, "메뉴 버튼 안눌림");
+                if (!currentUserId.equals(commentUserId)){
+                    Log.d(tag, "아이디 불일치, 본인이 작성한 댓글이 아니므로 메뉴 버튼 안눌림");
                     popupMenu.getMenu().findItem(R.id.action_edit).setVisible(false);
                     popupMenu.getMenu().findItem(R.id.action_delete).setVisible(false);
                 }
@@ -271,10 +271,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 Response response = client.newCall(request).execute();
                 String responseBody = response.body().string();
                 if (response.isSuccessful()) {
-
-//                    Toast.makeText(context.getApplicationContext(), "", Toast.LENGTH_SHORT).show();
                     Log.e("댓글 변경 성공", "댓글 변경되었어" + responseBody);
-                    
                 } else {
                     Log.e("댓글 변경 실패", "이유는 " + responseBody);
                 }

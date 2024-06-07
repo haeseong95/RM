@@ -95,18 +95,27 @@ public class CommunityContent extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
         String postHash = getIntent().getStringExtra("community_post_hash");
+        String postTitle = cTitle.getText().toString();
+        String postContent = cContent.getText().toString();
 
-        // 게시글 수정, 삭제
+        // 게시글 수정, 삭제 팝업 메뉴
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.inflateMenu(R.menu.comment_menu);
         toolbar.setOnMenuItemClickListener(item -> {
+            String currentUserId = PreferenceHelper.getLoginId(context);    // 로그인 시 사용된 아이디
+            String postUserId = getIntent().getStringExtra("community_post_userId");     // 게시글을 작성한 아이디
+            Log.e(tag, "게시글 작성한 아이디 : " + postUserId + ", 로그인 시 사용된 아이디 : " + currentUserId);
+            if(!currentUserId.equals(postUserId)) {
+                Log.d(tag, "아이디 불일치, 본인이 작성한 게시글X -> 메뉴 버튼 안눌림");
+                return false;
+            }
             switch (item.getItemId()) {
                 case R.id.action_delete:    // 게시글 삭제
-//                    postDelete(postId);
+                    messageDeletePost(postHash);
                     return true;
                 case R.id.action_edit:      // 게시글 수정
-//                    postModify(postId);
+                    postModify(postHash, postTitle, postContent);
                     return true;
                 default:
                     return CommunityContent.super.onOptionsItemSelected(item);
@@ -180,8 +189,6 @@ public class CommunityContent extends AppCompatActivity {
                                 cDate.setText(messageObject.getString("createTime"));
                                 cTitle.setText(messageObject.getString("title"));
                                 cContent.setText(messageObject.getString("contentText"));
-//                                cLike.setText(messageObject.getString("thumbsUp"));
-//                                cView.setText(messageObject.getString("views"));
                                 String date = messageObject.getString("createTime");
                                 cDate.setText(date.split("T")[0]);
                                 JSONArray imageArray = messageObject.getJSONArray("images");
@@ -495,68 +502,70 @@ public class CommunityContent extends AppCompatActivity {
         return true;
     }
 
-    // 게시글 수정 버튼 클릭 시 해당 게시글의 해시값 넘김
-    private void postModify(String postId) {
-        Log.i(tag, "현재 게시글의 해시값 : " + postId);
+    // 게시글 수정 버튼 클릭 -> 해당 게시글의 해시값 넘기고 수정(=생성) 페이지로 넘어감
+    private void postModify(String postHash, String postTitle, String postContent) {
         Intent intent = new Intent(CommunityContent.this, CommunityEdit.class);
-        intent.putExtra("postId", postId);  // 해시값 전달
+        intent.putExtra("modify_post_hash", postHash);
+        intent.putExtra("modify_post_title", postTitle);
+        intent.putExtra("modify_post_content", postContent);
         startActivity(intent);
     }
 
-    private void postDelete(String postId) {
+    // 게시글 삭제 버튼 클릭 -> 메시지 띄운 뒤에 서버에서 게시글 삭제
+    private void messageDeletePost(String hash) {
         AlertDialog dialog = new AlertDialog.Builder(CommunityContent.this)
                 .setMessage("게시글을 삭제하시겠습니까?")
                 .setPositiveButton("확인", (dialog1, which) -> {
-                    Log.i(tag, "게시글 삭제O");
-                    deletePostFromServer(postId);
+                    deletePost(hash);
                 })
-                .setNeutralButton("취소", (dialog2, which) -> dialog2.dismiss())
+                .setNegativeButton("취소", (dialog2, which) -> dialog2.dismiss())
                 .create();
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(android.R.color.black));
-        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(context.getResources().getColor(android.R.color.black));
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(android.R.color.black));
     }
 
-    private void deletePostFromServer(String postId) {
-        OkHttpClient client = new OkHttpClient();
-        TokenManager tokenManager = new TokenManager(getApplicationContext());
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("postId", postId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-        Request request = new Request.Builder()
-                .url("http://ipark4.duckdns.org:58395/api/delete/post")
-                .post(body)
-                .addHeader("Authorization", tokenManager.getToken())
-                .addHeader("Device-Info", Build.MODEL)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e(tag, "서버 연결 실패", e);
-                runOnUiThread(() -> Toast.makeText(CommunityContent.this, "서버 연결에 실패했습니다.", Toast.LENGTH_SHORT).show());
+    // 서버에 저장된 게시글 삭제
+    private void deletePost(String hash){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(context.getApplicationContext());
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hash", hash);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/delete/writing/info")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
                 if (response.isSuccessful()) {
-                    Log.i(tag, "게시글 삭제 성공");
-                    runOnUiThread(() -> finish());
+                    runOnUiThread(() -> {
+                        Toast.makeText(context.getApplicationContext(), "게시글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                        Log.e("게시글 삭제", "게시글 삭제 성공");
+                        Intent intent = new Intent(CommunityContent.this, Community.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    });
                 } else {
-                    Log.e(tag, "서버 응답 오류: " + response.body().string());
+                    Log.e("게시글 삭제 실패", "이유는 " + responseBody);
                 }
+            } catch (IOException e) {
+                Log.e(tag, "게시글 삭제 오류", e);
             }
-        });
+        }).start();
     }
-
-
-
 
     // 댓글 클래스
     public static class CommentBottomSheet extends BottomSheetDialogFragment {
