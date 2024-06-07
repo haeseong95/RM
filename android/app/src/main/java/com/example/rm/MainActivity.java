@@ -192,8 +192,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         List<NoticeData> newItem = new ArrayList<>();
         newItem.add(new NoticeData("공지사항1", "2023-22-22", "ㅇ"));
         newItem.add(new NoticeData("공지사항1", "2023-22-22", "ㅇ"));
-        newItem.add(new NoticeData("공지사항1", "2023-22-22", "ㅇ"));
-        newItem.add(new NoticeData("공지사항1", "2023-22-22", "ㅇ"));
         arrayList.addAll(newItem);
     }
 

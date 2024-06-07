@@ -32,23 +32,17 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
-// 사용자 로그인 화면
 public class LoginUser extends AppCompatActivity implements View.OnClickListener {
-    // 레이아웃
     ImageView btnBack;  // 뒤로 가기 버튼
     String userId, userPw = null;
     EditText loginId, loginPwd;  // 아이디, 비밀번호 입력창
     Button btnLogin, searchId, searchPwd, signUp;  // 로그인, 아이디 찾기, 비밀번호 찾기, 회원가입 버튼
-
-    //
     private static final String tag = "로그인";
     private TokenManager tokenManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_user);
-
         btnBack = (ImageView) findViewById(R.id.btn_back);
         loginId = (EditText) findViewById(R.id.login_id);
         loginPwd = (EditText) findViewById(R.id.login_pwd);
@@ -56,7 +50,6 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         searchId = (Button) findViewById(R.id.search_id);
         searchPwd = (Button) findViewById(R.id.search_pwd);
         signUp = (Button) findViewById(R.id.sign_up);
-
         btnBack.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
         searchId.setOnClickListener(this);

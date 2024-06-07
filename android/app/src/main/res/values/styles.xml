@@ -206,7 +206,21 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <!--게시글 메뉴 버튼-->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarTheme">@style/ToolbarTheme</item>
+        <item name="actionBarPopupTheme">@style/PopupMenuStyle</item>
+    </style>
 
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:colorControlNormal">@android:color/white</item>
+        <item name="android:colorControlActivated">@android:color/white</item>
+        <item name="android:colorControlHighlight">@android:color/white</item>
+    </style>
+
+    <style name="PopupMenuStyle" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorPrimary">@android:color/black</item>
+    </style>
 
 
 </resources>

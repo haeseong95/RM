@@ -9,7 +9,9 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.GradientDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -277,6 +279,13 @@ public class CommunityEdit extends AppCompatActivity {
             bitmap = BitmapFactory.decodeStream(inputStream, null, options);
             inputStream.close();
 
+            // 이미지 회전 각도 감지 및 회전
+            inputStream = new BufferedInputStream(this.getContentResolver().openInputStream(uri));
+            ExifInterface exif = new ExifInterface(inputStream);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            int rotationDegrees = exifToDegrees(orientation);
+            bitmap = rotateBitmap(bitmap, rotationDegrees);
+
         } finally {
             if (inputStream != null) {
                 try {
@@ -285,6 +294,28 @@ public class CommunityEdit extends AppCompatActivity {
                     Log.e(tag, "InputStream 닫기 실패", e);
                 }
             }
+        }
+        return bitmap;
+    }
+
+    private int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
+
+    private Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
+        if (degrees != 0 && bitmap != null) {
+            Matrix matrix = new Matrix();
+            matrix.setRotate(degrees, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
+            Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return rotatedBitmap;
         }
         return bitmap;
     }
@@ -306,6 +337,7 @@ public class CommunityEdit extends AppCompatActivity {
         Log.i(tag + " dp -> 픽셀", "가로 : " + MAX_WIDTH + ", 세로 : " + MAX_HEIGHT);
         return sampleSize;
     }
+
 
     // 디바이스의 DPI 계산 (dp -> 픽셀 변환)
     public int dpToPx(Context context, int dp){

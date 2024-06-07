@@ -11,7 +11,9 @@
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/main_color_green">
+        android:background="@color/main_color_green"
+        app:popupTheme="@style/PopupMenuStyle"
+        app:theme="@style/ToolbarTheme">
 
         <ImageView
             android:id="@+id/btn_back"
@@ -87,7 +89,7 @@
                 android:orientation="vertical"
                 android:layout_marginRight="15dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="20dp">
 
                 <TextView
                     android:id="@+id/cc_title"
@@ -164,7 +166,13 @@
                     android:textSize="@dimen/community_regular_text"/>
 
             </RelativeLayout>
+
         </LinearLayout>
+
+
     </ScrollView>
+
+
+
 
 </LinearLayout>

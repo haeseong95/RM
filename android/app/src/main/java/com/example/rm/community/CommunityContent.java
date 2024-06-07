@@ -96,11 +96,6 @@ public class CommunityContent extends AppCompatActivity {
         PreferenceHelper.init(CommunityContent.this);
         String postHash = getIntent().getStringExtra("community_post_hash");
 
-        // 좋아요 버튼
-        likeImage.setOnClickListener(v -> {
-            updateLike(postHash);
-        });
-
         // 게시글 수정, 삭제
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -123,6 +118,11 @@ public class CommunityContent extends AppCompatActivity {
             String post_hash = getIntent().getStringExtra("community_post_hash");
             CommentBottomSheet commentBottomSheet = CommentBottomSheet.newInstance(post_hash);
             commentBottomSheet.show(getSupportFragmentManager(), "댓글창");
+        });
+
+        // 좋아요 버튼
+        likeImage.setOnClickListener(v -> {
+            updateLike(postHash);
         });
 
         // 게시글 상세 내용
@@ -180,14 +180,11 @@ public class CommunityContent extends AppCompatActivity {
                                 cDate.setText(messageObject.getString("createTime"));
                                 cTitle.setText(messageObject.getString("title"));
                                 cContent.setText(messageObject.getString("contentText"));
-                                cLike.setText(messageObject.getString("thumbsUp"));
-                                cView.setText(messageObject.getString("views"));
+//                                cLike.setText(messageObject.getString("thumbsUp"));
+//                                cView.setText(messageObject.getString("views"));
                                 String date = messageObject.getString("createTime");
                                 cDate.setText(date.split("T")[0]);
-
                                 JSONArray imageArray = messageObject.getJSONArray("images");
-                                String[] directories = new String[imageArray.length()];
-                                String[] files = new String[imageArray.length()];
 
                                 for (int i = 0; i < imageArray.length(); i++) {
                                     JSONObject image = imageArray.getJSONObject(i);
@@ -359,11 +356,11 @@ public class CommunityContent extends AppCompatActivity {
                 Response response = client.newCall(request).execute();
                 String responseBody = response.body().string();
                 if (response.isSuccessful()) {
-                    String count = new JSONObject(responseBody).getString("message");   // 좋아요 개수값 가져옴
+                    String count = new JSONObject(responseBody).getString("message");   // 초기 좋아요 개수 가져옴
                     runOnUiThread(() -> {
                         cLike.setText(count);
-                        statusCount = Integer.parseInt(count);
-                        Log.e("좋아요 버튼, getLikeCount", "좋아요 개수 : " + count + "  " + responseBody);
+//                        statusCount = Integer.parseInt(count);
+                        Log.e("좋아요 개수, getLikeCount", "좋아요 개수 : " + count + "  " + responseBody);
                     });
                 } else {
                     Log.e("좋아요 개수 실패, getLikeCount", "이유는 " + responseBody);
@@ -402,17 +399,58 @@ public class CommunityContent extends AppCompatActivity {
                     String changeStatus = new JSONObject(responseBody).getString("message");
                     runOnUiThread(() -> {
                         updateLikeImage(changeStatus.equals("no2yes"));
-                        Log.e("좋아요 버튼", "좋아요 개수 : "  + " 12415sdfkjsadfgsdfhak " + responseBody);
+                        getLikeCount(hash);
+                        Log.e("좋아요 버튼, updateLike", "좋아요 개수 : "  + " yes2no-안누름 / no2yes-하트 누름 " + responseBody);
                     });
                 } else {
-                    Log.e("실패", "이유는 " + responseBody);
+                    Log.e("실패, updateLike", "이유는 " + responseBody);
                 }
             } catch (IOException | JSONException e) {
-                Log.e(tag, "오류", e);
+                Log.e(tag, "오류, updateLike", e);
             }
         }).start();
     }
 
+    // 초기 조회수 개수
+    private void getViews(String hash){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(context.getApplicationContext());
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hash", hash);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/read/writing/info/internal/view")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    String views = new JSONObject(responseBody).getString("message");
+                    runOnUiThread(() -> {
+                        cView.setText(views);
+                        Log.e("조회수 버튼", "조회수 개수 : " + views + "  " + responseBody);
+                    });
+                } else {
+                    Log.e("조회수 개수 실패", "이유는 " + responseBody);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e(tag, "조회수 개수 오류", e);
+            }
+        }).start();
+    }
+
+    // 조회수 개수 업데이트
     private void updateViews(String hash){
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
@@ -450,49 +488,6 @@ public class CommunityContent extends AppCompatActivity {
         }).start();
     }
 
-
-    // 조회수 개수 가져옴
-    private void getViews(String hash){
-        new Thread(() -> {
-            OkHttpClient client = new OkHttpClient();
-            TokenManager tokenManager = new TokenManager(context.getApplicationContext()); //
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("hash", hash);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-            Request request = new Request.Builder()
-                    .url("http://ipark4.duckdns.org:58395/api/read/writing/info/internal/view")
-                    .post(body)
-                    .addHeader("Authorization", tokenManager.getToken())
-                    .addHeader("Device-Info", Build.MODEL)
-                    .addHeader("Content-Type", "application/json")
-                    .build();
-
-            try {
-                Response response = client.newCall(request).execute();
-                String responseBody = response.body().string();
-                if (response.isSuccessful()) {
-                    String views = new JSONObject(responseBody).getString("message");
-                    runOnUiThread(() -> {
-                        cView.setText(views);
-                        Log.e("조회수 버튼", "조회수 개수 : " + views + "  " + responseBody);
-                    });
-                } else {
-                    Log.e("조회수 개수 실패", "이유는 " + responseBody);
-                }
-            } catch (IOException | JSONException e) {
-                Log.e(tag, "조회수 개수 오류", e);
-            }
-        }).start();
-    }
-
-
     // 툴바 상단 버튼 (게시글 수정/삭제)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -500,7 +495,7 @@ public class CommunityContent extends AppCompatActivity {
         return true;
     }
 
-    // 게시글 수정
+    // 게시글 수정 버튼 클릭 시 해당 게시글의 해시값 넘김
     private void postModify(String postId) {
         Log.i(tag, "현재 게시글의 해시값 : " + postId);
         Intent intent = new Intent(CommunityContent.this, CommunityEdit.class);
@@ -681,7 +676,7 @@ public class CommunityContent extends AppCompatActivity {
                         String date = createTime.split("T")[0];
 
                         Log.i(tag, "댓글 : " + contentText);
-                        allComments.add(new CommentData(nickname, place, date, contentText, hash));
+                        allComments.add(new CommentData(nickname, place, date, contentText, author, hash));
                     }
                     getActivity().runOnUiThread(() -> {
                         commentDataArrayList.addAll(allComments);
