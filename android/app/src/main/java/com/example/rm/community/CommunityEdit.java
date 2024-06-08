@@ -46,8 +46,11 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -113,6 +116,9 @@ public class CommunityEdit extends AppCompatActivity {
         String post_title = getIntent().getStringExtra("modify_post_title");
         String post_content = getIntent().getStringExtra("modify_post_content");
         String post_image_Array = getIntent().getStringExtra("modify_post_image_Array");
+        ArrayList<Uri> image_uri = getIntent().getParcelableArrayListExtra("modify_post_image_uri");    // 게시글에서 보여준 이미지 비트맵
+        Log.e("이미지 전달됨 ", String.valueOf(image_uri));
+
         try {
             if (
                     post_hash != null &&
@@ -131,16 +137,14 @@ public class CommunityEdit extends AppCompatActivity {
                 for (int i = 0; i < postImageArray.length(); i++) {
                     JSONObject imageObject = postImageArray.getJSONObject(i);
                     String fileLocation = imageObject.getString("fileLocation");
-                    String file = imageObject.getString("file");
                     Log.e("fileLocation 값", fileLocation);
                     files.add(fileLocation);
-                    files.add(file);
                     Uri imageUri = Uri.parse(postImageArray.getString(i));
                     uriArrayList.add(imageUri);
                 }
                 Log.i("ㄴㅇㄹ니얾ㄴㅇㄹ", String.valueOf(files));
 //                adapter = new ImageAdapter(files);
-                updateRecyclerView();
+                updateMoifyImage(image_uri);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -154,6 +158,43 @@ public class CommunityEdit extends AppCompatActivity {
         super.onResume();
         updateRecyclerView();
     }
+
+    private void updateMoifyImage(ArrayList<Uri> uris){
+        if(adapter == null){
+            adapter = new ImageAdapter(uris, getApplicationContext(), this::updateRecyclerView);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(CommunityEdit.this, LinearLayoutManager.HORIZONTAL, false));
+            Log.e("어댑터 초기화 시킴 ", "어댑터 초기화됨");
+        }
+        adapter.notifyDataSetChanged();
+        textImageCount.setText("(" + uriArrayList.size() + "/5)");
+    }
+
+    /*
+    // 받은 Bitmap 리스트에서 URI 리스트를 생성하는 함수
+    private ArrayList<Uri> convertBitmapToUriList(ArrayList<Bitmap> bitmapList, Context context) {
+        ArrayList<Uri> uriList = new ArrayList<>();
+
+        for (Bitmap bitmap : bitmapList) {
+            try {
+                // 임시 파일 생성
+                File file = File.createTempFile("image", ".png", context.getExternalCacheDir());
+                FileOutputStream out = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                out.flush();
+                out.close();
+
+                // 파일의 URI를 리스트에 추가
+                Uri uri = Uri.fromFile(file);
+                uriList.add(uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return uriList;
+    }
+
+     */
 
 
     // 작성 버튼을 누르면 글쓰기가 완료되고 입력한 내용이 db에 저장됨 + 게시판에 내가 쓴 글이 올라감

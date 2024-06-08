@@ -48,11 +48,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     private Context context;
     private Runnable updateImageCount;
 
-    public ImageAdapter(ArrayList<Uri> list, Context context, Runnable updateImageCount, ArrayList<String> files) {    // 게시글을 생성할 때 쓸 거
+    public ImageAdapter(ArrayList<Uri> list, Context context, Runnable updateImageCount) {    // 게시글을 생성할 때 쓸 거
         this.uriArrayList = list;
         this.context = context;
         this.updateImageCount = updateImageCount;
-        this.files = files;
     }
 
     public ImageAdapter(ArrayList<String> files){

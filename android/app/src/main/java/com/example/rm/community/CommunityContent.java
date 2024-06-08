@@ -7,8 +7,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
@@ -30,6 +33,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -45,7 +49,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -118,7 +126,7 @@ public class CommunityContent extends AppCompatActivity {
                 case R.id.action_delete:    // 게시글 삭제
                     messageDeletePost(postHash);
                     return true;
-                case R.id.action_edit:      // 게시글
+                case R.id.action_edit:      // 게시글 수정
                     Log.e(tag, "여기에" + postHash + " 값은?");
                     getModifyPostContent(postHash);
 //                    Log.e(tag, "여기에" + postHash + " 값은?");
@@ -552,7 +560,7 @@ public class CommunityContent extends AppCompatActivity {
                         postImageArray = json.getJSONArray("images");
 
                         runOnUiThread(() -> {
-                            postModify(hash, postTitle, postContent, postImageArray);
+                            postModify(hash, postTitle, postContent, postImageArray, bitmapArrayList);
                         });
                     } catch (JSONException e) {
                         Log.e(tag, "오류 발생", e);
@@ -565,8 +573,34 @@ public class CommunityContent extends AppCompatActivity {
         });
     }
 
-    private void postModify(String postHash, String postTitle, String postContent, JSONArray postImageArray) {
+    private void sendImageURLss(ArrayList<Bitmap> bitmaps, Context context) {
+        ArrayList<Uri> uriList = new ArrayList<>();
+        for (Bitmap bitmap : bitmaps) {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "test", null);
+            Uri imageUri = Uri.parse(path);
+            uriList.add(imageUri);
+        }
         Intent intent = new Intent(CommunityContent.this, CommunityEdit.class);
+        intent.putExtra("modify_post_image_uri", uriList);
+        startActivity(intent);
+    }
+
+    private void postModify(String postHash, String postTitle, String postContent, JSONArray postImageArray, ArrayList<Bitmap> bitmaps) {
+
+        Log.e("비트맵에 데이터 있는지 확인", String.valueOf(bitmaps));
+        ArrayList<Uri> uriList = new ArrayList<>();
+        for (Bitmap bitmap : bitmaps) {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "test", null);
+            Uri imageUri = Uri.parse(path);
+            uriList.add(imageUri);
+        }
+
+        Intent intent = new Intent(CommunityContent.this, CommunityEdit.class);
+        intent.putExtra("modify_post_image_uri", uriList);
         intent.putExtra("modify_post_hash", postHash);
         intent.putExtra("modify_post_title", postTitle);
         intent.putExtra("modify_post_content", postContent);
