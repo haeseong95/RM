@@ -1,9 +1,5 @@
 package com.example.rm.community;
 
-import static android.app.PendingIntent.getActivity;
-//import static com.example.rm.token.ApiClient.runOnUiThread;
-import static java.security.AccessController.getContext;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,6 +27,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
+import com.example.rm.token.PreferenceHelper;
 import com.example.rm.token.TokenManager;
 
 import org.json.JSONArray;
@@ -51,8 +48,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     static final String tag = "댓글 어댑터";
     private ArrayList<CommentData> arrayList = new ArrayList<>();
     private Context context;
-    private String currentUserId;   // 사용자 현재 ID로 댓글이 본인이 쓴 게 맞는지 검사하려고 생성자에 넣었는데 일단 빼고 필요하면 나중에 추가하기
-
     public CommentAdapter(Context context, ArrayList<CommentData> arrayList){
         this.arrayList = arrayList;
         this.context = context;
@@ -68,7 +63,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        int currentPosition = holder.getAbsoluteAdapterPosition();  // 클릭한 item의 position 값
+        int currentPosition = holder.getAbsoluteAdapterPosition();
         CommentData commentData = arrayList.get(position);
         String comment_hash = commentData.getComment_hash();
         holder.commentNickname.setText(commentData.getComment_nickname());
@@ -78,17 +73,18 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         holder.commentEdit.setText(commentData.getComment_comment());
         
         // 댓글 수정, 삭제 버튼 팝업 메뉴창
-        if (holder.btnMenu != null){    // findviewbyId가 null을 반환하는 경우가 있음
+        if (holder.btnMenu != null){
             holder.btnMenu.setOnClickListener(v -> {
-//          v.showContextMenu();    버튼 클릭 시 컨텍스트 메뉴 보여줌 (이건 communityContent.java에서 사용됨)
                 PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
                 popupMenu.inflate(R.menu.comment_menu);
-
-//                본인 댓글인지 확인, 본인이 작성한 댓글이면 메뉴창이 뜨고 아니면 안눌려야 함
-//                if (!comment.getComment_id().equals(currentUserId)) {
-//                    popupMenu.getMenu().findItem(R.id.action_edit).setVisible(false);       // 댓글 수정
-//                    popupMenu.getMenu().findItem(R.id.action_delete).setVisible(false);     // 댓글 삭제
-//                }
+                String currentUserId = PreferenceHelper.getLoginId(context);    // 로그인 시 사용된 아이디
+                String commentUserId = commentData.getCommnet_userId().trim();     // 댓글을 작성한 아이디
+                Log.e(tag, "댓글 작성한 아이디 : " + commentUserId + ", 로그인 시 사용된 아이디 : " + currentUserId);
+                if (!currentUserId.equals(commentUserId)){
+                    Log.d(tag, "아이디 불일치, 본인이 작성한 댓글이 아니므로 메뉴 버튼 안눌림");
+                    popupMenu.getMenu().findItem(R.id.action_edit).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.action_delete).setVisible(false);
+                }
 
                 popupMenu.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
@@ -98,36 +94,25 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                             holder.btnUnModify.setVisibility(View.VISIBLE);
                             holder.btnModify.setVisibility(View.VISIBLE);
                             holder.btnModify.setEnabled(false);
-
                             holder.commentEdit.setText(holder.commentComment.getText().toString());
-//                            holder.commentEdit.post(() -> {     // 키보드 올라옴
-//                                holder.commentEdit.requestFocus();
-//                                holder.commentEdit.setSelection(holder.commentEdit.getText().length());
-//                                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-//                                imm.showSoftInput(holder.commentEdit, InputMethodManager.SHOW_IMPLICIT);
-//                            });
                             holder.commentEdit.postDelayed(() -> {
                                 holder.commentEdit.requestFocus();
                                 holder.commentEdit.setSelection(holder.commentEdit.getText().length());
                                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm.showSoftInput(holder.commentEdit, InputMethodManager.SHOW_FORCED);
                             }, 100);
-
                             return true;
                         case R.id.action_delete:    // 삭제
                             Log.i(tag, "현재 게시글 position 값 : " + currentPosition);
                             AlertDialog dialog = new AlertDialog.Builder(context)
                                     .setTitle("댓글 삭제")
                                     .setMessage("댓글을 완전히 삭제할까요?")
-                                    .setPositiveButton("확인", null) // 리스너는 나중에 설정
-                                    .setNegativeButton("취소", null) // 리스너는 나중에 설정
+                                    .setPositiveButton("확인", null)
+                                    .setNegativeButton("취소", null)
                                     .create();
-
                             dialog.setOnShowListener(dialogInterface -> {
                                 Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
                                 Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-
-                                // 버튼이 null이 아닌지 확인 후 색상 설정
                                 if (positiveButton != null) {
                                     positiveButton.setTextColor(context.getResources().getColor(android.R.color.black));
                                     positiveButton.setOnClickListener(v1 -> {
@@ -162,7 +147,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String currentText = holder.commentComment.getText().toString();    // 수정 전 댓글
@@ -177,14 +161,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     holder.btnModify.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.black));
                 }
             }
-
             @Override
             public void afterTextChanged(Editable s) {
 
             }
         });
 
-        // 댓글 수정 확인 버튼
+        // 댓글 수정 확인 버튼 클릭 시
         if(holder.btnModify != null){
             holder.btnModify.setOnClickListener(v -> {
                 String updateComment = holder.commentEdit.getText().toString();
@@ -205,7 +188,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             Log.e(tag, "댓글 수정 확인 버튼 오류");
         }
 
-        // 댓글 수정 취소 버튼
+        // 댓글 수정 취소 버튼 클릭 시
         if(holder.btnUnModify != null){
             holder.btnUnModify.setOnClickListener(v -> {
                 holder.commentComment.setVisibility(View.VISIBLE);
@@ -221,20 +204,18 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
     }
 
-    // 댓글 삭제 버튼을 누르면 서버에 저장된 데이터 값 삭제시킴
+    // 댓글 삭제 버튼 클릭 -> 서버에 저장된 댓글 데이터 삭제
     private void deleteComment(String hash){
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
             TokenManager tokenManager = new TokenManager(context.getApplicationContext()); //
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("hash", hash);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Request request = new Request.Builder()
                     .url("http://ipark4.duckdns.org:58395/api/delete/writing/info")
@@ -243,7 +224,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     .addHeader("Device-Info", Build.MODEL)
                     .addHeader("Content-Type", "application/json")
                     .build();
-
             try {
                 Response response = client.newCall(request).execute();
                 String responseBody = response.body().string();
@@ -259,7 +239,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     }
 
 
-    // 댓글 수정한 값 서버에 전달
+    // 댓글 수정 버튼 클릭 -> 변경된 댓글 데이터 서버에 전달
     private void changeComment(String comment, String hash) {
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
@@ -291,10 +271,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 Response response = client.newCall(request).execute();
                 String responseBody = response.body().string();
                 if (response.isSuccessful()) {
-
-//                    Toast.makeText(context.getApplicationContext(), "", Toast.LENGTH_SHORT).show();
                     Log.e("댓글 변경 성공", "댓글 변경되었어" + responseBody);
-                    
                 } else {
                     Log.e("댓글 변경 실패", "이유는 " + responseBody);
                 }
@@ -319,7 +296,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         TextView commentNickname, commentPlace, commentDate, commentComment;
         EditText commentEdit;
         Button btnMenu, btnUnModify, btnModify;
-
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnCreateContextMenuListener(this);
@@ -346,8 +322,25 @@ class CommentData {
     private String comment_place = "";    // 등급
     private String comment_date = "";   // 생성날짜
     private String comment_comment = "";    // 게시글 댓글
-    private String comment_edit = "";   // 댓글 수정
+    private String commnet_userId = ""; // 게시글을 작성한 아이디
     private String comment_hash = "";   // 댓글의 해시값 
+
+    public CommentData(String comment_nickname, String comment_place, String comment_date, String comment_comment, String commnet_userId, String comment_hash) {
+        this.comment_nickname = comment_nickname;
+        this.comment_place = comment_place;
+        this.comment_date = comment_date;
+        this.comment_comment = comment_comment;
+        this.commnet_userId = commnet_userId;
+        this.comment_hash = comment_hash;
+    }
+
+    public String getCommnet_userId() {
+        return commnet_userId;
+    }
+
+    public void setCommnet_userId(String commnet_userId) {
+        this.commnet_userId = commnet_userId;
+    }
 
     public String getComment_hash() {
         return comment_hash;
@@ -355,14 +348,6 @@ class CommentData {
 
     public void setComment_hash(String comment_hash) {
         this.comment_hash = comment_hash;
-    }
-
-    public String getComment_edit() {
-        return comment_edit;
-    }
-
-    public void setComment_edit(String comment_edit) {
-        this.comment_edit = comment_edit;
     }
 
     public String getComment_nickname() {
@@ -395,13 +380,5 @@ class CommentData {
 
     public void setComment_comment(String comment_comment) {
         this.comment_comment = comment_comment;
-    }
-
-    public CommentData(String comment_nickname, String comment_place, String comment_date, String comment_comment, String comment_hash) {
-        this.comment_nickname = comment_nickname;
-        this.comment_place = comment_place;
-        this.comment_date = comment_date;
-        this.comment_comment = comment_comment;
-        this.comment_hash = comment_hash;
     }
 }

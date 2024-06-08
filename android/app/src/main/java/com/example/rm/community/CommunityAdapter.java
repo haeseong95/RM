@@ -52,12 +52,11 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         CommunityData communityData = communityDataArrayList.get(position);
         holder.mainTitle.setText(communityData.getMain_title());
         holder.mainNickname.setText(communityData.getMain_nickname());
-        holder.mainViewCount.setText(String.valueOf(communityData.getMain_view()));
         holder.mainDate.setText(communityData.getMain_date());
         holder.itemView.setOnClickListener(v -> {   // 게시글 목록을 클릭하면 해시, 아이디 값을 상세 페이지로 전달
             Intent intent = new Intent(context, CommunityContent.class);
-            intent.putExtra("community_post_hash", communityData.getMain_hash());
-            intent.putExtra("community_post_userId", communityData.getMain_userId());
+            intent.putExtra("community_post_hash", communityData.getMain_hash().trim());
+            intent.putExtra("community_post_userId", communityData.getMain_userId().trim());
             Log.i(tag, "해시값 : " + communityData.getMain_hash() + ", 아이디 : " + communityData.getMain_userId());
             context.startActivity(intent);
         });
@@ -75,11 +74,10 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     }
 
     public class CommuntiyViewHolder extends RecyclerView.ViewHolder{
-        TextView mainNickname, mainViewCount, mainDate, mainTitle;
+        TextView mainNickname, mainDate, mainTitle;
         public CommuntiyViewHolder(@NonNull View itemView) {
             super(itemView);
             mainNickname = itemView.findViewById(R.id.c_nickname);
-            mainViewCount = itemView.findViewById(R.id.c_views);
             mainDate = itemView.findViewById(R.id.c_date);
             mainTitle = itemView.findViewById(R.id.c_title);
         }
@@ -96,15 +94,13 @@ class CommunityData {
     private String main_nickname = ""; // 닉네임
     private String main_date = "";   // 생성날짜
     private String main_title = "";    // 게시글 제목
-    private long main_view = 0;  // 조회수
     private String main_hash = "";   // 게시글 해시값
     private String main_userId = "";    // 게시글을 작성한 사용자 id
 
-    public CommunityData(String main_nickname, String main_date, String main_title, long main_view, String main_hash, String main_userId) {
+    public CommunityData(String main_nickname, String main_date, String main_title, String main_hash, String main_userId) {
         this.main_nickname = main_nickname;
         this.main_date = main_date;
         this.main_title = main_title;
-        this.main_view = main_view;
         this.main_hash = main_hash;
         this.main_userId = main_userId;
     }
@@ -131,14 +127,6 @@ class CommunityData {
 
     public void setMain_title(String main_title) {
         this.main_title = main_title;
-    }
-
-    public long getMain_view() {
-        return main_view;
-    }
-
-    public void setMain_view(long main_view) {
-        this.main_view = main_view;
     }
 
     public String getMain_hash() {

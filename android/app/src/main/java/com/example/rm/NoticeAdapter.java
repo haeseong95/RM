@@ -38,8 +38,9 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
         holder.noticeDate.setText(noticeData.getNotice_date());
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, Notice.class);
-            intent.putExtra("notice_hash", noticeData.getNotice_hash());
-            Log.i(tag, "공지시항 해시값" + noticeData.getNotice_hash());
+            intent.putExtra("user_notice_hash", noticeData.getNotice_hash().trim());
+            intent.putExtra("user_notice_content", noticeData.getNotice_content());
+            Log.i(tag, "해시값 : " + noticeData.getNotice_content());
             context.startActivity(intent);
         });
     }
@@ -67,6 +68,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
 
 class NoticeData {
     private String notice_title = "";   // 공지사항 제목
+    private String notice_content = ""; // 공지사항 내용
     private String notice_date = "";  // 공지사항 생성날짜
     private String notice_hash = "";    // 공지사항 해시값
 
@@ -94,8 +96,16 @@ class NoticeData {
         this.notice_date = notice_date;
     }
 
-    public NoticeData(String notice_title, String notice_date, String notice_hash) {
+    public String getNotice_content() {
+        return notice_content;
+    }
+    public void setNotice_content(String notice_content) {
+        this.notice_content = notice_content;
+    }
+
+    public NoticeData(String notice_title, String notice_content, String notice_date, String notice_hash) {
         this.notice_title = notice_title;
+        this.notice_content = notice_content;
         this.notice_date = notice_date;
         this.notice_hash = notice_hash;
     }

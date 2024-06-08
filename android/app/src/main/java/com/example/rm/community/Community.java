@@ -47,15 +47,10 @@ public class Community extends AppCompatActivity {
     EditText searchBar;     // 검색창
     LinearLayout btnWrite;  // 글쓰기 아이콘
     RecyclerView recyclerView;  // 게시글 목록
-
     //
     private static final String tag = "Community 게시판 메인";
-    private static final int item_count = 10;
-    private int currentPage = 1;
-    private static final int REQUEST_CODE_EDIT = 1;
     ArrayList<CommunityData> arrayList = new ArrayList<>();     // 게시글 목록 데이터 저장
     CommunityAdapter adapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +93,6 @@ public class Community extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         TokenManager tokenManager = new TokenManager(getApplicationContext());
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("type", "post");
@@ -108,7 +102,6 @@ public class Community extends AppCompatActivity {
         }
 
         RequestBody requestBody = RequestBody.create(JSON, jsonObject.toString());
-
         Request request = new Request.Builder()
                 .url("http://ipark4.duckdns.org:58395/api/read/writing/list")
                 .post(requestBody)
@@ -122,7 +115,6 @@ public class Community extends AppCompatActivity {
                 Log.e(tag, "서버 연결 실패", e);
                 runOnUiThread(() -> Toast.makeText(Community.this, "서버 연결에 실패했습니다.", Toast.LENGTH_SHORT).show());
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
@@ -139,16 +131,12 @@ public class Community extends AppCompatActivity {
                             String nickname = jsonO.getString("nickname"); // 닉네임
                             String createTime = jsonO.getString("createTime"); // 생성날짜
                             String date = createTime.split("T")[0];
-                            long views = Long.parseLong(jsonO.getString("views"));   // 조회수
                             String postHash = jsonO.getString("hash"); // 해시값
-
-                            allPosts.add(new CommunityData(nickname, date, title, views, postHash, author));
+                            allPosts.add(new CommunityData(nickname, date, title, postHash, author));
                         }
-
                         runOnUiThread(() -> {
                             arrayList.addAll(allPosts);
                             adapter.notifyDataSetChanged();
-                            currentPage++;
                             Log.i(tag, "게시글 목록 보여줌" + responseBody);
                         });
                     } catch (JSONException e) {
@@ -204,5 +192,4 @@ public class Community extends AppCompatActivity {
             }
         });
     }
-
 }

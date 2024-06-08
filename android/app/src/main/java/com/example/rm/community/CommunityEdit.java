@@ -9,7 +9,9 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.GradientDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +41,8 @@ import com.example.rm.R;
 import com.example.rm.token.TokenManager;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -67,7 +71,7 @@ public class CommunityEdit extends AppCompatActivity {
     TextView btnCreate, btnDelete, btnAddImage, textImageCount;
 
     // 값
-    static final String tag = "CommunityEdit";
+    static final String tag = "게시글 작성 페이지";
     ImageAdapter adapter;
     ArrayList<Uri> uriArrayList = new ArrayList<>();    // 이미지 uri 담음
     ActivityResultLauncher<Intent> activityResultLauncher;
@@ -91,7 +95,118 @@ public class CommunityEdit extends AppCompatActivity {
         btnDelete.setOnClickListener(v -> cancelEdit());       // 취소 버튼
         btnCreate.setOnClickListener(v -> {finishEdit();});        // 작성 버튼
         init();     // 이미지 URI 얻기
+
+        // 게시글의 해시값이면
+        String post_hash = getIntent().getStringExtra("modify_post_hash");
+        String post_title = getIntent().getStringExtra("modify_post_title");
+        String post_content = getIntent().getStringExtra("modify_post_content");
+        Log.i(tag + " 수정", "수정할 해시값 : " + post_hash + ", 게시글 제목 : " + post_title + ", 게시글 내용 : " + post_content);
+        if (post_hash != null && !post_hash.isEmpty()) {
+            getModifyPostContent(post_hash, post_title, post_content);
+        }
+
     }
+
+    // 게시글 수정 (이미지 가져옴)
+    private void getModifyPostContent(String hash, String title, String content){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hash", hash);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/read/writing/list/post")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken())
+                    .addHeader("Device-Info", Build.MODEL)
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    JSONObject message = new JSONObject(responseBody).getJSONObject("message");
+                    runOnUiThread(() -> {
+                        try {
+                            postTitle.setText(message.getString("title"));
+                            postContent.setText(message.getString("contentText"));
+                            JSONArray imageArray = message.getJSONArray("images");
+
+                            for (int i = 0; i < imageArray.length(); i++) {
+                                JSONObject image = imageArray.getJSONObject(i);
+                                String directory = image.getString("fileLocation");
+                                String file = image.getString("name");
+                                Log.e("디렉터리 파일", directory + file);
+//                                getImageData(directory, file);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                } else {
+                    Log.e("게시글 수정 json 가져오기 실패", "이유는 " + responseBody);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e(tag, "게시글 수정 오류", e);
+            }
+        }).start();
+    }
+
+
+    /*
+    // 이미지 데이터 출력
+    private void getImageData(String directories, String files) {
+        OkHttpClient client = new OkHttpClient();
+        TokenManager tokenManager = new TokenManager(getApplicationContext());
+        JSONObject jsonObject = new JSONObject();
+        Log.e("값 뭐냐", directories + files);
+        try {
+            jsonObject.put("directory", directories);
+            jsonObject.put("file", files);
+            Log.e("디렉터리 파일", directories + files);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+        Request request = new Request.Builder()
+                .url("http://ipark4.duckdns.org:58395/api/read/image")
+                .post(body)
+                .addHeader("Authorization", tokenManager.getToken())
+                .addHeader("Device-Info", Build.MODEL)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e(tag, "이미지 서버 연결 실패", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    byte[] imageBytes = response.body().bytes();
+                    Bitmap bitmap = decodeSampledBitmapFromBytes(imageBytes, 1080, 1920);  // 원하는 크기로 디코딩
+                    runOnUiThread(() -> {
+                        bitmapArrayList.add(bitmap);
+                        viewPagerAdapter.notifyDataSetChanged();
+                    });
+                } else {
+                    Log.e(tag, "이미지 서버 응답 오류: " + response.body().toString());
+                }
+            }
+        });
+    }
+
+
+     */
+
 
     // 작성 버튼을 누르면 글쓰기가 완료되고 입력한 내용이 db에 저장됨 + 게시판에 내가 쓴 글이 올라감
     private void finishEdit(){
@@ -277,6 +392,13 @@ public class CommunityEdit extends AppCompatActivity {
             bitmap = BitmapFactory.decodeStream(inputStream, null, options);
             inputStream.close();
 
+            // 이미지 회전 각도 감지 및 회전
+            inputStream = new BufferedInputStream(this.getContentResolver().openInputStream(uri));
+            ExifInterface exif = new ExifInterface(inputStream);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            int rotationDegrees = exifToDegrees(orientation);
+            bitmap = rotateBitmap(bitmap, rotationDegrees);
+
         } finally {
             if (inputStream != null) {
                 try {
@@ -285,6 +407,30 @@ public class CommunityEdit extends AppCompatActivity {
                     Log.e(tag, "InputStream 닫기 실패", e);
                 }
             }
+        }
+        return bitmap;
+    }
+
+    // 이미지 돌아간 거 회전시켜줌1
+    private int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
+
+    // 이미지 돌아간 거 회전시켜줌2
+    private Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
+        if (degrees != 0 && bitmap != null) {
+            Matrix matrix = new Matrix();
+            matrix.setRotate(degrees, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
+            Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return rotatedBitmap;
         }
         return bitmap;
     }
@@ -306,6 +452,7 @@ public class CommunityEdit extends AppCompatActivity {
         Log.i(tag + " dp -> 픽셀", "가로 : " + MAX_WIDTH + ", 세로 : " + MAX_HEIGHT);
         return sampleSize;
     }
+
 
     // 디바이스의 DPI 계산 (dp -> 픽셀 변환)
     public int dpToPx(Context context, int dp){
