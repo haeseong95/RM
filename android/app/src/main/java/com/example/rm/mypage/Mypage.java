@@ -47,7 +47,7 @@ import okhttp3.Response;
 
 public class Mypage extends AppCompatActivity implements View.OnClickListener {
     // 레이아웃
-    LinearLayout btnLogout, btnDelete, btnCommunity, btnUserInfo;
+    LinearLayout btnLogout, btnDelete, btnUserInfo;
     ImageView btnBack;
     TextView userId, userEmail;
 
@@ -65,13 +65,11 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
         btnBack = findViewById(R.id.btn_back);
         btnLogout = findViewById(R.id.btn_logout);
         btnDelete = findViewById(R.id.li_delete);
-        btnCommunity = findViewById(R.id.li_community);
         btnUserInfo = findViewById(R.id.li_user);
 
         btnBack.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
-        btnCommunity.setOnClickListener(this);
         btnUserInfo.setOnClickListener(this);
         tokenManager = new TokenManager(this);
 
@@ -156,10 +154,6 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
             case R.id.li_delete:    // 탈퇴하기 페이지
                 DeleteBottomSheet deleteBottomSheet = new DeleteBottomSheet();
                 deleteBottomSheet.show(getSupportFragmentManager(), "계정탈퇴");
-                break;
-            case R.id.li_community: // 내 게시글/댓글 수정 페이지
-                Intent intent = new Intent(Mypage.this, MypageModify.class);
-                startActivity(intent);
                 break;
             case R.id.li_user:  // 회원 정보 수정 페이지
                 Intent intent1 = new Intent(Mypage.this, MypageUserInfo.class);

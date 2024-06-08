@@ -74,23 +74,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/li_community"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="10dp">
-        <TextView
-            android:text="게시글/댓글 관리하기"
-            style="@style/mypage_button"/>
-
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="25dp"
-            android:layout_gravity="center"
-            android:src="@drawable/btn_right"/>
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/btn_logout"
         android:layout_width="match_parent"
         android:layout_height="50dp"

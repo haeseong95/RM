@@ -15,8 +15,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
-import com.example.rm.mypage.AdapterComment;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -130,11 +130,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     }
 
     private void getFiles(ArrayList<String> files){
-        Log.i("ㄴㅇㄹ니얾 어댑터", String.valueOf(files));
-
         for (int i=0; i<files.size(); i++){
             String fileLocation = files.get(i);
-            Log.i("ㄴㅇㄹ니얾 sdfsdf어댑터", fileLocation);
         }
 
     }

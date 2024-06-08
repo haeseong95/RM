@@ -383,8 +383,3 @@ public class RecycleLocation extends AppCompatActivity implements OnMapReadyCall
                 });
     }
 }
-
-
-
-
-

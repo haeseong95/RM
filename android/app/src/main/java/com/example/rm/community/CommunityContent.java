@@ -519,8 +519,6 @@ public class CommunityContent extends AppCompatActivity {
         return true;
     }
 
-    // 게시글 수정 버튼 클릭 -> 해당 게시글의 해시값 넘기고 수정(=생성) 페이지로 넘어감
-
     // 게시글 수정 (이미지 가져옴)
     private void getModifyPostContent(String hash) {
             OkHttpClient client = new OkHttpClient();
@@ -573,34 +571,26 @@ public class CommunityContent extends AppCompatActivity {
         });
     }
 
-    private void sendImageURLss(ArrayList<Bitmap> bitmaps, Context context) {
-        ArrayList<Uri> uriList = new ArrayList<>();
-        for (Bitmap bitmap : bitmaps) {
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "test", null);
-            Uri imageUri = Uri.parse(path);
-            uriList.add(imageUri);
-        }
-        Intent intent = new Intent(CommunityContent.this, CommunityEdit.class);
-        intent.putExtra("modify_post_image_uri", uriList);
-        startActivity(intent);
-    }
-
     private void postModify(String postHash, String postTitle, String postContent, JSONArray postImageArray, ArrayList<Bitmap> bitmaps) {
+        File directory = getApplicationContext().getDir("images", Context.MODE_PRIVATE);
+        ArrayList<String> imageFileList = new ArrayList<>();
 
-        Log.e("비트맵에 데이터 있는지 확인", String.valueOf(bitmaps));
-        ArrayList<Uri> uriList = new ArrayList<>();
         for (Bitmap bitmap : bitmaps) {
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "test", null);
-            Uri imageUri = Uri.parse(path);
-            uriList.add(imageUri);
+            String fileName = "image_" + System.currentTimeMillis() + ".png";
+            File imagePath = new File(directory, fileName);
+
+            try (FileOutputStream fos = new FileOutputStream(imagePath)) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                String path = imagePath.getAbsolutePath();
+                imageFileList.add(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
+        Log.e("이미지 파일 경로 저장함", String.valueOf(imageFileList));
         Intent intent = new Intent(CommunityContent.this, CommunityEdit.class);
-        intent.putExtra("modify_post_image_uri", uriList);
+        intent.putExtra("modify_post_image_file_path", imageFileList);
         intent.putExtra("modify_post_hash", postHash);
         intent.putExtra("modify_post_title", postTitle);
         intent.putExtra("modify_post_content", postContent);
@@ -608,7 +598,6 @@ public class CommunityContent extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //////////////////////////////////////////////////////////
 
     // 게시글 삭제 버튼 클릭 -> 메시지 띄운 뒤에 서버에서 게시글 삭제
     private void messageDeletePost(String hash) {

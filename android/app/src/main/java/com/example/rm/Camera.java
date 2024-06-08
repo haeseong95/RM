@@ -304,4 +304,3 @@ public class Camera extends AppCompatActivity {
         }
     };
 }
-

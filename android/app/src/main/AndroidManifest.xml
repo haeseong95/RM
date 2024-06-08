@@ -73,7 +73,6 @@
         <activity android:name="com.example.rm.community.CommunityEdit"/>
         <activity android:name="com.example.rm.community.CommunityContent"/>
         <activity android:name="com.example.rm.Notice"/>
-        <activity android:name="com.example.rm.mypage.MypageModify"/>
         <activity android:name="com.example.rm.mypage.MypageUserInfo"/>
         <activity android:name="com.example.rm.manager.Manager"/>
     </application>

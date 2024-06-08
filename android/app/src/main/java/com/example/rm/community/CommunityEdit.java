@@ -116,7 +116,7 @@ public class CommunityEdit extends AppCompatActivity {
         String post_title = getIntent().getStringExtra("modify_post_title");
         String post_content = getIntent().getStringExtra("modify_post_content");
         String post_image_Array = getIntent().getStringExtra("modify_post_image_Array");
-        ArrayList<Uri> image_uri = getIntent().getParcelableArrayListExtra("modify_post_image_uri");    // 게시글에서 보여준 이미지 비트맵
+        ArrayList<String> image_uri = getIntent().getStringArrayListExtra("modify_post_image_file_path");   // 게시글에서 보여준 이미지 비트맵
         Log.e("이미지 전달됨 ", String.valueOf(image_uri));
 
         try {
@@ -144,7 +144,7 @@ public class CommunityEdit extends AppCompatActivity {
                 }
                 Log.i("ㄴㅇㄹ니얾ㄴㅇㄹ", String.valueOf(files));
 //                adapter = new ImageAdapter(files);
-                updateMoifyImage(image_uri);
+                updateModifyImage(image_uri);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -159,16 +159,41 @@ public class CommunityEdit extends AppCompatActivity {
         updateRecyclerView();
     }
 
-    private void updateMoifyImage(ArrayList<Uri> uris){
-        if(adapter == null){
-            adapter = new ImageAdapter(uris, getApplicationContext(), this::updateRecyclerView);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(CommunityEdit.this, LinearLayoutManager.HORIZONTAL, false));
-            Log.e("어댑터 초기화 시킴 ", "어댑터 초기화됨");
+//    private void updateMoifyImage(ArrayList<Uri> uris){
+//
+//
+//
+//        uriArrayList.clear();
+//        uriArrayList.addAll(uris); // 초기 이미지 설정
+//        if (adapter == null) {
+//            adapter = new ImageAdapter(uriArrayList, getApplicationContext(), this::updateRecyclerView);
+//            recyclerView.setAdapter(adapter);
+//            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//        }
+//        adapter.notifyDataSetChanged();
+//        textImageCount.setText("(" + uriArrayList.size() + "/5)");
+//    }
+
+    private void updateModifyImage(ArrayList<String> filePaths) {
+        uriArrayList.clear();
+        for (String filePath : filePaths) {
+            File imgFile = new File(filePath);
+            if (imgFile.exists()) {
+                Uri imageUri = Uri.fromFile(imgFile);
+                uriArrayList.add(imageUri);
+            }
         }
-        adapter.notifyDataSetChanged();
+
+        if (adapter == null) {
+            adapter = new ImageAdapter(uriArrayList, getApplicationContext(), this::updateRecyclerView);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        } else {
+            adapter.notifyDataSetChanged();
+        }
         textImageCount.setText("(" + uriArrayList.size() + "/5)");
     }
+
 
     /*
     // 받은 Bitmap 리스트에서 URI 리스트를 생성하는 함수
@@ -340,7 +365,7 @@ public class CommunityEdit extends AppCompatActivity {
                     if(intent.getData() != null){   // 이미지 1개만 선택
                         Log.e(tag + " 이미지 1개 선택", String.valueOf(intent.getData()));
                         Uri uri = intent.getData();     // 이미지 URI 얻음
-                        if (!uriArrayList.contains(uri)){   // 중복된 uri가 있으면 추가X
+                        if (!uriArrayList.contains(uri) && uriArrayList.size() < 5){   // 중복된 uri가 있으면 추가X
                             uriArrayList.add(uri);
                         }
                         updateRecyclerView();
@@ -355,7 +380,10 @@ public class CommunityEdit extends AppCompatActivity {
                                 uriArrayList.add(uri);
                             }
                         }
-                        updateRecyclerView();
+//                        updateRecyclerView();
+
+                        adapter.notifyDataSetChanged();
+                        textImageCount.setText("(" + uriArrayList.size() + "/5)");
                     }
                 } else {Log.e(tag + " uri 이미지 개수", "5개 초과하면 추가안됨");}
             }

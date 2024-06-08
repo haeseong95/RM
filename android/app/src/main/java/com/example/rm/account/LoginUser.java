@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rm.MainActivity;
 import com.example.rm.R;
+import com.example.rm.manager.Manager;
 import com.example.rm.token.PreferenceHelper;
 import com.example.rm.token.TokenManager;
 
@@ -39,6 +40,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
     Button btnLogin, searchId, searchPwd, signUp;  // 로그인, 아이디 찾기, 비밀번호 찾기, 회원가입 버튼
     private static final String tag = "로그인";
     private TokenManager tokenManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +80,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
             } else if (userPw.isEmpty()) {
                 Toast.makeText(this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
             } else {
-                loginUser(userId, userPw);  // 아이디, 비번 검사 -> 회원이 맞으면 메인화면으로 이동
+                loginUser(userId, userPw);  // 아이디, 비번 검사 -> 회원이 맞으면 메인화면 또는 관리자 화면으로 이동
             }
         } else if (v.getId() == R.id.search_id) {
             intent = new Intent(LoginUser.this, SearchId.class);
@@ -104,7 +106,7 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                 json.put("passwd", userPw);
                 json.put("device_info", deviceModel);
             } catch (Exception e) {
-                e.toString();
+                e.printStackTrace();
             }
             RequestBody body = RequestBody.create(JSON, json.toString());
             Request request = new Request.Builder()
@@ -119,12 +121,20 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
                 if (response.isSuccessful()) {
                     JSONObject responseJson = new JSONObject(responseBody);
                     String token = responseJson.getString("message");
+                    String userType = responseJson.getString("place"); // 사용자 유형 받아오기
                     tokenManager.saveToken(token);  // 토큰 저장
                     runOnUiThread(() -> {
-                        PreferenceHelper.setLoginState(LoginUser.this, true, userId);   // 로그인 성공 시 true 값 저장 + 로그인 id 저장
-                        Intent intent = new Intent(LoginUser.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        PreferenceHelper.setLoginState(LoginUser.this, true, userId);
+                        if ("admin".equals(userType)) {
+                            // 관리자 페이지로 이동
+                            Intent intent = new Intent(LoginUser.this, Manager.class);
+                            startActivity(intent);
+                        } else {
+                            // 일반 사용자 페이지로 이동
+                            Intent intent = new Intent(LoginUser.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
                     });
                 } else {
                     runOnUiThread(() -> {
@@ -138,3 +148,4 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         }).start();
     }
 }
+
