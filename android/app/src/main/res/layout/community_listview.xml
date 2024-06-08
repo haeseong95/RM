@@ -29,7 +29,6 @@
                 style="@style/community_text_normal_gray"
                 android:text="닉네임"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="5dp"
                 android:textSize="13dp"/>
 
 

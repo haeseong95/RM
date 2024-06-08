@@ -51,7 +51,7 @@ public class ApiClient {
                 .build();
     }
 
-    private static void runOnUiThread(Runnable runnable) {
+    public static void runOnUiThread(Runnable runnable) {
         new android.os.Handler(android.os.Looper.getMainLooper()).post(runnable);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,12 @@ import com.example.rm.R;
 import java.util.ArrayList;
 
 public class AdapterComment extends RecyclerView.Adapter<AdapterComment.CommentViewHolder> {
-    private ArrayList<CommentData> commentDataArrayList;
+    static final String tag = "내 댓글 수정 어댑터";
+    private ArrayList<CommentData> arrayList;
     private Context context;
-
     public AdapterComment(Context context, ArrayList<CommentData> arrayList) {
         this.context = context;
-        this.commentDataArrayList = arrayList;
+        this.arrayList = arrayList;
     }
 
     @NonNull
@@ -37,17 +38,17 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.CommentV
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        CommentData commentData = commentDataArrayList.get(position);
-        holder.commentTitle.setText(commentData.getComment_title());
-        holder.commentPost.setText(commentData.getComment_post());
-        holder.modifyDeleteButton.setOnClickListener(v -> {
+        CommentData commentData = arrayList.get(position);
+        holder.commentComment.setText(commentData.getComment_comment());
+        holder.commentPostTitle.setText(commentData.getComment_post());
+        holder.btnDelete.setOnClickListener(v -> {
             AlertDialog dialog = new AlertDialog.Builder(context)
                     .setTitle("댓글 삭제")
                     .setMessage("이 댓글을 삭제하시겠습니까?")
                     .setPositiveButton("확인", (dialogInterface, which) -> {
-                        commentDataArrayList.remove(position);
+                        arrayList.remove(position);
                         notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, commentDataArrayList.size());
+                        notifyItemRangeChanged(position, arrayList.size());
                         Toast.makeText(context, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton("취소", (dialogInterface, which) -> dialogInterface.dismiss())
@@ -66,45 +67,46 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.CommentV
 
     @Override
     public int getItemCount() {
-        return commentDataArrayList == null ? 0 : commentDataArrayList.size();
-    }
-
-    public void updateData(ArrayList<CommentData> newData) {
-        this.commentDataArrayList = newData;
-        notifyDataSetChanged();
+        if(arrayList == null){
+            Log.i(tag + " 게시글 개수", "아이템 비어있음");
+            return 0;
+        } else {
+            Log.i(tag + " 게시글 개수", "아이템 개수 : " + arrayList.size());
+            return arrayList.size();
+        }
     }
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
-        TextView commentTitle, commentPost;
-        Button modifyDeleteButton;
+        TextView commentComment, commentPostTitle;
+        Button btnDelete;
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
-            commentTitle = itemView.findViewById(R.id.c_comment);
-            commentPost = itemView.findViewById(R.id.c_date);
-            modifyDeleteButton = itemView.findViewById(R.id.modify_delete);
-            modifyDeleteButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ff0000")));
+            commentComment = itemView.findViewById(R.id.my_comment);   // 게시글 제목
+            commentPostTitle = itemView.findViewById(R.id.my_post_title);
+            btnDelete = itemView.findViewById(R.id.my_delete);
+            btnDelete.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ff0000")));
         }
     }
 }
 
 class CommentData {
-    private String comment_title = "";  // 댓글
+    private String comment_comment = "";  // 댓글 내용
     private String comment_post = "";   // 댓글 단 게시글 제목
     private String comment_hash = "";   // 댓글의 해시값
 
-    public CommentData(String comment_title, String comment_post, String comment_hash) {
-        this.comment_title = comment_title;
+    public CommentData(String comment_comment, String comment_post, String comment_hash) {
+        this.comment_comment = comment_comment;
         this.comment_post = comment_post;
         this.comment_hash = comment_hash;
     }
 
-    public String getComment_title() {
-        return comment_title;
+    public String getComment_comment() {
+        return comment_comment;
     }
 
-    public void setComment_title(String comment_title) {
-        this.comment_title = comment_title;
+    public void setComment_comment(String comment_comment) {
+        this.comment_comment = comment_comment;
     }
 
     public String getComment_post() {

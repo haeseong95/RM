@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainUserinfo.setOnClickListener(this);
         PreferenceHelper.init(this);
         tokenManager = new TokenManager(this);
-        getNotice();
-        setRecyclerView();
+//        getNotice();
+//        setRecyclerView();
     }
 
     @Override

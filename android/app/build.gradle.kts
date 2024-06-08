@@ -44,8 +44,10 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
 
     // okhttp
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.2")
     implementation("com.squareup.okhttp3:okhttp-urlconnection:4.4.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")
+    implementation("commons-fileupload:commons-fileupload:1.4")
 
 
     // Retrofit

@@ -51,7 +51,7 @@ public class MypageModify extends AppCompatActivity {
 
     private void initializeData() {
         // 예시 데이터 추가 (실제 데이터로 대체)
-        postsData.add(new PostData("2023-05-23", "첫 번째 게시글 제목", "d"));
+        postsData.add(new PostData("2023-05-23", "첫 번째 게시글 제목", "d", ""));
         commentsData.add(new CommentData("2023-05-23", "첫 번째 댓글 내용", "dd"));
     }
 

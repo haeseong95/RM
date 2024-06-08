@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -17,7 +16,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/c_comment"
+                android:id="@+id/my_comment"
                 style="@style/community_text_bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -25,12 +24,12 @@
                 android:layout_marginEnd="10dp"
                 android:text="댓글"
                 android:textSize="@dimen/community_regular_text"
-                app:layout_constraintEnd_toStartOf="@+id/modify_delete"
+                app:layout_constraintEnd_toStartOf="@+id/my_delete"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <Button
-                android:id="@+id/modify_delete"
+                android:id="@+id/my_delete"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/mypage_modify_delete"
@@ -41,13 +40,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
-                android:id="@+id/c_date"
+                android:id="@+id/my_post_title"
                 style="@style/community_text_normal_gray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="게시글 제목"
                 android:textSize="@dimen/community_regular_text"
-                app:layout_constraintTop_toBottomOf="@id/c_comment"
+                app:layout_constraintTop_toBottomOf="@id/my_comment"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="8dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>

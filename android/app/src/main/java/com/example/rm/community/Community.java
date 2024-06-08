@@ -20,15 +20,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rm.MainActivity;
 import com.example.rm.R;
+import com.example.rm.account.LoginUser;
+import com.example.rm.mypage.Mypage;
 import com.example.rm.token.TokenManager;
 import com.google.gson.Gson;
 
+import org.apache.commons.fileupload.util.Streams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +45,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import org.apache.commons.fileupload.MultipartStream;
+
+import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Community extends AppCompatActivity {
     // 레이아웃
@@ -99,6 +111,16 @@ public class Community extends AppCompatActivity {
             jsonObject.put("whichWriting", "");
         } catch (JSONException e) {
             e.printStackTrace();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            runOnUiThread(() -> {
+                tokenManager.clearToken();
+                Toast.makeText(Community.this, "로그인 세션이 만료되어 로그아웃 처리 되었습니다.", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Community.this, LoginUser.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            });
         }
 
         RequestBody requestBody = RequestBody.create(JSON, jsonObject.toString());
@@ -193,3 +215,4 @@ public class Community extends AppCompatActivity {
         });
     }
 }
+

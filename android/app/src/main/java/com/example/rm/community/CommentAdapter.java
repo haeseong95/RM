@@ -251,13 +251,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 jsonObject.put("hash", hash);
                 jsonObject.put("title", "");
                 jsonObject.put("contentText", comment);
-
-//                JSONArray imagesArray = new JSONArray();
                 jsonObject.put("images", "[]");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Request request = new Request.Builder()
                     .url("http://ipark4.duckdns.org:58395/api/update/writing/info")

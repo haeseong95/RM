@@ -49,17 +49,28 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.MultipartReader;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import org.apache.commons.fileupload.MultipartStream;
+import org.apache.commons.fileupload.util.Streams;
+
+
 
 // 커뮤니티 글쓰기 화면
 public class CommunityEdit extends AppCompatActivity {
@@ -72,8 +83,10 @@ public class CommunityEdit extends AppCompatActivity {
 
     // 값
     static final String tag = "게시글 작성 페이지";
+    private String postHash;
     ImageAdapter adapter;
     ArrayList<Uri> uriArrayList = new ArrayList<>();    // 이미지 uri 담음
+    ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();  // 게시글 수정 시 이미지 bitmap 담음
     ActivityResultLauncher<Intent> activityResultLauncher;
     ProgressDialog progressDialog;
     @Override
@@ -96,116 +109,51 @@ public class CommunityEdit extends AppCompatActivity {
         btnCreate.setOnClickListener(v -> {finishEdit();});        // 작성 버튼
         init();     // 이미지 URI 얻기
 
-        // 게시글의 해시값이면
         String post_hash = getIntent().getStringExtra("modify_post_hash");
         String post_title = getIntent().getStringExtra("modify_post_title");
         String post_content = getIntent().getStringExtra("modify_post_content");
-        Log.i(tag + " 수정", "수정할 해시값 : " + post_hash + ", 게시글 제목 : " + post_title + ", 게시글 내용 : " + post_content);
-        if (post_hash != null && !post_hash.isEmpty()) {
-            getModifyPostContent(post_hash, post_title, post_content);
-        }
-
-    }
-
-    // 게시글 수정 (이미지 가져옴)
-    private void getModifyPostContent(String hash, String title, String content){
-        new Thread(() -> {
-            OkHttpClient client = new OkHttpClient();
-            TokenManager tokenManager = new TokenManager(getApplicationContext());
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("hash", hash);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-            Request request = new Request.Builder()
-                    .url("http://ipark4.duckdns.org:58395/api/read/writing/list/post")
-                    .post(body)
-                    .addHeader("Authorization", tokenManager.getToken())
-                    .addHeader("Device-Info", Build.MODEL)
-                    .build();
-
-            try {
-                Response response = client.newCall(request).execute();
-                String responseBody = response.body().string();
-                if (response.isSuccessful()) {
-                    JSONObject message = new JSONObject(responseBody).getJSONObject("message");
-                    runOnUiThread(() -> {
-                        try {
-                            postTitle.setText(message.getString("title"));
-                            postContent.setText(message.getString("contentText"));
-                            JSONArray imageArray = message.getJSONArray("images");
-
-                            for (int i = 0; i < imageArray.length(); i++) {
-                                JSONObject image = imageArray.getJSONObject(i);
-                                String directory = image.getString("fileLocation");
-                                String file = image.getString("name");
-                                Log.e("디렉터리 파일", directory + file);
-//                                getImageData(directory, file);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                } else {
-                    Log.e("게시글 수정 json 가져오기 실패", "이유는 " + responseBody);
-                }
-            } catch (IOException | JSONException e) {
-                Log.e(tag, "게시글 수정 오류", e);
-            }
-        }).start();
-    }
-
-
-    /*
-    // 이미지 데이터 출력
-    private void getImageData(String directories, String files) {
-        OkHttpClient client = new OkHttpClient();
-        TokenManager tokenManager = new TokenManager(getApplicationContext());
-        JSONObject jsonObject = new JSONObject();
-        Log.e("값 뭐냐", directories + files);
+        String post_image_Array = getIntent().getStringExtra("modify_post_image_Array");
         try {
-            jsonObject.put("directory", directories);
-            jsonObject.put("file", files);
-            Log.e("디렉터리 파일", directories + files);
+            if (
+                    post_hash != null &&
+                            post_title != null &&
+                            post_content != null &&
+                            post_image_Array != null
+            ){
+                postHash = post_hash;
+                postTitle.setText(post_title);
+                postContent.setText(post_content);
+
+
+                JSONArray postImageArray = new JSONArray(post_image_Array);
+                ArrayList<String> files = new ArrayList<>();
+
+                for (int i = 0; i < postImageArray.length(); i++) {
+                    JSONObject imageObject = postImageArray.getJSONObject(i);
+                    String fileLocation = imageObject.getString("fileLocation");
+                    String file = imageObject.getString("file");
+                    Log.e("fileLocation 값", fileLocation);
+                    files.add(fileLocation);
+                    files.add(file);
+                    Uri imageUri = Uri.parse(postImageArray.getString(i));
+                    uriArrayList.add(imageUri);
+                }
+                Log.i("ㄴㅇㄹ니얾ㄴㅇㄹ", String.valueOf(files));
+//                adapter = new ImageAdapter(files);
+                updateRecyclerView();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
+            Log.e("JSONException 발생함", e.toString());
         }
+        Log.i(tag + " 수정", "수정할 해시값 : " + post_hash + ", 게시글 제목 : " + post_title + ", 게시글 내용 : " + post_content);
 
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
-        Request request = new Request.Builder()
-                .url("http://ipark4.duckdns.org:58395/api/read/image")
-                .post(body)
-                .addHeader("Authorization", tokenManager.getToken())
-                .addHeader("Device-Info", Build.MODEL)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e(tag, "이미지 서버 연결 실패", e);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    byte[] imageBytes = response.body().bytes();
-                    Bitmap bitmap = decodeSampledBitmapFromBytes(imageBytes, 1080, 1920);  // 원하는 크기로 디코딩
-                    runOnUiThread(() -> {
-                        bitmapArrayList.add(bitmap);
-                        viewPagerAdapter.notifyDataSetChanged();
-                    });
-                } else {
-                    Log.e(tag, "이미지 서버 응답 오류: " + response.body().toString());
-                }
-            }
-        });
     }
 
-
-     */
+    protected void onResume(){
+        super.onResume();
+        updateRecyclerView();
+    }
 
 
     // 작성 버튼을 누르면 글쓰기가 완료되고 입력한 내용이 db에 저장됨 + 게시판에 내가 쓴 글이 올라감
@@ -326,7 +274,8 @@ public class CommunityEdit extends AppCompatActivity {
         if(adapter == null){
             adapter = new ImageAdapter(uriArrayList, getApplicationContext(), this::updateRecyclerView);
             recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(CommunityEdit.this, LinearLayoutManager.HORIZONTAL, true));
+            recyclerView.setLayoutManager(new LinearLayoutManager(CommunityEdit.this, LinearLayoutManager.HORIZONTAL, false));
+            Log.e("어댑터 초기화 시킴 ", "어댑터 초기화됨");
         }
         adapter.notifyDataSetChanged();
         textImageCount.setText("(" + uriArrayList.size() + "/5)");

@@ -73,6 +73,8 @@ public class CommunityContent extends AppCompatActivity {
     private static final String tag = "상세 게시글 화면";
     private static int currentItemCount = -1;
     private int itemPosition = RecyclerView.NO_POSITION, statusCount = -1;    // item 초기값
+    private String postTitle, postContent;
+    private JSONArray postImageArray;
     ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();    // viewpager의 이미지를 담을 bitmap 리스트
 
     @Override
@@ -95,8 +97,10 @@ public class CommunityContent extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
         String postHash = getIntent().getStringExtra("community_post_hash");
-        String postTitle = cTitle.getText().toString();
-        String postContent = cContent.getText().toString();
+
+//        String postTitle = cTitle.getText().toString();
+//        String postContent = cContent.getText().toString();
+//        JSONArray postImageArray;
 
         // 게시글 수정, 삭제 팝업 메뉴
         setSupportActionBar(toolbar);
@@ -114,8 +118,14 @@ public class CommunityContent extends AppCompatActivity {
                 case R.id.action_delete:    // 게시글 삭제
                     messageDeletePost(postHash);
                     return true;
-                case R.id.action_edit:      // 게시글 수정
-                    postModify(postHash, postTitle, postContent);
+                case R.id.action_edit:      // 게시글
+                    Log.e(tag, "여기에" + postHash + " 값은?");
+                    getModifyPostContent(postHash);
+//                    Log.e(tag, "여기에" + postHash + " 값은?");
+//                    Log.e("postTitle", postTitle);
+//                    Log.e("postContent", postContent);
+//                    Log.e("postImageArray", postImageArray.toString());
+//                    postModify(postHash, postTitle, postContent, postImageArray);
                     return true;
                 default:
                     return CommunityContent.super.onOptionsItemSelected(item);
@@ -219,7 +229,6 @@ public class CommunityContent extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         TokenManager tokenManager = new TokenManager(getApplicationContext());
         JSONObject jsonObject = new JSONObject();
-        Log.e("값 뭐냐", directories + files);
         try {
             jsonObject.put("directory", directories);
             jsonObject.put("file", files);
@@ -503,13 +512,69 @@ public class CommunityContent extends AppCompatActivity {
     }
 
     // 게시글 수정 버튼 클릭 -> 해당 게시글의 해시값 넘기고 수정(=생성) 페이지로 넘어감
-    private void postModify(String postHash, String postTitle, String postContent) {
+
+    // 게시글 수정 (이미지 가져옴)
+    private void getModifyPostContent(String hash) {
+            OkHttpClient client = new OkHttpClient();
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hash", hash);
+                Log.e("hash 값을 넘겨줍니다.", hash);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/read/writing/info")
+                    .post(body)
+                    .addHeader("Authorization", tokenManager.getToken()) // String token = tokenManager.getToken();
+                    .addHeader("Device-Info", Build.MODEL) // String deviceModel = Build.MODEL;
+                    .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e(tag, "서버 연결 실패", e);
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "서버 연결에 실패했습니다.", Toast.LENGTH_SHORT).show());
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    try {
+                        JSONObject responseObject = new JSONObject(responseBody);
+                        JSONObject json = responseObject.getJSONObject("message");  // json 결과를 배열로 저장
+
+                        postTitle = json.getString("title");
+                        postContent = json.getString("contentText");
+                        postImageArray = json.getJSONArray("images");
+
+                        runOnUiThread(() -> {
+                            postModify(hash, postTitle, postContent, postImageArray);
+                        });
+                    } catch (JSONException e) {
+                        Log.e(tag, "오류 발생", e);
+                    }
+                } else {
+                    Log.e(tag, "서버 응답 오류: " + response.message());
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "서버 응답 오류", Toast.LENGTH_SHORT).show());
+                }
+            }
+        });
+    }
+
+    private void postModify(String postHash, String postTitle, String postContent, JSONArray postImageArray) {
         Intent intent = new Intent(CommunityContent.this, CommunityEdit.class);
         intent.putExtra("modify_post_hash", postHash);
         intent.putExtra("modify_post_title", postTitle);
         intent.putExtra("modify_post_content", postContent);
+        intent.putExtra("modify_post_image_Array", postImageArray.toString());
         startActivity(intent);
     }
+
+    //////////////////////////////////////////////////////////
 
     // 게시글 삭제 버튼 클릭 -> 메시지 띄운 뒤에 서버에서 게시글 삭제
     private void messageDeletePost(String hash) {
