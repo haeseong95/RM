@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".category.TrashDetail">
+    tools:context=".manager.NNoticeInfo">
 
-    <!--툴바-->
     <androidx.appcompat.widget.Toolbar
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
@@ -18,23 +17,15 @@
             android:id="@+id/btn_back"
             android:src="@drawable/btn_left" style="@style/back_icon"/>
 
-        <TextView android:id="@+id/title_trashName" android:text="쓰레기 이름" style="@style/toolbar_text" />
+        <TextView android:id="@+id/category_title" android:text="공지사항" style="@style/toolbar_text" android:textColor="#FFFFFF"/>
     </androidx.appcompat.widget.Toolbar>
 
-    <ImageView
-        android:id="@+id/trash_image"
-        android:layout_width="match_parent"
-        android:layout_height="280dp"
-        android:scaleType="centerCrop"
-        android:background="@color/category_gray"/>
-
     <TextView
-        android:id="@+id/trash_info"
+        android:id="@+id/m_notice_cotent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="분리수거 방법 안내"
+        android:layout_height="match_parent"
+        android:textSize="15dp"
         android:fontFamily="@font/nanum_regular"
-        android:textSize="20dp"
-        android:layout_margin="30dp"
-        android:paddingBottom="30dp"/>
+        android:layout_margin="20dp"/>
+
 </LinearLayout>

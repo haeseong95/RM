@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".community.CommunityEdit">
+    tools:context=".manager.NNoticeEdit">
 
     <androidx.appcompat.widget.Toolbar
         app:contentInsetStart="0dp"
@@ -27,7 +27,7 @@
         android:padding="20dp">
 
         <EditText
-            android:id="@+id/editTextTitle"
+            android:id="@+id/manager_editTextTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nanum_regular"
@@ -38,9 +38,9 @@
             android:textStyle="bold"/>
 
         <EditText
-            android:id="@+id/editTextContent"
+            android:id="@+id/manager_editTextContent"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="500dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/border_community"
             android:fontFamily="@font/nanum_regular"
@@ -49,42 +49,6 @@
             android:inputType="textMultiLine"
             android:padding="15dp"
             android:textSize="14dp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
-
-            <TextView
-                android:id="@+id/btn_addImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="이미지 첨부하기"
-                android:textColor="#000000"
-                android:fontFamily="@font/nanum_regular"
-                android:layout_marginRight="40dp"
-                android:textSize="15sp"
-                android:layout_alignParentEnd="true"/>
-
-            <TextView
-                android:id="@+id/image_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(0/5)"
-                android:textColor="#000000"
-                android:fontFamily="@font/nanum_regular"
-                android:layout_alignParentEnd="true"
-                android:textSize="15sp"/>
-
-        </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="start"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -99,7 +63,7 @@
                 android:layout_alignParentBottom="true">
 
                 <TextView
-                    android:id="@+id/btn_postdelete"
+                    android:id="@+id/btn_manager_postdelete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -115,7 +79,7 @@
                     android:textSize="13sp" />
 
                 <TextView
-                    android:id="@+id/btn_postcreate"
+                    android:id="@+id/btn_manager_postcreate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"

@@ -75,6 +75,9 @@
         <activity android:name="com.example.rm.Notice"/>
         <activity android:name="com.example.rm.mypage.MypageUserInfo"/>
         <activity android:name="com.example.rm.manager.Manager"/>
+        <activity android:name="com.example.rm.manager.NNotice"/>
+        <activity android:name="com.example.rm.manager.NNoticeEdit"/>
+        <activity android:name="com.example.rm.manager.NNoticeInfo"/>
     </application>
 
 </manifest>

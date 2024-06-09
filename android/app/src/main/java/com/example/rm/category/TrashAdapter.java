@@ -44,7 +44,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashViewHol
         holder.itemView.setOnClickListener(v -> {       // 해시값 넘겨서 해당하는 이미지 가져오기
             int item_position = holder.getAbsoluteAdapterPosition();    // item의 position 반환
             Intent intent = new Intent(context, TrashDetail.class);
-            intent.putExtra("category_trash_hash", trashData.getTrash_hash());
+            intent.putExtra("category_trash_detail_hash", trashData.getTrash_hash());
             Log.i(tag, "클릭한 item 위치 : " + item_position + ", 해시값 : " + trashData.getTrash_hash());
             context.startActivity(intent);
         });
@@ -83,11 +83,12 @@ class TrashData {
     private String trash_name = "";     // 쓰레기 이름
     private String trash_info = "";     // 쓰레기 분리수거 방법
     private String trash_hash = "";     // 쓰레기 설명 해시값
-    public TrashData(String trash_name, String trash_info, String trash_hash) {
+
+    public TrashData(String trash_name, String trash_hash) {
         this.trash_name = trash_name;
-        this.trash_info = trash_info;
         this.trash_hash = trash_hash;
     }
+
     public String getTrash_name() {
         return trash_name;
     }

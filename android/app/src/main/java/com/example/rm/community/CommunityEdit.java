@@ -91,7 +91,6 @@ public class CommunityEdit extends AppCompatActivity {
     ArrayList<Uri> uriArrayList = new ArrayList<>();    // 이미지 uri 담음
     ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();  // 게시글 수정 시 이미지 bitmap 담음
     ActivityResultLauncher<Intent> activityResultLauncher;
-    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,8 +103,6 @@ public class CommunityEdit extends AppCompatActivity {
         btnDelete = findViewById(R.id.btn_postdelete);
         btnAddImage = findViewById(R.id.btn_addImage);
         textImageCount = findViewById(R.id.image_count);
-        progressBar = findViewById(R.id.progressBar);
-
         btnAddImage.setOnClickListener(v -> attachAlbum());     // 이미지 첨부하기 버튼
         btnBack.setOnClickListener(v -> {cancelEdit();});          // 뒤로 가기 버튼
         btnDelete.setOnClickListener(v -> cancelEdit());       // 취소 버튼
@@ -130,7 +127,6 @@ public class CommunityEdit extends AppCompatActivity {
                 postTitle.setText(post_title);
                 postContent.setText(post_content);
 
-
                 JSONArray postImageArray = new JSONArray(post_image_Array);
                 ArrayList<String> files = new ArrayList<>();
 
@@ -143,8 +139,11 @@ public class CommunityEdit extends AppCompatActivity {
                     uriArrayList.add(imageUri);
                 }
                 Log.i("ㄴㅇㄹ니얾ㄴㅇㄹ", String.valueOf(files));
-//                adapter = new ImageAdapter(files);
                 updateModifyImage(image_uri);
+                // 수정 버튼
+                btnCreate.setOnClickListener(view -> {
+
+                });
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -159,21 +158,7 @@ public class CommunityEdit extends AppCompatActivity {
         updateRecyclerView();
     }
 
-//    private void updateMoifyImage(ArrayList<Uri> uris){
-//
-//
-//
-//        uriArrayList.clear();
-//        uriArrayList.addAll(uris); // 초기 이미지 설정
-//        if (adapter == null) {
-//            adapter = new ImageAdapter(uriArrayList, getApplicationContext(), this::updateRecyclerView);
-//            recyclerView.setAdapter(adapter);
-//            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-//        }
-//        adapter.notifyDataSetChanged();
-//        textImageCount.setText("(" + uriArrayList.size() + "/5)");
-//    }
-
+    // 게시글 수정 시 원래 이미지 + 새 이미지 추가/삭제
     private void updateModifyImage(ArrayList<String> filePaths) {
         uriArrayList.clear();
         for (String filePath : filePaths) {
@@ -183,7 +168,6 @@ public class CommunityEdit extends AppCompatActivity {
                 uriArrayList.add(imageUri);
             }
         }
-
         if (adapter == null) {
             adapter = new ImageAdapter(uriArrayList, getApplicationContext(), this::updateRecyclerView);
             recyclerView.setAdapter(adapter);
@@ -193,34 +177,6 @@ public class CommunityEdit extends AppCompatActivity {
         }
         textImageCount.setText("(" + uriArrayList.size() + "/5)");
     }
-
-
-    /*
-    // 받은 Bitmap 리스트에서 URI 리스트를 생성하는 함수
-    private ArrayList<Uri> convertBitmapToUriList(ArrayList<Bitmap> bitmapList, Context context) {
-        ArrayList<Uri> uriList = new ArrayList<>();
-
-        for (Bitmap bitmap : bitmapList) {
-            try {
-                // 임시 파일 생성
-                File file = File.createTempFile("image", ".png", context.getExternalCacheDir());
-                FileOutputStream out = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                out.flush();
-                out.close();
-
-                // 파일의 URI를 리스트에 추가
-                Uri uri = Uri.fromFile(file);
-                uriList.add(uri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return uriList;
-    }
-
-     */
-
 
     // 작성 버튼을 누르면 글쓰기가 완료되고 입력한 내용이 db에 저장됨 + 게시판에 내가 쓴 글이 올라감
     private void finishEdit(){

@@ -41,18 +41,38 @@
                 android:layout_alignBottom="@id/m_comment_userId"
                 android:layout_toEndOf="@id/m_comment_userId"/>
 
-            <Button
-                android:id="@+id/m_delete_comment"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/border_manager_com"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:fontFamily="@font/nanum_regular"
-                android:text="삭제"
-                android:textColor="@color/white"
-                android:textSize="@dimen/community_regular_text" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/m_edit_notice"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/border_manager_com"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:fontFamily="@font/nanum_regular"
+                    android:text="수정"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/community_regular_text" />
+
+                <Button
+                    android:id="@+id/m_delete_notice"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_toEndOf="@id/m_edit_notice"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/border_manager_com"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:fontFamily="@font/nanum_regular"
+                    android:text="삭제"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/community_regular_text" />
+            </RelativeLayout>
         </RelativeLayout>
 
     </LinearLayout>

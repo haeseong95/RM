@@ -81,7 +81,7 @@ public class CAdapterComment extends RecyclerView.Adapter<CAdapterComment.Commen
             commentTitle = itemView.findViewById(R.id.m_comment_title);
             commentId = itemView.findViewById(R.id.m_comment_userId);
             commentDate = itemView.findViewById(R.id.m_comment_date);
-            deleteComment = itemView.findViewById(R.id.m_delete_comment);
+            deleteComment = itemView.findViewById(R.id.m_delete_notice);
             deleteComment.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF0000")));
         }
     }

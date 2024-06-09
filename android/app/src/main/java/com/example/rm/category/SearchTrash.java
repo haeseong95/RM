@@ -18,13 +18,10 @@ import com.example.rm.R;
 import java.util.ArrayList;
 
 public class SearchTrash extends AppCompatActivity {
-    // 레이아웃
     RecyclerView recyclerView;
     ArrayList<TrashData> trashData = new ArrayList<>(); // 쓰레기 데이터 담음
     TrashAdapter trashAdapter;
-    //
     static final String tag = "쓰레기 검색창";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +35,7 @@ public class SearchTrash extends AppCompatActivity {
 
         // recyclerView
         setRecyclerView();
-        getTrashData();
+
     }
 
     @Override
@@ -72,6 +69,9 @@ public class SearchTrash extends AppCompatActivity {
         return true;
     }
 
+    // 쓰레기 데이터 싸그리 모아봄
+
+
     // 검색창에 입력한 텍스트가 있으면 텍스트값과 비교해서 같은 데이터를 result에 추가
     private void filterTrash(String text){
         ArrayList<TrashData> result = new ArrayList<>();
@@ -92,11 +92,4 @@ public class SearchTrash extends AppCompatActivity {
         recyclerView.setAdapter(trashAdapter);
     }
 
-    // 리스트뷰에 출력할 데이터 서버에서 가져와 trashData에 저장 (검색 전에 이미 만들어져 있어야 하고, 데이터를 가져오기만 하므로 화면에 출력X)
-    private void getTrashData() {
-        trashData.add(new TrashData("Plastic Bottle", "Recycle as plastic", "hash001"));
-        trashData.add(new TrashData("Glass Bottle", "Recycle as glass", "hash002"));
-        trashData.add(new TrashData("Newspaper", "Recycle as paper", "hash003"));
-        trashData.add(new TrashData("Aluminum Can", "Recycle as metal", "hash004"));
-    }
 }
