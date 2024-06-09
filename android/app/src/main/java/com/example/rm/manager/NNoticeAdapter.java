@@ -23,10 +23,10 @@ import java.util.List;
 
 public class NNoticeAdapter extends RecyclerView.Adapter<NNoticeAdapter.NoticeViewHolder> {
     static final String tag = "관리자 공지사항 어댑터";
-    private List<NNoticeList> noticeList;
+    private ArrayList<NNoticeList> noticeList;
     private Context context;
 
-    public NNoticeAdapter(List<NNoticeList> noticeList, Context context) {
+    public NNoticeAdapter(ArrayList<NNoticeList> noticeList, Context context) {
         this.noticeList = noticeList;
         this.context = context;
     }
@@ -43,6 +43,9 @@ public class NNoticeAdapter extends RecyclerView.Adapter<NNoticeAdapter.NoticeVi
         NNoticeList notice = noticeList.get(position);
         holder.noticeTitle.setText(notice.getM_notice_title());
         holder.noticeDate.setText(notice.getM_notice_date());
+        holder.btnModify.setBackgroundColor(Color.BLUE);
+        holder.btnDelete.setBackgroundColor(Color.RED);
+
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(context, NNoticeInfo.class);
             intent.putExtra("m_notice_hash", notice.getM_notice_hash().trim());
@@ -95,8 +98,8 @@ public class NNoticeAdapter extends RecyclerView.Adapter<NNoticeAdapter.NoticeVi
             super(itemView);
             noticeTitle = itemView.findViewById(R.id.m_cnotice_title);
             noticeDate = itemView.findViewById(R.id.m_cnotice_day);
-            btnDelete = itemView.findViewById(R.id.m_edit_notice);
-            btnModify = itemView.findViewById(R.id.m_delete_notice);
+            btnDelete = itemView.findViewById(R.id.m_delete_notice);
+            btnModify = itemView.findViewById(R.id.m_modify_notice);
         }
     }
 }

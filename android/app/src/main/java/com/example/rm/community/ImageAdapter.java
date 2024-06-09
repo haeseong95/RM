@@ -43,59 +43,85 @@ import okhttp3.Response;
 // 커뮤니티 글쓰기에서 이미지 5장 추가하기
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
     static final String tag = "이미지 어댑터";
-    private ArrayList<Uri> uriArrayList = new ArrayList<>();
-    private ArrayList<String> files;    // 서버에서 가져온 파일 위치 저장함
+    private ArrayList<Uri> uriArrayList = new ArrayList<>();    // 현재 recyclerView에 들어간 이미지 uri 저장할 리스트
+
+    private ArrayList<ArrayList<String>> deleteImage = new ArrayList<>();     // 삭제할 이미지 경로 저장
+    private ArrayList<ArrayList<String>> serverUrl;    // 서버에서 가져온 파일 위치 저장함
     private Context context;
     private Runnable updateImageCount;
 
-    public ImageAdapter(ArrayList<Uri> list, Context context, Runnable updateImageCount) {    // 게시글을 생성할 때 쓸 거
+//    public ImageAdapter(ArrayList<Uri> list, Context context, Runnable updateImageCount) {    // 게시글을 생성할 때 쓸 거
+//        this.uriArrayList = list;
+//        this.context = context;
+//        this.updateImageCount = updateImageCount;
+//    }
+
+    public ImageAdapter(ArrayList<Uri> list, ArrayList<ArrayList<String>> url, Context context, Runnable updateImageCount) {    // 게시글을 생성할 때 쓸 거
         this.uriArrayList = list;
         this.context = context;
         this.updateImageCount = updateImageCount;
+        this.serverUrl = url;
     }
 
-    public ImageAdapter(ArrayList<String> files){
-        this.files = files;
-        getFiles(files);
+    public ArrayList<ArrayList<String>> getDeleteImage(){
+        Log.e("getDeleteImage 개수", String.valueOf(deleteImage.size()));
+        return deleteImage;
     }
 
     @NonNull
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {    // 데이터 -> 뷰 전환
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.community_listview_image, parent, false);
-//        ImageViewHolder viewHolder = new ImageViewHolder(view);
         return new ImageViewHolder(view);
     }
-
     // position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시
+
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
+
         Uri uri = uriArrayList.get(position);
         Glide.with(context).load(uri).into(holder.imageView);
 
         // 로컬에서 이미지 로드
-        if ("content".equals(uri.getScheme())) {  // content 스킴인 경우, 로컬에서 이미지 로드
+        if ("content".equals(uri.getScheme())) {
             Glide.with(context).load(uri).into(holder.imageView);
             Log.e(tag, "파일 로케이션 값 :dzfgasgsfgbasfg ");
         } else {
             Glide.with(context).load(uri).into(holder.imageView);
-            Log.e(tag, "파일 로케이션 값 : else 부분 출력함  ");
+            Log.e(tag, "파일 로케이션 값 : else 부분 출력함ffffffff  ");
 
-
-
-            if (files != null) {
-                for (int i=0; i<files.size(); i++){
-                    String fileLocation = files.get(i);
-                    Log.e(tag, "파일 로케이션 값 : " + fileLocation);
-                    fetchImageData(uri.toString(), holder.imageView, fileLocation);
-                }
-
-            }
+//            if (files != null) {
+//                for (int i=0; i<files.size(); i++){
+//                    String fileLocation = files.get(i);
+//                    Log.e(tag, "파일 로케이션 값을 어디서 가져오는 지 확인 차 도전 : " + fileLocation);
+//                    fetchImageData(uri.toString(), holder.imageView, fileLocation);
+//                }
+//            }
         }
 
         holder.delete.setOnClickListener(v -> {
             int adapterPosition = holder.getAbsoluteAdapterPosition();  // 현재 아이템 위치 가져옴
+            Log.e("uriArrayList 이건 뭐가 들어있나?", uriArrayList.get(position).toString());
+            Log.e("adapterPosition 값 확인", String.valueOf(adapterPosition));
             if (adapterPosition != RecyclerView.NO_POSITION){
+//                Log.e("files 값", files.toString());
+////                else if(adapterPosition < files.size()) Log.e("adapterPosition < files.size()", String.valueOf(files.size()));
+//                if(files != null && adapterPosition < files.size()){
+//                    Log.i("files 값 있냐", "확인 좀 " + files.size());
+//                    Log.e("deleteImage 하나 삭제 전, 길이", String.valueOf(deleteImage.size()));
+//                    deleteImage.add(files.get(adapterPosition));    // 삭제할 이미지 경로 저장
+//                    Log.e("deleteImage 하나 삭제 후, 길이", String.valueOf(deleteImage.size()));
+//                }
+
+
+                if( !serverUrl.isEmpty() && (adapterPosition < serverUrl.size()) ) {
+                    Log.e("uriArrayList.remove 수행 전 내부 값", uriArrayList.toString());
+                    deleteImage.add(serverUrl.remove(adapterPosition));
+//                    uriArrayList.remove(adapterPosition);  // 리스트 위치의 데이터 삭제
+                    Log.e("deleteImage 수행", deleteImage.toString());
+                    Log.e("uriArrayList.remove 수행 후 내부 값", uriArrayList.toString());
+                }
+
                 uriArrayList.remove(adapterPosition);  // 리스트 위치의 데이터 삭제
                 notifyItemRemoved(adapterPosition);    // 리사이클뷰의 ui 항목 제거 알림
                 notifyItemRangeChanged(adapterPosition, uriArrayList.size());  // 제거하면 다른 목록들의 위치 업데이트
@@ -117,7 +143,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             return uriArrayList.size();
         }
     }
-
     public class ImageViewHolder extends RecyclerView.ViewHolder{    // 아이템 뷰를 저장하는 뷰홀더 클래스
         ImageView imageView;
         Button delete;
@@ -127,15 +152,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             delete = itemView.findViewById(R.id.btn_image_delete);
             delete.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0000FF")));
         }
-    }
-
-    private void getFiles(ArrayList<String> files){
-        for (int i=0; i<files.size(); i++){
-            String fileLocation = files.get(i);
-        }
 
     }
 
+    // 게시글 수정 시 기존의 이미지 가져옴
     private void fetchImageData(String uri, ImageView imageView, String fileLocation) {
         OkHttpClient client = new OkHttpClient();
         TokenManager tokenManager = new TokenManager(context);
@@ -165,6 +185,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    Log.e("레스펀스 바디", response.body().toString());
                     byte[] imageBytes = response.body().bytes();
                     Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
                     runOnUiThread(() -> Glide.with(context).load(bitmap).into(imageView));

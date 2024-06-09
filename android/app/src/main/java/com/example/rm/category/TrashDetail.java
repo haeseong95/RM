@@ -51,7 +51,10 @@ public class TrashDetail extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         String hash = getIntent().getStringExtra("category_trash_detail_hash");
+        String search_hash = getIntent().getStringExtra("category_trash_search_hash");
+
         getTrashDetail(hash);
+        getTrashDetail(search_hash);
     }
 
     // 쓰레기 텍스트 값 가져옴

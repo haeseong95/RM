@@ -1,13 +1,19 @@
 package com.example.rm.category;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.appcompat.widget.SearchView;
 
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,18 +21,34 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SearchTrash extends AppCompatActivity {
+    TextView categoryTag;
     RecyclerView recyclerView;
     ArrayList<TrashData> trashData = new ArrayList<>(); // 쓰레기 데이터 담음
-    TrashAdapter trashAdapter;
+    SearchAdapter searchAdapter;
+
+
     static final String tag = "쓰레기 검색창";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchtrash);
         recyclerView = findViewById(R.id.search_recyclerview);
+
 
         // 툴바
         Toolbar toolbar = (Toolbar)findViewById(R.id.search_toolbar);
@@ -60,36 +82,72 @@ public class SearchTrash extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String text) {    // 검색어 입력할 때마다 실행됨
                 if(text.isEmpty()){
-                    trashAdapter.updateSearchView(new ArrayList<>());
+                    searchAdapter.updateSearchView(new ArrayList<>());
                 }
-                else {filterTrash(text);}
+                else {
+                    getTrashDetail(text);
+                }
                 return true;
             }
         });
         return true;
     }
 
-    // 쓰레기 데이터 싸그리 모아봄
-
-
-    // 검색창에 입력한 텍스트가 있으면 텍스트값과 비교해서 같은 데이터를 result에 추가
-    private void filterTrash(String text){
-        ArrayList<TrashData> result = new ArrayList<>();
-        for(int i=0; i<trashData.size(); i++){
-            TrashData data = trashData.get(i);
-            if(data.getTrash_name().toLowerCase().contains(text.toLowerCase())){
-                result.add(data);
+    private void getTrashDetail(String text) {
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("titlePart", text);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        }
-        trashAdapter.updateSearchView(result);
+            RequestBody requestBody = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/read/writing/info/search")
+                    .post(requestBody)
+                    .addHeader("Device-Info", Build.MODEL)
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    JSONObject responseObject = new JSONObject(responseBody);
+                    JSONArray json = responseObject.getJSONArray("message");  // json 결과를 배열로 저장
+                    ArrayList<SearchData> result = new ArrayList<>();
+
+                    for (int i = 0; i < json.length(); i++) {
+                        JSONObject jsonO = json.getJSONObject(i);
+                        String title = jsonO.getString("title");
+                        String trash_hash = jsonO.getString("hash");
+                        String trash_tag = jsonO.getString("category");
+                        result.add(new SearchData(title, trash_hash, trash_tag));
+                    }
+                    runOnUiThread(() -> {
+                        searchAdapter.updateSearchView(result);
+                        Log.i(tag, "쓰레기 검색 결과 출력됨 : " + responseBody);
+                    });
+                } else {
+                    Log.e(tag, "쓰레기 검색 결과 망함 : " + responseBody);
+                }
+            } catch (IOException | JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+    }
+
+    // 태그의 색깔 변경
+    private void setColor(TextView textView, String colorCode) {
+        ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor(colorCode));
+        textView.setBackgroundTintList(colorStateList);
     }
 
     // recyclerView 초기화
     private void setRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SearchTrash.this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        trashAdapter = new TrashAdapter(new ArrayList<>(), SearchTrash.this);
-        recyclerView.setAdapter(trashAdapter);
+        searchAdapter = new SearchAdapter(new ArrayList<>(), SearchTrash.this);
+        recyclerView.setAdapter(searchAdapter);
     }
-
 }

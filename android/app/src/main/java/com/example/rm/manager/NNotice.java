@@ -53,18 +53,8 @@ public class NNotice extends AppCompatActivity {
         });
 
         // 공지사항 목록
-        test();
-//        getNotice();
+        getNotice();
         setNoticeRecycler();
-    }
-
-    private void test(){
-        List<NNoticeList> noticeList = new ArrayList<>();
-        noticeList.add(new NNoticeList("공지사항 1", "공지사항 내용 1", "2023-06-01", "hash1"));
-        noticeList.add(new NNoticeList("공지사항 2", "공지사항 내용 2", "2023-06-02", "hash2"));
-        noticeList.add(new NNoticeList("공지사항 3", "공지사항 내용 3", "2023-06-03", "hash3"));
-        noticeList.add(new NNoticeList("공지사항 4", "공지사항 내용 4", "2023-06-04", "hash4"));
-        noticeList.add(new NNoticeList("공지사항 5", "공지사항 내용 5", "2023-06-05", "hash5"));
     }
 
     // 공지사항 목록 가져옴
@@ -102,25 +92,23 @@ public class NNotice extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e(tag, "서버 연결 실패", e);
-                runOnUiThread(() -> Toast.makeText(NNotice.this, "서버 연결에 실패했습니다.", Toast.LENGTH_SHORT).show());
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
                     try {
-                        JSONObject responseObject = new JSONObject(responseBody);
-                        JSONArray jsonArray = responseObject.getJSONArray("message");
+                        JSONArray jsonArray = new JSONObject(responseBody).getJSONArray("message");
                         List<NNoticeList> allNotice = new ArrayList<>();
 
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonO = jsonArray.getJSONObject(i);
                             String title = jsonO.getString("title");   // 공지사항 제목
-                            String content = jsonO.getString("contentText");    // 공지사항 내용
+                            String postHash = jsonO.getString("hash"); // 해시값
+//                            String content = jsonO.getString("contentText");    // 공지사항 내용
                             String createTime = jsonO.getString("createTime"); // 생성날짜
                             String date = createTime.split("T")[0];
-                            String postHash = jsonO.getString("hash"); // 해시값
-                            allNotice.add(new NNoticeList(title, content,date, postHash));
+                            allNotice.add(new NNoticeList(title, title,date, postHash));
                         }
                         runOnUiThread(() -> {
                             noticeList.addAll(allNotice);

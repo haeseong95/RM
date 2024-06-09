@@ -37,9 +37,11 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
         holder.noticeTitle.setText(noticeData.getNotice_title());
         holder.noticeDate.setText(noticeData.getNotice_date());
         holder.itemView.setOnClickListener(v -> {
+
+
             Intent intent = new Intent(context, Notice.class);
             intent.putExtra("user_notice_hash", noticeData.getNotice_hash().trim());
-            Log.i(tag, "해시값 : " + noticeData.getNotice_content());
+            Log.i(tag, "해시값 : " + noticeData.getNotice_hash());
             context.startActivity(intent);
         });
     }

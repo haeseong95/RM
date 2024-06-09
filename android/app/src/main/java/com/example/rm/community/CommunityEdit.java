@@ -1,37 +1,24 @@
 package com.example.rm.community;
 
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.drawable.GradientDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rm.R;
 import com.example.rm.token.TokenManager;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,49 +35,34 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.MultipartReader;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import org.apache.commons.fileupload.MultipartStream;
-import org.apache.commons.fileupload.util.Streams;
-
-
-
-// 커뮤니티 글쓰기 화면
 public class CommunityEdit extends AppCompatActivity {
-    // 레이아웃
     ImageView btnBack;
-    ProgressBar progressBar;
     RecyclerView recyclerView;
     EditText postTitle, postContent;
     TextView btnCreate, btnDelete, btnAddImage, textImageCount;
 
     // 값
+//    private boolean onlyOneCall = false;
+    private int initialImageCount;
     static final String tag = "게시글 작성 페이지";
     private String postHash;
     ImageAdapter adapter;
     ArrayList<Uri> uriArrayList = new ArrayList<>();    // 이미지 uri 담음
-    ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();  // 게시글 수정 시 이미지 bitmap 담음
+    ArrayList<ArrayList<String>> files = new ArrayList<>();
     ActivityResultLauncher<Intent> activityResultLauncher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,21 +101,51 @@ public class CommunityEdit extends AppCompatActivity {
                 postContent.setText(post_content);
 
                 JSONArray postImageArray = new JSONArray(post_image_Array);
-                ArrayList<String> files = new ArrayList<>();
 
+                // 기존 이미지 + new 이미지 같은 어댑터로 정리
                 for (int i = 0; i < postImageArray.length(); i++) {
                     JSONObject imageObject = postImageArray.getJSONObject(i);
+                    ArrayList<String> file = new ArrayList<>();
                     String fileLocation = imageObject.getString("fileLocation");
+                    String name = imageObject.getString("name");
+
+                    file.add(fileLocation);
+                    file.add(name);
+
                     Log.e("fileLocation 값", fileLocation);
-                    files.add(fileLocation);
+                    Log.e("name 값", name);
+
+                    files.add(file);
+
+                    Log.e("postImageArray.getString(i)", postImageArray.getString(i));
+
                     Uri imageUri = Uri.parse(postImageArray.getString(i));
                     uriArrayList.add(imageUri);
-                }
-                Log.i("ㄴㅇㄹ니얾ㄴㅇㄹ", String.valueOf(files));
-                updateModifyImage(image_uri);
-                // 수정 버튼
-                btnCreate.setOnClickListener(view -> {
+                    Log.e("uriArrayList", uriArrayList.get(i).toString());
 
+                }
+
+                initialImageCount = uriArrayList.size();
+                Log.e("uriArrayList.size()", String.valueOf(uriArrayList.size()));
+                Log.i("기존 + new 이미지","files에는 기존 게시글 사진 경로가 저장됨 : " + String.valueOf(files));
+                updateModifyImage(image_uri, files);
+
+
+                // 수정 버튼
+//                ArrayList<ArrayList<String>> deleteImage = adapter.getDeleteImage();   // 기존 이미지 삭제할 거 저장
+                btnCreate.setOnClickListener(view -> {
+                    try {
+                        ArrayList<ArrayList<String>> deleteImage = adapter.getDeleteImage();   // 기존 이미지 삭제할 거 저장
+                        Log.e("post_title", post_title);
+                        Log.e("post_content", post_content);
+                        Log.e("uriArrayList", String.valueOf(uriArrayList.size()));
+                        Log.e("deleteImage", String.valueOf(deleteImage));
+
+                        ArrayList<Uri> newArrayList = new ArrayList<>( uriArrayList.subList(initialImageCount - deleteImage.size(), uriArrayList.size()) );
+                        submitUpdatedPost(post_title, post_content, newArrayList, deleteImage);
+                    } catch (IOException e) {
+                        Log.e("수정 버튼 클릭부터 에러", "!!!!!!!!!!!!!!!!!");
+                    }
                 });
             }
         } catch (JSONException e) {
@@ -159,7 +162,7 @@ public class CommunityEdit extends AppCompatActivity {
     }
 
     // 게시글 수정 시 원래 이미지 + 새 이미지 추가/삭제
-    private void updateModifyImage(ArrayList<String> filePaths) {
+    private void updateModifyImage(ArrayList<String> filePaths, ArrayList<ArrayList<String>> files) {
         uriArrayList.clear();
         for (String filePath : filePaths) {
             File imgFile = new File(filePath);
@@ -168,8 +171,11 @@ public class CommunityEdit extends AppCompatActivity {
                 uriArrayList.add(imageUri);
             }
         }
+
+        Log.e("uriArrayList.size() updateModifyImage", String.valueOf(uriArrayList.size()));
+
         if (adapter == null) {
-            adapter = new ImageAdapter(uriArrayList, getApplicationContext(), this::updateRecyclerView);
+            adapter = new ImageAdapter(uriArrayList, files, getApplicationContext(), this::updateRecyclerView);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         } else {
@@ -224,7 +230,8 @@ public class CommunityEdit extends AppCompatActivity {
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                     byte[] byteArray = byteArrayOutputStream.toByteArray();
-                    multipartBodyBuilder.addFormDataPart("images" + (i+1), "image" + (i+1) + ".jpg", RequestBody.create(byteArray, MediaType.parse("image/jpeg")));
+                    String imageFileName = uri.getLastPathSegment();
+                    multipartBodyBuilder.addFormDataPart("images" + (i+1), imageFileName, RequestBody.create(byteArray, MediaType.parse("image/jpeg")));
                     imageList.add(String.valueOf(i));
                 }
                 multipartBodyBuilder.addFormDataPart("image_lines", new JSONArray(imageList).toString());
@@ -290,11 +297,150 @@ public class CommunityEdit extends AppCompatActivity {
         }).start();
     }
 
+    // 수정된 게시글과 이미지 정보를 서버로 전송
+    private void submitUpdatedPost(String title, String content, ArrayList<Uri> newImages, ArrayList<ArrayList<String>> deletedImages) throws IOException {
+        new Thread(() -> {
+
+            String jsonData = (new Gson()).toJson(deletedImages);
+            OkHttpClient client = new OkHttpClient();
+            MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("hash", postHash)
+                    .addFormDataPart("title", title)
+                    .addFormDataPart("contentText", content)
+                    .addFormDataPart("deleteImageNames", jsonData);
+
+            // 이미지 추가
+            if (!newImages.isEmpty()) {
+                Log.e("newImages", newImages.toString());
+                ArrayList<String> imageList = new ArrayList<>();
+                int notServerImageStart = initialImageCount - deletedImages.size();
+                Log.e("notServerImageStart", String.valueOf(notServerImageStart));
+                Log.e("newImages.size()", String.valueOf(newImages.size()));
+                for (int i = 0; i < newImages.size(); i++) {
+                    Uri uri = newImages.get(i);
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = decodeBitmap(uri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream.toByteArray();
+                    String imageFileName = uri.getLastPathSegment();
+                    multipartBodyBuilder.addFormDataPart("images" + (i + 1), imageFileName, RequestBody.create(byteArray, MediaType.parse("image/jpeg")));
+                    imageList.add(imageFileName.split(":")[1]);
+                }
+                multipartBodyBuilder.addFormDataPart("new_image_lines", new JSONArray(imageList).toString());
+                Log.e("new_image_lines", new JSONArray(imageList).toString());
+            }
+
+//        // 추가할 이미지 정보
+//        JSONArray newImageLines = new JSONArray();
+//        for (int i = 0; i < newImages.size(); i++) {
+//            Uri imageUri = newImages.get(i);
+//            Bitmap bitmap = decodeBitmap(imageUri);
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+////            String imageFileName = "updated_image_" + i + ".jpg";
+//            String imageFileName = imageUri.getLastPathSegment();
+//            multipartBodyBuilder.addFormDataPart("newImages", imageFileName,
+//                    RequestBody.create(MediaType.parse("image/jpeg"), stream.toByteArray()));
+//            newImageLines.put(i); // 이미지 순서 정보
+//        }
+//        multipartBodyBuilder.addFormDataPart("new_image_lines", newImageLines.toString());
+
+//        // 삭제할 이미지 정보
+//        JSONArray deleteImageNames = new JSONArray();
+//        for (String fileInfo : deletedImages) {
+//            JSONArray fileJson = new JSONArray(Arrays.asList(fileInfo));
+//            deleteImageNames.put(fileJson);
+//        }
+//        multipartBodyBuilder.addFormDataPart("deleteImageNames", deleteImageNames.toString());
+
+            // 토큰과 디바이스 정보를 헤더에 추가
+
+//            RequestBody requestBody = multipartBodyBuilder.build();
+            String token = new TokenManager(getApplicationContext()).getToken();
+            String deviceModel = Build.MODEL;
+
+            if (token == null) {
+                Log.e(tag, "Token is null");
+                runOnUiThread(() -> Toast.makeText(CommunityEdit.this, "토큰이 유효하지 않습니다.", Toast.LENGTH_SHORT).show());
+                return;
+            }
+
+            if (deviceModel == null) {
+                Log.e(tag, "Device model is null");
+                runOnUiThread(() -> Toast.makeText(CommunityEdit.this, "디바이스 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show());
+                return;
+            }
+
+            Request request = new Request.Builder()
+                    .url("http://ipark4.duckdns.org:58395/api/update/writing/info")
+                    .post(multipartBodyBuilder.build())
+                    .addHeader("Authorization", token)
+                    .addHeader("Device-Info", deviceModel)
+                    .build();
+
+//            client.newCall(request).enqueue(new Callback() {
+//                @Override
+//                public void onFailure(Call call, IOException e) {
+//                    runOnUiThread(() -> Toast.makeText(CommunityEdit.this, "네트워크 오류: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+//                }
+//
+//                @Override
+//                public void onResponse(Call call, Response response) throws IOException {
+//                    if (response.isSuccessful()) {
+//                        runOnUiThread(() -> {
+//                            Toast.makeText(CommunityEdit.this, "게시글 수정 성공", Toast.LENGTH_SHORT).show();
+//                            finish(); // 액티비티 종료
+//                        });
+//                    } else {
+//                        Log.e("게시글 수정 실패", response.body().toString());
+//                    }
+//                }
+//            });
+
+            try {
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    runOnUiThread(() -> {
+                        Log.e(tag, "게시글 수정 완료 " + response.body().toString());
+                        Toast.makeText(CommunityEdit.this, "게시글이 성공적으로 수정되었습니다.", Toast.LENGTH_SHORT).show();
+
+                        Intent result = new Intent();
+                        result.putExtra("post_create_success", true);
+                        setResult(RESULT_OK, result);
+
+                        Intent intent = new Intent(CommunityEdit.this, CommunityContent.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        try {
+                            Log.e(tag, "게시글 수정 실패 " + responseBody);
+                            Toast.makeText(CommunityEdit.this, "게시글 수정에 실패했습니다: " + responseBody, Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }).start();
+    }
 
     // 리사이클뷰 초기화 + 업데이트
     private void updateRecyclerView(){
         if(adapter == null){
-            adapter = new ImageAdapter(uriArrayList, getApplicationContext(), this::updateRecyclerView);
+            adapter = new ImageAdapter(uriArrayList, (new ArrayList<>()), getApplicationContext(), this::updateRecyclerView);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(CommunityEdit.this, LinearLayoutManager.HORIZONTAL, false));
             Log.e("어댑터 초기화 시킴 ", "어댑터 초기화됨");

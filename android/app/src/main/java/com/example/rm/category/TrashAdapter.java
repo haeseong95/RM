@@ -41,6 +41,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashViewHol
         holder.trashName.setText(trashData.getTrash_name());
         holder.trashInfo.setText(trashData.getTrash_info());
         holder.trashHash.setText(trashData.getTrash_hash());
+
         holder.itemView.setOnClickListener(v -> {       // 해시값 넘겨서 해당하는 이미지 가져오기
             int item_position = holder.getAbsoluteAdapterPosition();    // item의 position 반환
             Intent intent = new Intent(context, TrashDetail.class);
@@ -88,6 +89,7 @@ class TrashData {
         this.trash_name = trash_name;
         this.trash_hash = trash_hash;
     }
+
 
     public String getTrash_name() {
         return trash_name;

@@ -44,16 +44,12 @@ public class Notice extends AppCompatActivity {
         btnBack = findViewById(R.id.btn_back);
         btnBack.setOnClickListener(v -> finish());
         String hash = getIntent().getStringExtra("user_notice_hash"); // 공지사항 내용 가져옴
+        Log.e("공지사항 해시값 확인좀 ", hash);
         getTextData(hash);
-
-
-
     }
-
 
     private void getTextData(String hash) {
         OkHttpClient client = new OkHttpClient();
-        TokenManager tokenManager = new TokenManager(getApplicationContext());
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         JSONObject jsonObject = new JSONObject();
         try {
@@ -66,7 +62,6 @@ public class Notice extends AppCompatActivity {
         Request request = new Request.Builder()
                 .url("http://ipark4.duckdns.org:58395/api/read/writing/list/post")
                 .post(body)
-                .addHeader("Authorization", tokenManager.getToken())
                 .addHeader("Device-Info", Build.MODEL)
                 .build();
 
@@ -74,9 +69,7 @@ public class Notice extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e(tag, "서버 연결 실패", e);
-                runOnUiThread(() -> Toast.makeText(Notice.this, "서버 연결에 실패했습니다.", Toast.LENGTH_SHORT).show());
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
@@ -84,7 +77,6 @@ public class Notice extends AppCompatActivity {
                     try {
                         JSONObject responseObject = new JSONObject(responseBody);
                         JSONObject messageObject = responseObject.getJSONObject("message");
-
                         runOnUiThread(() -> {
                             try {
                                 textView.setText(messageObject.getString("contentText"));
