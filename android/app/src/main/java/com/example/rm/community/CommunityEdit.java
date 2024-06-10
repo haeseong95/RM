@@ -85,7 +85,7 @@ public class CommunityEdit extends AppCompatActivity {
         btnCreate.setOnClickListener(v -> {finishEdit();});        // 작성 버튼
         init();     // 이미지 URI 얻기
 
-        String post_hash = getIntent().getStringExtra("modify_post_hash");
+        String post_hash = getIntent().getStringExtra("modify_post_hash");  // content에서 edit로 보내준 상세 게시글의 해시값
         String post_title = getIntent().getStringExtra("modify_post_title");
         String post_content = getIntent().getStringExtra("modify_post_content");
         String post_image_Array = getIntent().getStringExtra("modify_post_image_Array");
@@ -303,7 +303,7 @@ public class CommunityEdit extends AppCompatActivity {
         }).start();
     }
 
-    // 수정된 게시글과 이미지 정보를 서버로 전송
+    // 수정된 게시글 + 이미지 정보를 서버로 전송
     private void submitUpdatedPost(String title, String content, ArrayList<Uri> newImages, ArrayList<ArrayList<String>> deletedImages) throws IOException {
         new Thread(() -> {
 
@@ -342,32 +342,6 @@ public class CommunityEdit extends AppCompatActivity {
                 Log.e("new_image_lines", new JSONArray(imageList).toString());
             }
 
-//        // 추가할 이미지 정보
-//        JSONArray newImageLines = new JSONArray();
-//        for (int i = 0; i < newImages.size(); i++) {
-//            Uri imageUri = newImages.get(i);
-//            Bitmap bitmap = decodeBitmap(imageUri);
-//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-////            String imageFileName = "updated_image_" + i + ".jpg";
-//            String imageFileName = imageUri.getLastPathSegment();
-//            multipartBodyBuilder.addFormDataPart("newImages", imageFileName,
-//                    RequestBody.create(MediaType.parse("image/jpeg"), stream.toByteArray()));
-//            newImageLines.put(i); // 이미지 순서 정보
-//        }
-//        multipartBodyBuilder.addFormDataPart("new_image_lines", newImageLines.toString());
-
-//        // 삭제할 이미지 정보
-//        JSONArray deleteImageNames = new JSONArray();
-//        for (String fileInfo : deletedImages) {
-//            JSONArray fileJson = new JSONArray(Arrays.asList(fileInfo));
-//            deleteImageNames.put(fileJson);
-//        }
-//        multipartBodyBuilder.addFormDataPart("deleteImageNames", deleteImageNames.toString());
-
-            // 토큰과 디바이스 정보를 헤더에 추가
-
-//            RequestBody requestBody = multipartBodyBuilder.build();
             String token = new TokenManager(getApplicationContext()).getToken();
             String deviceModel = Build.MODEL;
 
@@ -390,25 +364,6 @@ public class CommunityEdit extends AppCompatActivity {
                     .addHeader("Device-Info", deviceModel)
                     .build();
 
-//            client.newCall(request).enqueue(new Callback() {
-//                @Override
-//                public void onFailure(Call call, IOException e) {
-//                    runOnUiThread(() -> Toast.makeText(CommunityEdit.this, "네트워크 오류: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-//                }
-//
-//                @Override
-//                public void onResponse(Call call, Response response) throws IOException {
-//                    if (response.isSuccessful()) {
-//                        runOnUiThread(() -> {
-//                            Toast.makeText(CommunityEdit.this, "게시글 수정 성공", Toast.LENGTH_SHORT).show();
-//                            finish(); // 액티비티 종료
-//                        });
-//                    } else {
-//                        Log.e("게시글 수정 실패", response.body().toString());
-//                    }
-//                }
-//            });
-
             try {
                 Response response = client.newCall(request).execute();
                 String responseBody = response.body().string();
@@ -422,6 +377,7 @@ public class CommunityEdit extends AppCompatActivity {
                         setResult(RESULT_OK, result);
 
                         Intent intent = new Intent(CommunityEdit.this, CommunityContent.class);
+                        intent.putExtra("modify_success_post_hash", postHash);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();

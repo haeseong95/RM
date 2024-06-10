@@ -105,10 +105,21 @@ public class CommunityContent extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
         PreferenceHelper.init(CommunityContent.this);
         String postHash = getIntent().getStringExtra("community_post_hash");
+        String postModifyHash = getIntent().getStringExtra("modify_success_post_hash"); // 수정 완료 후 얻은 해시값
+        if(postModifyHash != null){
+            // 수정된 게시글
+            getTextData(postModifyHash);
+            setupViewPager();
 
-//        String postTitle = cTitle.getText().toString();
-//        String postContent = cContent.getText().toString();
-//        JSONArray postImageArray;
+            // 좋아요
+            likeState(postModifyHash);
+            getLikeCount(postModifyHash);
+
+            // 조회수
+            getViews(postModifyHash);
+            updateViews(postModifyHash);
+
+        }
 
         // 게시글 수정, 삭제 팝업 메뉴
         setSupportActionBar(toolbar);
@@ -129,11 +140,6 @@ public class CommunityContent extends AppCompatActivity {
                 case R.id.action_edit:      // 게시글 수정
                     Log.e(tag, "여기에" + postHash + " 값은?");
                     getModifyPostContent(postHash);
-//                    Log.e(tag, "여기에" + postHash + " 값은?");
-//                    Log.e("postTitle", postTitle);
-//                    Log.e("postContent", postContent);
-//                    Log.e("postImageArray", postImageArray.toString());
-//                    postModify(postHash, postTitle, postContent, postImageArray);
                     return true;
                 default:
                     return CommunityContent.super.onOptionsItemSelected(item);
@@ -571,6 +577,7 @@ public class CommunityContent extends AppCompatActivity {
         });
     }
 
+    // 게시글 수정 시 게시글의 기존 이미지 전달
     private void postModify(String postHash, String postTitle, String postContent, JSONArray postImageArray, ArrayList<Bitmap> bitmaps) {
         File directory = getApplicationContext().getDir("images", Context.MODE_PRIVATE);
         ArrayList<String> imageFileList = new ArrayList<>();

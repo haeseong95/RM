@@ -166,7 +166,6 @@ public class Community extends AppCompatActivity {
                     }
                 } else {
                     Log.e(tag, "서버 응답 오류: " + response.message());
-                    runOnUiThread(() -> Toast.makeText(Community.this, "서버 응답 오류", Toast.LENGTH_SHORT).show());
                 }
             }
         });
