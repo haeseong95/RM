@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +32,6 @@
             android:textSize="15dp" />
     </RelativeLayout>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -59,17 +57,8 @@
             android:layout_marginLeft="10dp"
             android:textSize="12dp" />
     </LinearLayout>
-
-
     <Button
         android:id="@+id/changeNickname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="변경"
-        android:backgroundTint="@color/main_color_green"
-        android:textColor="#FFFFFF"
-        android:layout_marginTop="20dp"/>
-
+        style="@style/modify_btn_change"
+        android:text="변경"/>
 </LinearLayout>

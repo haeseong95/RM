@@ -75,5 +75,4 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.Page
             imageView = itemView.findViewById(R.id.viewpager_image);
         }
     }
-
 }

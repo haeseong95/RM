@@ -49,7 +49,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                 holder.trashTag.setVisibility(View.VISIBLE);
                 colorCode = "#FF0000";
                 break;
-            case "병류":
+            case "유리류":
                 holder.trashTag.setVisibility(View.VISIBLE);
                 colorCode = "#808080";
                 break;

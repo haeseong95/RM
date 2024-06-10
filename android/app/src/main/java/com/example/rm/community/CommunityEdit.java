@@ -48,6 +48,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import java.security.SecureRandom;
+import java.util.Random;
+
 
 public class CommunityEdit extends AppCompatActivity {
     ImageView btnBack;
@@ -141,8 +144,11 @@ public class CommunityEdit extends AppCompatActivity {
                         Log.e("uriArrayList", String.valueOf(uriArrayList.size()));
                         Log.e("deleteImage", String.valueOf(deleteImage));
 
+                        String title = postTitle.getText().toString();
+                        String content = postContent.getText().toString();
+
                         ArrayList<Uri> newArrayList = new ArrayList<>( uriArrayList.subList(initialImageCount - deleteImage.size(), uriArrayList.size()) );
-                        submitUpdatedPost(post_title, post_content, newArrayList, deleteImage);
+                        submitUpdatedPost(title, content, newArrayList, deleteImage);
                     } catch (IOException e) {
                         Log.e("수정 버튼 클릭부터 에러", "!!!!!!!!!!!!!!!!!");
                     }
@@ -230,9 +236,9 @@ public class CommunityEdit extends AppCompatActivity {
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                     byte[] byteArray = byteArrayOutputStream.toByteArray();
-                    String imageFileName = uri.getLastPathSegment();
+                    String imageFileName = String.valueOf(new SecureRandom().nextInt());
                     multipartBodyBuilder.addFormDataPart("images" + (i+1), imageFileName, RequestBody.create(byteArray, MediaType.parse("image/jpeg")));
-                    imageList.add(String.valueOf(i));
+                    imageList.add(imageFileName);
                 }
                 multipartBodyBuilder.addFormDataPart("image_lines", new JSONArray(imageList).toString());
             }
@@ -328,9 +334,9 @@ public class CommunityEdit extends AppCompatActivity {
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                     byte[] byteArray = byteArrayOutputStream.toByteArray();
-                    String imageFileName = uri.getLastPathSegment();
+                    String imageFileName = String.valueOf(new SecureRandom().nextInt());
                     multipartBodyBuilder.addFormDataPart("images" + (i + 1), imageFileName, RequestBody.create(byteArray, MediaType.parse("image/jpeg")));
-                    imageList.add(imageFileName.split(":")[1]);
+                    imageList.add(imageFileName);
                 }
                 multipartBodyBuilder.addFormDataPart("new_image_lines", new JSONArray(imageList).toString());
                 Log.e("new_image_lines", new JSONArray(imageList).toString());

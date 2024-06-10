@@ -48,14 +48,12 @@
             android:orientation="horizontal"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="40dp">
-
             <TextView
                 android:id="@+id/text_modify_email"
                 android:text="이메일"
                 style="@style/textView_mypageinfo"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"/>
-
         </RelativeLayout>
 
         <TextView android:text="닉네임" style="@style/textView_mypage"/>
@@ -109,6 +107,5 @@
                 android:fontFamily="@font/nanum_regular"
                 android:textSize="15dp" />
         </RelativeLayout>
-
     </LinearLayout>
 </LinearLayout>

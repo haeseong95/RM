@@ -3,13 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:orientation="horizontal">
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,7 +18,6 @@
             android:padding="20dp"
             android:backgroundTint="#F5F5F5"
             android:gravity="center"/>
-
         <Button
             android:id="@+id/btn_close_password"
             android:layout_width="80dp"
@@ -33,7 +30,6 @@
             android:fontFamily="@font/nanum_regular"
             android:textSize="15dp" />
     </RelativeLayout>
-
     <EditText
         android:id="@+id/edit_pwd_current"
         style="@style/editText_style"
@@ -55,7 +51,6 @@
         android:layout_marginBottom="10dp"
         android:layout_gravity="center"
         android:inputType="textPassword" />
-
     <EditText
         android:id="@+id/edit_pwd_check"
         style="@style/editText_style"
@@ -65,16 +60,8 @@
         android:hint="새 비밀번호 확인"
         android:layout_gravity="center"
         android:inputType="textPassword" />
-
     <Button
         android:id="@+id/changePwd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="변경"
-        android:backgroundTint="@color/category_gray"
-        android:textColor="@color/black"
-        android:layout_marginTop="20dp"/>
-
+        style="@style/modify_btn_changed"
+        android:text="변경"/>
 </LinearLayout>

@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".mypage.Mypage">
-
-    <!--툴바-->
     <androidx.appcompat.widget.Toolbar
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
@@ -47,7 +45,6 @@
             android:fontFamily="@font/nanum_regular"
             android:textSize="20dp"/>
     </LinearLayout>
-
     <View
         android:layout_width="350dp"
         android:layout_height="1dp"
@@ -81,7 +78,6 @@
         <TextView
             android:text="로그아웃"
             style="@style/mypage_button"/>
-
         <ImageView
             android:layout_width="25dp"
             android:layout_height="25dp"
@@ -106,5 +102,4 @@
             android:layout_gravity="center"
             android:src="@drawable/btn_right"/>
     </LinearLayout>
-
 </LinearLayout>

@@ -222,5 +222,27 @@
         <item name="android:textColorPrimary">@android:color/black</item>
     </style>
 
+    <style name="modify_btn_change">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="fontFamily">@font/nanum_regular</item>
+        <item name="android:backgroundTint">@color/main_color_green</item>
+    </style>
+
+    <style name="modify_btn_changed">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="fontFamily">@font/nanum_regular</item>
+        <item name="android:backgroundTint">@color/category_gray</item>
+    </style>
+
 
 </resources>

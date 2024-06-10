@@ -266,4 +266,3 @@ public class Mypage extends AppCompatActivity implements View.OnClickListener {
         }
     }
 }
-
